@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Atm\" />
+    <Folder Include="Features\Internetbank\" />
+    <Folder Include="Features\Users\" />
+  </ItemGroup>
+
 </Project>

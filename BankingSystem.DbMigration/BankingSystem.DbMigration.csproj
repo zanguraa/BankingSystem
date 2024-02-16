@@ -11,4 +11,11 @@
     <Folder Include="Scripts\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="dbup-core" Version="5.0.76" />
+    <PackageReference Include="dbup-sqlserver" Version="5.0.40" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+  </ItemGroup>
+
 </Project>

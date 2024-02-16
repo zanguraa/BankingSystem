@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingSystem.Api", "BankingSystem.Api\BankingSystem.Api.csproj", "{25A1CAA2-108A-4EE8-99D6-AE3A4286F8A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankingSystem.Api", "BankingSystem.Api\BankingSystem.Api.csproj", "{25A1CAA2-108A-4EE8-99D6-AE3A4286F8A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingSystem.Core", "BankingSystem.Core\BankingSystem.Core.csproj", "{0F10686B-F35D-4BAE-9B07-FC000FA55C0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankingSystem.Core", "BankingSystem.Core\BankingSystem.Core.csproj", "{0F10686B-F35D-4BAE-9B07-FC000FA55C0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingSystem.DbMigration", "BankingSystem.DbMigration\BankingSystem.DbMigration.csproj", "{A51F4BF5-5547-49C4-AA04-C465B4DEBB63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankingSystem.Test", "BankingSystem.Test\BankingSystem.Test.csproj", "{DE5C3ACE-D155-4AB3-B1E4-CA2B5653D970}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{0F10686B-F35D-4BAE-9B07-FC000FA55C0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F10686B-F35D-4BAE-9B07-FC000FA55C0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F10686B-F35D-4BAE-9B07-FC000FA55C0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A51F4BF5-5547-49C4-AA04-C465B4DEBB63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A51F4BF5-5547-49C4-AA04-C465B4DEBB63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A51F4BF5-5547-49C4-AA04-C465B4DEBB63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A51F4BF5-5547-49C4-AA04-C465B4DEBB63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE5C3ACE-D155-4AB3-B1E4-CA2B5653D970}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE5C3ACE-D155-4AB3-B1E4-CA2B5653D970}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE5C3ACE-D155-4AB3-B1E4-CA2B5653D970}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE5C3ACE-D155-4AB3-B1E4-CA2B5653D970}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

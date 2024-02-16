@@ -16,9 +16,10 @@ public class Program
             .AddJsonFile("appsettings.json")
             .Build();
 
-        var user = "Zangura";
+        string username = Environment.UserName;
 
-        var connectionString = config.GetConnectionString(user);
+
+        var connectionString = config.GetConnectionString(username);
 
         var upgrader =
             DeployChanges.To

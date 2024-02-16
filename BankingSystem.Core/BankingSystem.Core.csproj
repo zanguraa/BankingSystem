@@ -12,4 +12,8 @@
     <None Remove="Features\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

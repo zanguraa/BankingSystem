@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -10,13 +10,11 @@
   <ItemGroup>
     <None Remove="scripts\Script001 - CreateDatabase.sql" />
     <None Remove="scripts\Script002-CreateOperatorTable.sql" />
-    <None Remove="scripts\Script003 - InsertOperator.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="scripts\Script001 - CreateDatabase.sql" />
     <EmbeddedResource Include="scripts\Script002-CreateOperatorTable.sql" />
-    <EmbeddedResource Include="scripts\Script003 - InsertOperator.sql" />
   </ItemGroup>
 
   <ItemGroup>

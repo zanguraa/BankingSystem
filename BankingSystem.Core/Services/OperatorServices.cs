@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Services
 {
-    public class OperatorServices
+    public class OperatorServices : IOperatorServices
     {
         private readonly IOperatorRepository _operatorRepository;
 
@@ -21,10 +21,6 @@ namespace BankingSystem.Core.Services
         public bool RegisterOperator(CreateOperatorRequest request)
         {
             if(request == null)
-            {
-                return false;
-            }
-            if (!string.IsNullOrEmpty(request.OperatorId) && !int.TryParse(request.OperatorId, out _))
             {
                 return false;
             }

@@ -19,7 +19,7 @@ namespace BankingSystem.Core.Repositories
 
         public bool AddOperator(CreateOperatorRequest request)
         {
-            string sql = "INSERT INTO Operator (OperatorId, Username, Password) VALUES (@OperatorId, @Username, @Password)";
+            string sql = "INSERT INTO Operator ( Username, Password) VALUES (@Username, @Password)";
             return _dataManager.Execute(sql, request) > 0;
         }
 

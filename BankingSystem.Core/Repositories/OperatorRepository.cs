@@ -1,4 +1,5 @@
 ﻿using BankingSystem.Core.Interfaces;
+using BankingSystem.Core.Models;
 using BankingSystem.Core.Models.Requests;
 using BankingSystem.Core.Shared;
 using System;
@@ -25,5 +26,13 @@ namespace BankingSystem.Core.Repositories
             return _dataManager.Execute(sql, request) > 0;
         }
 
+        public bool OperatorExists(string username)
+        {
+          string sql = "SELECT * FROM Operator WHERE Username = @Username";
+
+            var data = _dataManager.Query<Operator, object>(sql, new { Username = username });
+
+            return data.FirstOrDefault() != null;
+        }
     }
 }

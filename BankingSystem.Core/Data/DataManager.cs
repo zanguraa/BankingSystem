@@ -20,5 +20,11 @@ namespace BankingSystem.Core.Data
             using IDbConnection connection = new SqlConnection(_connectionString);
             return  connection.Execute(sql, item);
         }
+
+        public IEnumerable<T> Query<T, P>(string sql, P parameters)
+        {
+            using IDbConnection connection = new SqlConnection(_connectionString);
+            return connection.Query<T>(sql, parameters);
+        }
     }
 }

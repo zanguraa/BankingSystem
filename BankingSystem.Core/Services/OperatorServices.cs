@@ -33,6 +33,11 @@ namespace BankingSystem.Core.Services
                 return false;
             }
 
+            if (_operatorRepository.OperatorExists(request.Username))
+            {
+                return false;
+            }
+
             var data = _operatorRepository.AddOperator(request);
 
             return true;

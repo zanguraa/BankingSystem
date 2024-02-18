@@ -1,4 +1,5 @@
-﻿using BankingSystem.Core.Models.Requests;
+﻿using BankingSystem.Core.Interfaces;
+using BankingSystem.Core.Models.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,14 @@ namespace BankingSystem.Core.Services
 {
     public class OperatorServices
     {
+        private readonly IOperatorRepository _operatorRepository;
+
+        public OperatorServices( IOperatorRepository operatorRepository)
+        {
+            _operatorRepository = operatorRepository;
+        }
+        
+
         public bool RegisterOperator(CreateOperatorRequest request)
         {
             if(request == null)
@@ -28,7 +37,7 @@ namespace BankingSystem.Core.Services
                 return false;
             }
 
-
+            var data = _operatorRepository.AddOperator(request);
 
             return true;
         }

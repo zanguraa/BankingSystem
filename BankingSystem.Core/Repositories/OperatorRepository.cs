@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Repositories
 {
-    public class OperatorRepository
+    public class OperatorRepository : IOperatorRepository
     {
         private readonly IDatamanager _dataManager;
 
@@ -19,7 +19,8 @@ namespace BankingSystem.Core.Repositories
 
         public bool AddOperator(CreateOperatorRequest request)
         {
-          
+            string sql = "INSERT INTO Operator (OperatorId, Username, Password) VALUES (@OperatorId, @Username, @Password)";
+            return _dataManager.Execute(sql, request) > 0;
         }
 
     }

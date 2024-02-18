@@ -8,5 +8,6 @@ namespace BankingSystem.Core.Interfaces
 {
     public interface IDatamanager
     {
+        public int Execute<T>(string sql, T item);
     }
 }

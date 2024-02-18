@@ -8,12 +8,20 @@
 
   <ItemGroup>
     <Compile Remove="Features\**" />
+    <Compile Remove="Repositories\Interfaces\**" />
     <EmbeddedResource Remove="Features\**" />
+    <EmbeddedResource Remove="Repositories\Interfaces\**" />
     <None Remove="Features\**" />
+    <None Remove="Repositories\Interfaces\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\Interfaces\" />
+    <PackageReference Include="Dapper" Version="2.1.28" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BankingSystem.DbMigration\BankingSystem.DbMigration.csproj" />
   </ItemGroup>
 
 </Project>

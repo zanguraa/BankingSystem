@@ -15,16 +15,16 @@ namespace BankingSystem.Core.Data
     {
         private readonly string _connectionString = "Data Source=DESKTOP-7OLVUTI;Database=BankingSystem_db;Integrated Security=SSPI;TrustServerCertificate=True";
 
-        public int Execute<T>(string sql, T item)
+        public async Task<int> Execute<T>(string sql, T item)
         {
             using IDbConnection connection = new SqlConnection(_connectionString);
-            return  connection.Execute(sql, item);
+            return await connection.ExecuteAsync(sql, item);
         }
 
-        public IEnumerable<T> Query<T, P>(string sql, P parameters)
+        public async Task<IEnumerable<T>> Query<T, P>(string sql, P parameters)
         {
             using IDbConnection connection = new SqlConnection(_connectionString);
-            return connection.Query<T>(sql, parameters);
+            return await connection.QueryAsync<T>(sql, parameters);
         }
     }
 }

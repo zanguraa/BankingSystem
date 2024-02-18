@@ -18,10 +18,10 @@ namespace BankingSystem.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register([FromBody] CreateOperatorRequest request)
+        public async Task<IActionResult> Register([FromBody] CreateOperatorRequest request)
         {
 
-           var result = _operatorServices.RegisterOperator(request);
+           var result = await _operatorServices.RegisterOperator(request);
 
             return Ok(result);
         }

@@ -9,6 +9,6 @@ namespace BankingSystem.Core.Interfaces
 {
     public interface IOperatorServices
     {
-        bool RegisterOperator(CreateOperatorRequest request);
+        Task<bool> RegisterOperator(CreateOperatorRequest request);
     }
 }

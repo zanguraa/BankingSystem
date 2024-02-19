@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Api.Controllers
@@ -7,5 +8,7 @@ namespace BankingSystem.Api.Controllers
 	[ApiController]
 	public class AuthController : ControllerBase
 	{
+
+
 	}
 }

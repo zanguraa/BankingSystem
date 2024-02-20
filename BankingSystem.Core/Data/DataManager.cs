@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Data
 {
-    public class DataManager : IDatamanager
+    public class DataManager : IDataManager
     {
 
         private readonly string _connectionString;

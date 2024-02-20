@@ -1,9 +1,9 @@
 ﻿
 using BankingSystem.Core.Data;
 using BankingSystem.Core.Interfaces;
-using BankingSystem.Core.Repositories;
 using BankingSystem.Core.Services;
 using BankingSystem.Core.Shared;
+using Classroom.TodoWithAuth.Auth.Db;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -83,9 +83,6 @@ namespace BankingSystem.Api
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddTransient<IOperatorRepository, OperatorRepository>();
-            builder.Services.AddTransient<IDatamanager, DataManager>();
-            builder.Services.AddTransient<IOperatorServices, OperatorServices>();
             builder.Services.AddTransient<JwtTokenGenerator>();
 
 

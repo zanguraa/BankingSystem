@@ -29,7 +29,7 @@ namespace BankingSystem.Api.Controllers
 			[Route("generate-token")]
 			public IActionResult GenerateToken()
 			{
-				var jwt = _JwtTokenGenerator.Generate("1" , "2");
+				var jwt = _JwtTokenGenerator.Generate("1" , "user");
 				return Ok(jwt);
 			}
 

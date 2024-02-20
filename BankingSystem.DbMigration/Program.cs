@@ -20,6 +20,7 @@ public class Program
 
 
         var connectionString = config.GetConnectionString(username);
+        EnsureDatabase.For.SqlDatabase(connectionString);
 
         var upgrader =
             DeployChanges.To

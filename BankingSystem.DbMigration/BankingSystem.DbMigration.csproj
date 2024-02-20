@@ -13,7 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="scripts\Script001 - CreateDatabase.sql" />
+    <EmbeddedResource Include="scripts\Script001 - CreateDatabase.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="scripts\Script002-CreateOperatorTable.sql" />
   </ItemGroup>
 

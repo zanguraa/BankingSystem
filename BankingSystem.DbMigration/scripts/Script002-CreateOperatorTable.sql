@@ -1,6 +1,6 @@
 USE BankingSystem_db;
 
-IF NOT EXISTS (SELECT * FROM [BankingSystem_db] WHERE TABLE_NAME = 'Operator')
+IF NOT EXISTS (SELECT * FROM [BankingSystem_db].INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Operator')
 BEGIN
     CREATE TABLE Operator
     (

@@ -13,7 +13,7 @@ namespace BankingSystem.Core.Data
 {
     public class DataManager : IDatamanager
     {
-        private readonly string _connectionString = "Data Source=DESKTOP-7OLVUTI;Database=BankingSystem_db;Integrated Security=SSPI;TrustServerCertificate=True";
+        private readonly string _connectionString = "Data Source=localhost;Database=BankingSystem_db;Integrated Security=SSPI;TrustServerCertificate=True";
 
         public async Task<int> Execute<T>(string sql, T item)
         {

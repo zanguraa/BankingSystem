@@ -13,8 +13,15 @@ namespace BankingSystem.Core.Data
 {
     public class DataManager : IDatamanager
     {
-        private readonly string _connectionString = "Data Source=localhost;Database=BankingSystem_db;Integrated Security=SSPI;TrustServerCertificate=True";
 
+        private readonly string _connectionString;
+
+        public DataManager(IConfiguration configuration)
+        {
+            string username = Environment.UserName;
+
+            _connectionString = configuration.GetConnectionString(username);
+        }
         public async Task<int> Execute<T>(string sql, T item)
         {
             using IDbConnection connection = new SqlConnection(_connectionString);

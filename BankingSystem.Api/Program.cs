@@ -1,8 +1,16 @@
-
+﻿
 using BankingSystem.Core.Data;
 using BankingSystem.Core.Interfaces;
 using BankingSystem.Core.Repositories;
 using BankingSystem.Core.Services;
+using BankingSystem.Core.Shared;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Security.Claims;
+using System.Text;
 
 namespace BankingSystem.Api
 {
@@ -12,7 +20,64 @@ namespace BankingSystem.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // Token-ის შემქნელი
+            var issuer = "myapp.com";
+
+            //Token-ის აუდიტორია
+            var audience = "myapp.com";
+
+            // Token-ის გასაღები 
+            var secretKey = builder.Configuration["JwtTokenSecretKey"]!;
+
+            // Token-ის ვალიდაციის პარამეტრები, რის მიხედვითაც aspn.net მოახდენს ვალიდაციას.
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = false,
+                ValidIssuer = issuer,
+                ValidAudience = audience,
+                ClockSkew = TimeSpan.Zero,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+            };
+
+            builder.Services.AddTransient<JwtTokenGenerator>();
+
+
+            // საჭირო სერვისების IoC-ში რეგისტრაცია
+
+            builder.Services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => { options.TokenValidationParameters = tokenValidationParameters; });
+
+            builder.Services
+                .AddDbContext<AppDbContext>(c => c.UseSqlServer(builder.Configuration["AppDbContextConnection"]));
+
+
+            // Policy-ს შექმნა და კონტეინერში დამატება
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("MyApiUserPolicy", policy =>
+                {
+                    policy.RequireClaim(ClaimTypes.Role, "user");
+                });
+            });
+
+            //UserEntity და RoleEntity კლასების მიხედვით მოხდება ბაზაში ცხრილების შექმნა
+            builder.Services
+                .AddIdentity<UserEntity, RoleEntity>(o =>
+                {
+                    o.Password.RequireDigit = true;
+                    o.Password.RequireLowercase = true;
+                    o.Password.RequireUppercase = true;
+                    o.Password.RequireNonAlphanumeric = true;
+                    o.Password.RequiredLength = 8;
+                })
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -21,6 +86,7 @@ namespace BankingSystem.Api
             builder.Services.AddTransient<IOperatorRepository, OperatorRepository>();
             builder.Services.AddTransient<IDatamanager, DataManager>();
             builder.Services.AddTransient<IOperatorServices, OperatorServices>();
+            builder.Services.AddTransient<JwtTokenGenerator>();
 
 
 

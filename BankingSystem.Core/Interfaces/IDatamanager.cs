@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Interfaces
 {
-	internal interface IdataManager
+	public interface IDataManager
 	{
+		 Task<int> Execute<T>(string sql, T item);
+
+		Task<IEnumerable<T>> Query<T, P>(string sql, P parameters);
+
 	}
 }

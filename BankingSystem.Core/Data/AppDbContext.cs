@@ -37,17 +37,23 @@ namespace Classroom.TodoWithAuth.Auth.Db
         {
             builder.Entity<RoleEntity>().HasData(new[]
             {
-            new RoleEntity { Id = 1, Name = "user", NormalizedName = "USER" },
-            new RoleEntity { Id = 2, Name = "operator", NormalizedName = "OPERATOR" }
-        });
+        new RoleEntity { Id = 1, Name = "user", NormalizedName = "USER" },
+        new RoleEntity { Id = 2, Name = "operator", NormalizedName = "OPERATOR" }
+    });
 
-            var userName = "user@domain.com";
-            var password = "abc123";
+            var userName = "Hackera@gmail.com";
+            var password = "Admin@123";
             var operatorUser = new UserEntity
             {
                 Id = 1,
                 Email = userName,
-                UserName = userName
+                UserName = userName,
+                FirstName = "Hackera",
+                LastName = "Hackerashvili",
+                NormalizedEmail = userName.ToUpper(),
+                BirthdayDate = new DateTime(1990, 1, 1), // Set a non-null value for BirthdayDate
+                PersonalId = "12345678910", // Set a non-null value for PersonalId
+                PhoneNumber = "555123456",
             };
 
             var hasher = new PasswordHasher<UserEntity>();
@@ -56,8 +62,8 @@ namespace Classroom.TodoWithAuth.Auth.Db
 
             builder.Entity<IdentityUserRole<int>>().HasData(new[]
             {
-            new IdentityUserRole<int> { UserId = 1, RoleId = 2 }
-        });
+        new IdentityUserRole<int> { UserId = 1, RoleId = 2 }
+    });
         }
     }
 }

@@ -34,65 +34,7 @@ namespace BankingSystem.Api.Controllers
             return Ok(jwt);
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
-        {
-            var entity = new UserEntity
-            {
-                UserName = request.Email,
-                Email = request.Email
-            };
 
-            // მომხმარებლის რეგისტრაცია
-            var result = await _userManager.CreateAsync(entity, request.Password);
-
-            if (!result.Succeeded)
-            {
-                var firstError = result.Errors.First();
-                return BadRequest(firstError.Description);
-            }
-
-            // მომხმარებლისთვის api-user როლის მინიჭება
-            var addToRoleResult = await _userManager.AddToRoleAsync(entity, "user");
-
-            return Ok();
-        }
-
-        [HttpPost("registerOperator")]
-        public async Task<IActionResult> RegisterOperator([FromBody] RegisterUserRequest request)
-        {
-            var entity = new UserEntity
-            {
-                UserName = request.Email,
-                Email = request.Email
-            };
-
-            // Register user
-            var result = await _userManager.CreateAsync(entity, request.Password);
-
-            if (!result.Succeeded)
-            {
-                var firstError = result.Errors.First();
-                return BadRequest(firstError.Description);
-            }
-
-            // Assign 'operator' role to the user
-            var role = await _roleManager.FindByNameAsync("operator");
-            if (role == null)
-            {
-                // 'operator' role doesn't exist, return error
-                return BadRequest("Operator role not found.");
-            }
-
-            var addToRoleResult = await _userManager.AddToRoleAsync(entity, role.Name);
-            if (!addToRoleResult.Succeeded)
-            {
-                // Failed to assign role, return error
-                return BadRequest("Failed to assign role to user.");
-            }
-
-            return Ok();
-        }
 
         // ავტორიზაცია
         [HttpPost("login")]
@@ -101,21 +43,18 @@ namespace BankingSystem.Api.Controllers
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
             {
-                return NotFound("User not found");
+                // Handle the case where the user is not found
+                return NotFound("User not found.");
             }
 
             var isCorrectPassword = await _userManager.CheckPasswordAsync(user, request.Password);
             if (!isCorrectPassword)
             {
-                return BadRequest("Incorrect email or password");
+                return BadRequest("ელ.ფოსტა ან პაროლი არასწორია");
             }
 
-            var roles = await _userManager.GetRolesAsync(user);
-            var isOperator = roles.Contains("operator");
-
-            // Generate token based on user role
-            var jwt = _JwtTokenGenerator.Generate(user.Id.ToString(), isOperator ? "operator" : "user");
-            return Ok(jwt);
+            // var isOperator = await _userManager.IsInRoleAsync(user, "operator");
+            return Ok(_JwtTokenGenerator.Generate(user.Id.ToString(), "operator"));
         }
 
 

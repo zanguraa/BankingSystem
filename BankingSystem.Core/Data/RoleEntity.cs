@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace BankingSystem.Core.Data
 {
-    public class RoleEntity : IdentityRole<int>
-    {
-    }
+	public class RoleEntity : IdentityRole<int>
+	{
+	}
 }

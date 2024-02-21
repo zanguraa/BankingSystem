@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Models.Requests
 {
-    public class RequestPasswordResetRequest
-    {
-        public string Email { get; set; }
-    }
+	public class RequestPasswordResetRequest
+	{
+		public string Email { get; set; }
+	}
 }

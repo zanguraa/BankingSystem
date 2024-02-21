@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Shared
 {
-    public class JwtTokenGenerator
-    {
-        private readonly IConfiguration configuration;
+	public class JwtTokenGenerator
+	{
+		private readonly IConfiguration configuration;
 
 		public JwtTokenGenerator(IConfiguration configuration)
 		{
@@ -20,26 +20,26 @@ namespace BankingSystem.Core.Shared
 		}
 
 		public string Generate(string userId, string userRole)
-        {
-            var claims = new List<Claim>
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, userId),
-            new Claim(ClaimTypes.Role, userRole)
-        };
+		{
+			var claims = new List<Claim>
+		{
+			new Claim(JwtRegisteredClaimNames.Sub, userId),
+			new Claim(ClaimTypes.Role, userRole)
+		};
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtTokenSecretKey"]!));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtTokenSecretKey"]!));
+			var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(
-                issuer: "myapp.com",
-                audience: "myapp.com",
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(3600),
-                signingCredentials: credentials);
+			var token = new JwtSecurityToken(
+				issuer: "myapp.com",
+				audience: "myapp.com",
+				claims: claims,
+				expires: DateTime.Now.AddMinutes(3600),
+				signingCredentials: credentials);
 
-            var tokenGenerator = new JwtSecurityTokenHandler();
-            var jwt = tokenGenerator.WriteToken(token);
-            return jwt;
-        }
-    }
+			var tokenGenerator = new JwtSecurityTokenHandler();
+			var jwt = tokenGenerator.WriteToken(token);
+			return jwt;
+		}
+	}
 }

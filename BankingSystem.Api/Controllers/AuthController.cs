@@ -53,8 +53,9 @@ namespace BankingSystem.Api.Controllers
                 return BadRequest("ელ.ფოსტა ან პაროლი არასწორია");
             }
 
+            var role = await _userManager.GetRolesAsync(user);
             // var isOperator = await _userManager.IsInRoleAsync(user, "operator");
-            return Ok(_JwtTokenGenerator.Generate(user.Id.ToString(), "operator"));
+            return Ok(_JwtTokenGenerator.Generate(user.Id.ToString(), role.FirstOrDefault() ?? ""));
         }
 
 

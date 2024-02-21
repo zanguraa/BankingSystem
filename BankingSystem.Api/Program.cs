@@ -52,17 +52,22 @@ namespace BankingSystem.Api
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => { options.TokenValidationParameters = tokenValidationParameters; });
 
-			builder.Services
-		 .AddDbContext<AppDbContext>(c => c.UseSqlServer(builder.Configuration.GetConnectionString(Environment.UserName)));
+            builder.Services
+         .AddDbContext<AppDbContext>(c => c.UseSqlServer(builder.Configuration.GetConnectionString(Environment.UserName)));
 
 
 
-			// Policy-ს შექმნა და კონტეინერში დამატება
-			builder.Services.AddAuthorization(options =>
+            // Policy-ს შექმნა და კონტეინერში დამატება
+            builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("MyApiUserPolicy", policy =>
                 {
                     policy.RequireClaim(ClaimTypes.Role, "user");
+                });
+
+                options.AddPolicy("OperatorPolicy", policy =>
+                {
+                    policy.RequireClaim(ClaimTypes.Role, "operator");
                 });
             });
 
@@ -102,10 +107,10 @@ namespace BankingSystem.Api
 
             app.MapControllers();
 
-			using var scope = app.Services.CreateScope();
-			var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-			db.Database.EnsureCreated();
-			app.Run();
+            using var scope = app.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.Database.EnsureCreated();
+            app.Run();
         }
     }
 }

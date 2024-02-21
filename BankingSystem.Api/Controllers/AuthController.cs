@@ -33,7 +33,31 @@ namespace BankingSystem.Api.Controllers
 				return Ok(jwt);
 			}
 
-			[HttpGet]
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
+        {
+            var entity = new UserEntity
+            {
+                UserName = request.Email,
+                Email = request.Email
+            };
+
+            // მომხმარებლის რეგისტრაცია
+            var result = await _userManager.CreateAsync(entity, request.Password);
+
+            if (!result.Succeeded)
+            {
+                var firstError = result.Errors.First();
+                return BadRequest(firstError.Description);
+            }
+
+            // მომხმარებლისთვის api-user როლის მინიჭება
+            var addToRoleResult = await _userManager.AddToRoleAsync(entity, "user");
+
+            return Ok();
+        }
+
+        [HttpGet]
 			[Route("test")]
 			[Authorize("MyApiUserPolicy", AuthenticationSchemes = "Bearer")]
 			public IActionResult Test()

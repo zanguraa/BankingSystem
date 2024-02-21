@@ -8,14 +8,11 @@ using System.Reflection.Emit;
 namespace Classroom.TodoWithAuth.Auth.Db
 {
     // ავტორიზაციისთვის საჭირო მონაცემთა ბაზის კონფიგურაცია Entity framework-ის გამოყენებით
-
-
     public class AppDbContext : IdentityDbContext<UserEntity, RoleEntity, int>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -32,7 +29,6 @@ namespace Classroom.TodoWithAuth.Auth.Db
             // Seed მონაცემების ჩაწერა
             InsertSeedData(builder);
         }
-
         private void InsertSeedData(ModelBuilder builder)
         {
             builder.Entity<RoleEntity>().HasData(new[]

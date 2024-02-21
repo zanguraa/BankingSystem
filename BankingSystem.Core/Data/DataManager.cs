@@ -13,9 +13,7 @@ namespace BankingSystem.Core.Data
 {
     public class DataManager : IDataManager
     {
-
         private readonly string _connectionString;
-
         public DataManager(IConfiguration configuration)
         {
             string username = Environment.UserName;
@@ -27,7 +25,6 @@ namespace BankingSystem.Core.Data
             using IDbConnection connection = new SqlConnection(_connectionString);
             return await connection.ExecuteAsync(sql, item);
         }
-
         public async Task<IEnumerable<T>> Query<T, P>(string sql, P parameters)
         {
             using IDbConnection connection = new SqlConnection(_connectionString);

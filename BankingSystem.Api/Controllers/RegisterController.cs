@@ -13,7 +13,6 @@ namespace BankingSystem.Api.Controllers
     [ApiController]
     public class RegisterController : ControllerBase
     {
-
         private readonly JwtTokenGenerator _JwtTokenGenerator;
         private readonly UserManager<UserEntity> _userManager;
         private readonly RoleManager<RoleEntity> _roleManager;

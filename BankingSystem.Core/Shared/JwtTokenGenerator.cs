@@ -42,4 +42,4 @@ namespace BankingSystem.Core.Shared
             return jwt;
         }
     }
-    }
+}

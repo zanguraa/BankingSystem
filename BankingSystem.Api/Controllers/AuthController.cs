@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Api.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
@@ -34,8 +33,6 @@ namespace BankingSystem.Api.Controllers
             return Ok(jwt);
         }
 
-
-
         // ავტორიზაცია
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
@@ -57,7 +54,6 @@ namespace BankingSystem.Api.Controllers
             // var isOperator = await _userManager.IsInRoleAsync(user, "operator");
             return Ok(_JwtTokenGenerator.Generate(user.Id.ToString(), role.FirstOrDefault() ?? ""));
         }
-
 
         // პაროლის დარესეტების token-ის გენერაცია
         [HttpPost("request-password-reset")]
@@ -102,7 +98,6 @@ namespace BankingSystem.Api.Controllers
             return Ok();
         }
 
-
         [HttpGet]
         [Route("test")]
         [Authorize("MyApiUserPolicy", AuthenticationSchemes = "Bearer")]
@@ -118,8 +113,6 @@ namespace BankingSystem.Api.Controllers
         {
             return Ok("ok");
         }
-
     }
-
 }
 

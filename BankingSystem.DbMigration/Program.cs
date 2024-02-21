@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using DbUp;
 using DbUp.SqlServer;
 
-
 public class Program
 {
     static int Main(string[] args)
@@ -17,7 +16,6 @@ public class Program
             .Build();
 
         string username = Environment.UserName;
-
 
         var connectionString = config.GetConnectionString(username);
         EnsureDatabase.For.SqlDatabase(connectionString);

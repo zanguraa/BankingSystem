@@ -55,8 +55,6 @@ namespace BankingSystem.Api
             builder.Services
          .AddDbContext<AppDbContext>(c => c.UseSqlServer(builder.Configuration.GetConnectionString(Environment.UserName)));
 
-
-
             // Policy-ს შექმნა და კონტეინერში დამატება
             builder.Services.AddAuthorization(options =>
             {
@@ -91,8 +89,6 @@ namespace BankingSystem.Api
             builder.Services.AddSwaggerGen();
             builder.Services.AddTransient<JwtTokenGenerator>();
 
-
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -103,8 +99,6 @@ namespace BankingSystem.Api
             }
 
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             using var scope = app.Services.CreateScope();

@@ -14,12 +14,12 @@ namespace BankingSystem.Core.Shared
     {
         private readonly IConfiguration configuration;
 
-        public JwtTokenGenerator(IConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
+		public JwtTokenGenerator(IConfiguration configuration)
+		{
+			this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+		}
 
-        public string Generate(string userId, string userRole)
+		public string Generate(string userId, string userRole)
         {
             var claims = new List<Claim>
         {

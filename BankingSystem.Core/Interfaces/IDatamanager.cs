@@ -8,8 +8,7 @@ namespace BankingSystem.Core.Interfaces
 {
 	public interface IDataManager
 	{
-		 Task<int> Execute<T>(string sql, T item);
-
+		Task<int> Execute<T>(string sql, T item);
 		Task<IEnumerable<T>> Query<T, P>(string sql, P parameters);
 
 	}

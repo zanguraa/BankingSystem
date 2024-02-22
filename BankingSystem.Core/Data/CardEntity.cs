@@ -14,6 +14,8 @@ namespace BankingSystem.Core.Data
 		public DateTime CardExpirationDate { get; set; }
 		public string? CvvCode { get; set; }
 		public string? PinCode { get; set; }
+		public int AccountId { get; set; }
+		public virtual AccountEntity Account { get; set; }
 
 	}
 }

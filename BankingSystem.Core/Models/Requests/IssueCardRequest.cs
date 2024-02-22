@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Models.Requests
 {
-	public class CreateAccountRequest
+	internal class IssueCardRequest
 	{
-		public string Iban { get; set; }
-		public decimal InitialAmount { get; set; }
-		public string Currency { get; set; }
-
 	}
 }

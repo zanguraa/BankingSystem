@@ -39,8 +39,6 @@ namespace BankingSystem.Api.Controllers
 				PhoneNumber = request.PhoneNumber,
 				BirthdayDate = request.BirthdayDate,
 				PersonalId = request.PersonalId
-
-
 			};
 
 			// მომხმარებლის რეგისტრაცია

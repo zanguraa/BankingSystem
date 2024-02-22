@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Models.Requests
 {
-	internal class CreateAccountRequest
+	public class CreateAccountRequest
 	{
+		
 	}
 }

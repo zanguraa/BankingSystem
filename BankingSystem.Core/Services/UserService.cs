@@ -29,7 +29,7 @@ namespace BankingSystem.Core.Services
             {
                 FirstName = registerRequest.FirstName,
                 LastName = registerRequest.LastName,
-                PersonalNumber = registerRequest.PersonalNumber, // Make sure to set PersonalNumber
+                PersonalId = registerRequest.PersonalId, // Make sure to set PersonalNumber
                 BirthdayDate = registerRequest.BirthdayDate,
                 Email = registerRequest.Email,
             };

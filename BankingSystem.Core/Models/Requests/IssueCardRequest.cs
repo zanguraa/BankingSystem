@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Models.Requests
 {
-	internal class IssueCardRequest
+	public class IssueCardRequest
 	{
+		public int AccountId { get; set; }
+		public string CardHolderName { get; set; }
+		public DateTime CardExpirationDate { get; set; }
+
 	}
 }

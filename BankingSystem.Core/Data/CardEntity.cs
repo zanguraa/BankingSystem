@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Data
 {
-	internal class CardEntity
+	public class CardEntity
 	{
+
 	}
 }

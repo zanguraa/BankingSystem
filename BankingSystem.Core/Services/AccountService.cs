@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Services
 {
-	internal class UserServices
+	internal class AccountService
 	{
+
 	}
 }

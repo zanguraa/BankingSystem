@@ -14,6 +14,7 @@ namespace BankingSystem.Core.Data
 		public DateTime BirthdayDate { get; set; }
 		public string PersonalId { get; set; }
 		public string PhoneNumber { get; set; }
+		public virtual ICollection<AccountEntity> Accounts { get; set; }
 
 	}
 }

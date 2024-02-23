@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankingSystem.Core.Services
+namespace BankingSystem.Core.Features.BankAccounts
 {
-	internal class AccountService
-	{
-
-	}
+    public class BankAcountService
+    {
+    }
 }

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankingSystem.Core.Models.Requests
+namespace BankingSystem.Core.Features.Users.Authorization
 {
-	public class ResetPasswordRequest
-	{
-		public int UserId { get; set; }
-		public string Token { get; set; }
-		public string NewPassword { get; set; }
-	}
+    public class ResetPasswordRequest
+    {
+        public int UserId { get; set; }
+        public string Token { get; set; }
+        public string NewPassword { get; set; }
+    }
 }

@@ -1,5 +1,6 @@
-﻿using BankingSystem.Core.Data;
-using BankingSystem.Core.Models.Requests;
+﻿using BankingSystem.Core.Data.Entities;
+using BankingSystem.Core.Features.Users.Authorization;
+using BankingSystem.Core.Features.Users.Login;
 using BankingSystem.Core.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Api.Controllers
 {
-	[ApiController]
+    [ApiController]
 	[Route("api/[controller]")]
 	public class AuthController : ControllerBase
 	{

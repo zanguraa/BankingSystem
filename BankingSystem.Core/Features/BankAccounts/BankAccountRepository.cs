@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Features.BankAccounts
 {
-    internal class BankAccountRepository
+    public class BankAccountRepository
     {
     }
 }

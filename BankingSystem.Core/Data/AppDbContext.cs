@@ -1,4 +1,4 @@
-﻿using BankingSystem.Core.Data;
+﻿using BankingSystem.Core.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -7,8 +7,8 @@ using System.Reflection.Emit;
 
 namespace Classroom.TodoWithAuth.Auth.Db
 {
-	// ავტორიზაციისთვის საჭირო მონაცემთა ბაზის კონფიგურაცია Entity framework-ის გამოყენებით
-	public class AppDbContext : IdentityDbContext<UserEntity, RoleEntity, int>
+    // ავტორიზაციისთვის საჭირო მონაცემთა ბაზის კონფიგურაცია Entity framework-ის გამოყენებით
+    public class AppDbContext : IdentityDbContext<UserEntity, RoleEntity, int>
 	{
 		public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
 		{

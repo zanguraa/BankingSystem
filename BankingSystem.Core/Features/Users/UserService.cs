@@ -3,10 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BankingSystem.Core.Models.Requests;
-using BankingSystem.Core.Data;
+using BankingSystem.Core.Data.Entities;
 
-namespace BankingSystem.Core.Services
+namespace BankingSystem.Core.Features.Users
 {
     public class UserService
     {

@@ -1,4 +1,4 @@
-﻿using BankingSystem.Core.Data;
+﻿using BankingSystem.Core.Data.Entities;
 using BankingSystem.Core.Interfaces;
 using BankingSystem.Core.Services;
 using BankingSystem.Core.Shared;
@@ -13,7 +13,7 @@ using System.Text;
 
 namespace BankingSystem.Api
 {
-	public class Program
+    public class Program
 	{
 		public static void Main(string[] args)
 		{

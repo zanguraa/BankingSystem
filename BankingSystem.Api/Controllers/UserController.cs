@@ -1,11 +1,11 @@
-﻿using BankingSystem.Core.Models.Requests;
-using BankingSystem.Core.Services;
+﻿using BankingSystem.Core.Features.Users;
+using BankingSystem.Core.Models.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Api.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class UserController : ControllerBase
 	{

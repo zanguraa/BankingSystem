@@ -1,4 +1,5 @@
-﻿using BankingSystem.Core.Data;
+﻿using BankingSystem.Core.Data.Entities;
+using BankingSystem.Core.Features.Users.CreateUser;
 using BankingSystem.Core.Interfaces;
 using BankingSystem.Core.Models.Requests;
 using BankingSystem.Core.Shared;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Api.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class RegisterController : ControllerBase
 	{

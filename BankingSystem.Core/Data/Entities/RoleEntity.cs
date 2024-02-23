@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace BankingSystem.Core.Data
+namespace BankingSystem.Core.Data.Entities
 {
-	public class RoleEntity : IdentityRole<int>
-	{
-	}
+    public class RoleEntity : IdentityRole<int>
+    {
+    }
 }

@@ -1,5 +1,4 @@
-﻿using BankingSystem.Core.Interfaces;
-using Dapper;
+﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Data
 {
-	public class DataManager : IDataManager
+    public class DataManager : IDataManager
 	{
 		private readonly string _connectionString;
 		public DataManager(IConfiguration configuration)

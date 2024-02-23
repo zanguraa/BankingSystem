@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankingSystem.Core.Interfaces
+namespace BankingSystem.Core.Data
 {
-	public interface IDataManager
-	{
-		Task<int> Execute<T>(string sql, T item);
-		Task<IEnumerable<T>> Query<T, P>(string sql, P parameters);
+    public interface IDataManager
+    {
+        Task<int> Execute<T>(string sql, T item);
+        Task<IEnumerable<T>> Query<T, P>(string sql, P parameters);
 
-	}
+    }
 }

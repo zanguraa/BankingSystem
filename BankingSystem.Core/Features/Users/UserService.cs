@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BankingSystem.Core.Data.Entities;
+using BankingSystem.Core.Features.Users.CreateUser;
+using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
 
 namespace BankingSystem.Core.Features.Users
 {
@@ -16,7 +18,7 @@ namespace BankingSystem.Core.Features.Users
             _userManager = userManager;
         }
 
-        public async Task<UserEntity> RegisterUser(AccountRegisterRequest registerRequest)
+        public async Task<UserEntity> RegisterUser(RegisterUserRequest registerRequest)
         {
             var existingUser = await _userManager.FindByEmailAsync(registerRequest.Email);
             if (existingUser != null)
@@ -45,6 +47,11 @@ namespace BankingSystem.Core.Features.Users
         public async Task<UserEntity> GetUserByEmail(string email)
         {
             return await _userManager.FindByEmailAsync(email);
+        }
+
+        public Task RegisterUser(CreateBankAccountRequest registerRequest)
+        {
+            throw new NotImplementedException();
         }
     }
 }

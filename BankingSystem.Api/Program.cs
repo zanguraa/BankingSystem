@@ -1,6 +1,4 @@
 ﻿using BankingSystem.Core.Data.Entities;
-using BankingSystem.Core.Interfaces;
-using BankingSystem.Core.Services;
 using BankingSystem.Core.Shared;
 using Classroom.TodoWithAuth.Auth.Db;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

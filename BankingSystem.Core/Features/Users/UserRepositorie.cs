@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BankingSystem.Core.Data;
-using BankingSystem.Core.Models.Requests;
+using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
+using BankingSystem.Core.Features.Users.CreateUser;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -26,7 +27,7 @@ namespace BankingSystem.Core.Features.Users
             }
 
             [HttpPost("register")]
-            public async Task<IActionResult> Register([FromBody] AccountRegisterRequest registerRequest)
+            public async Task<IActionResult> Register([FromBody] RegisterUserRequest registerRequest)
             {
                 try
                 {

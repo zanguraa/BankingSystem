@@ -9,14 +9,14 @@
 
   <ItemGroup>
     <None Remove="scripts\Script001 - CreateDatabase.sql" />
-    <None Remove="scripts\Script003 - AlterUserRoleTable.sql" />
+    <None Remove="scripts\Script002 - CreateBankAccountsTable.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="scripts\Script001 - CreateDatabase.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="scripts\Script003 - AlterUserRoleTable.sql">
+    <EmbeddedResource Include="scripts\Script002 - CreateBankAccountsTable.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

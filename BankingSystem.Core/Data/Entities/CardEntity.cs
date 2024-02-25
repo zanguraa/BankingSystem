@@ -21,8 +21,7 @@ namespace BankingSystem.Core.Data.Entities
 		public int UserId { get; set; }
 		public int AccountId { get; set; }
 
-		public UserEntity User { get; set; }
-		public BankAccount Account { get; set; }
+		
 
 	}
 }

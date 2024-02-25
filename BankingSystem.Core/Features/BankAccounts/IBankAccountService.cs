@@ -9,7 +9,7 @@ namespace BankingSystem.Core.Features.BankAccounts
 {
     public interface IBankAccountService
     {
-        Task<Guid> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest);
+        Task<int> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest);
         Task<List<BankAccount>> GetBankAccounts();
     }
 }

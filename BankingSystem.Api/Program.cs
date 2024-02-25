@@ -1,4 +1,5 @@
-﻿using BankingSystem.Core.Data.Entities;
+﻿using BankingSystem.Core.Data;
+using BankingSystem.Core.Data.Entities;
 using BankingSystem.Core.Features.BankAccounts;
 using BankingSystem.Core.Shared;
 using Classroom.TodoWithAuth.Auth.Db;
@@ -48,8 +49,10 @@ namespace BankingSystem.Api
             var connectionString = builder.Configuration.GetConnectionString("Zangura")!;
 
 
-            builder.Services.AddScoped<IBankAccountRepository>(_ => new BankAccountRepository(connectionString));
+            builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
             builder.Services.AddScoped<IBankAccountService, BankAccountService>();
+            builder.Services.AddScoped<IDataManager, DataManager>();
+
 
 
             // საჭირო სერვისების IoC-ში რეგისტრაცია

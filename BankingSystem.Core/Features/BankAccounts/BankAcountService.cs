@@ -13,10 +13,9 @@ public class BankAccountService : IBankAccountService
         _bankAccountRepository = bankAccountRepository ?? throw new ArgumentNullException(nameof(bankAccountRepository));
     }
 
-    public async Task<Guid> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
+    public async Task<int> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
     {
-        // Generate a unique identifier for the bank account
-        Guid bankAccountId = Guid.NewGuid();
+        
 
         // Construct the bank account object using the request data
         BankAccount bankAccount = new BankAccount
@@ -29,10 +28,10 @@ public class BankAccountService : IBankAccountService
         };
 
         // Save the bank account using the repository
-        await _bankAccountRepository.CreateBankAccountAsync(bankAccount);
+       var result =  await _bankAccountRepository.CreateBankAccountAsync(bankAccount);
 
         // Return the ID of the newly created bank account
-        return bankAccountId;
+        return result;
     }
 
     public async Task<List<BankAccount>> GetBankAccounts()

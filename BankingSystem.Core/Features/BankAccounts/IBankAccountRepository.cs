@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 public interface IBankAccountRepository
 {
-    Task CreateBankAccountAsync(BankAccount bankAccount);
+    Task<BankAccount?> GetAccountByIbanAsync(string iban);
+    Task<int> CreateBankAccountAsync(BankAccount bankAccount);
     Task<List<BankAccount>> GetBankAccounts();
     }

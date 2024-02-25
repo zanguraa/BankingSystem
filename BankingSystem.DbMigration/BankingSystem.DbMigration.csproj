@@ -8,15 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="scripts\.sql" />
     <None Remove="scripts\Script001 - CreateDatabase.sql" />
-    <None Remove="scripts\Script002 - CreateBankAccounstTable.sql" />
+    <None Remove="scripts\Script003 - CreateCardTable.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="scripts\Script001 - CreateDatabase.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="scripts\Script002 - CreateBankAccounstTable.sql">
+    <EmbeddedResource Include="scripts\Script003 - CreateCardTable.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

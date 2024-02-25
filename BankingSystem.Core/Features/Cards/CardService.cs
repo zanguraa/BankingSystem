@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Features.Cards
 {
-	internal class CardServices
+	internal class CardService
 	{
 	}
 }

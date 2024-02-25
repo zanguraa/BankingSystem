@@ -16,7 +16,7 @@ namespace BankingSystem.Core.Features.BankAccounts.CreateBankAccount
 
     public class CreateBankAccountRequest
     {
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
         public string Iban { get; set; }
         public decimal InitialAmount { get; set; }
         public CurrencyType Currency { get; set; }

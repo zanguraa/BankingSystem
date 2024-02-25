@@ -23,12 +23,11 @@ public class BankAccountRepository : IBankAccountRepository
             await connection.OpenAsync();
 
             var commandText = @"
-                INSERT INTO BankAccounts (Id, UserId, Iban, InitialAmount, Currency)
-                VALUES (@Id, @UserId, @Iban, @InitialAmount, @Currency);";
+                INSERT INTO BankAccounts ( UserId, Iban, InitialAmount, Currency)
+                VALUES (@UserId, @Iban, @InitialAmount, @Currency);";
 
             await connection.ExecuteAsync(commandText, new
             {
-                bankAccount.Id,
                 bankAccount.UserId,
                 bankAccount.Iban,
                 bankAccount.InitialAmount,

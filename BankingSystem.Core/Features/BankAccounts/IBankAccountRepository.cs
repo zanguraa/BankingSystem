@@ -6,4 +6,4 @@ public interface IBankAccountRepository
 {
     Task CreateBankAccountAsync(BankAccount bankAccount);
     Task<List<BankAccount>> GetBankAccounts();
-}
+    }

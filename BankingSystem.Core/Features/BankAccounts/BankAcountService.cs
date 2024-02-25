@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BankingSystem.Core.Features.BankAccounts;
 using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
 
-public class BankAccountService
+public class BankAccountService : IBankAccountService
 {
     private readonly IBankAccountRepository _bankAccountRepository;
 
@@ -20,7 +21,7 @@ public class BankAccountService
         // Construct the bank account object using the request data
         BankAccount bankAccount = new BankAccount
         {
-            Id = bankAccountId,
+            Id = createBankAccountRequest.UserId,
             UserId = createBankAccountRequest.UserId,
             Iban = createBankAccountRequest.Iban,
             InitialAmount = createBankAccountRequest.InitialAmount,

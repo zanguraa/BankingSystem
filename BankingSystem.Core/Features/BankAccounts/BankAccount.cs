@@ -9,8 +9,8 @@ public class BankAccount
         GEL = 981   // Georgian Lari
     }
 
-    public Guid Id { get; set; }
-    public Guid UserId { get; set; }
+    public int Id { get; set; }
+    public int UserId { get; set; }
     public string Iban { get; set; }
     public decimal InitialAmount { get; set; }
     public CurrencyType Currency { get; set; }

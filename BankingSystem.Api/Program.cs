@@ -1,6 +1,7 @@
 ﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Data.Entities;
 using BankingSystem.Core.Features.BankAccounts;
+using BankingSystem.Core.Features.Cards;
 using BankingSystem.Core.Shared;
 using Classroom.TodoWithAuth.Auth.Db;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -52,12 +53,14 @@ namespace BankingSystem.Api
             builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
             builder.Services.AddScoped<IBankAccountService, BankAccountService>();
             builder.Services.AddScoped<IDataManager, DataManager>();
+			builder.Services.AddScoped<ICardRepository, CardRepository>(); 
+			builder.Services.AddScoped<ICardService, CardService>();
 
 
 
-            // საჭირო სერვისების IoC-ში რეგისტრაცია
+			// საჭირო სერვისების IoC-ში რეგისტრაცია
 
-            builder.Services
+			builder.Services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => { options.TokenValidationParameters = tokenValidationParameters; });
 

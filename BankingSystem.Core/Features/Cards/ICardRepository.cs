@@ -5,9 +5,12 @@ namespace BankingSystem.Core.Features.Cards
 {
 	public interface ICardRepository
 	{
-		Task<CardEntity> CreateCardAsync(CardEntity card);
-		Task<CardEntity> GetCardByIdAsync(int cardId);
-		Task<CardEntity> GetCardByNumberAsync(string cardNumber);
-		Task<List<CardEntity>> GetCardsByUserIdAsync(int userId);
+		Task<Card?> GetCardByCardNumber(string CardNumber);
+		Task<Card> GetCardByIdAsync(int cardId);
+		Task<Card> CreateCardAsync(Card card);
+		Task<List<Card>> GetCards();
+		Task<List<Card>> GetCardsByUserIdAsync(int userId);
+		Task<UserResponse?> GetUserFullNameById(int userId);
+
 	}
 }

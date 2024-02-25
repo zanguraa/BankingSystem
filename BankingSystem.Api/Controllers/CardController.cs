@@ -18,36 +18,18 @@ namespace BankingSystem.Api.Controllers
 			_cardService = cardService ?? throw new ArgumentNullException(nameof(cardService));
 		}
 
-		[HttpPost]
+		[HttpPost("Create/cards")]
 		public async Task<IActionResult> CreateCard([FromBody] CreateCardRequest createCardRequest)
 		{
-			try
+			var result = await _cardService.CreateCardAsync(createCardRequest);
+			if (result == null) 
 			{
-				var createdCard = await _cardService.CreateCardAsync(createCardRequest);
-				return CreatedAtAction(nameof(GetCardByNumber), new { cardNumber = createdCard.CardNumber }, createdCard);
+				return BadRequest("Card didnt create");
 			}
-			catch (Exception ex)
-			{
-				return BadRequest(ex.Message);
-			}
+			return Ok(result); 
 		}
 
-		[HttpGet("{cardNumber}")]
-		public async Task<IActionResult> GetCardByNumber(string cardNumber)
-		{
-			try
-			{
-				var card = await _cardService.GetCardByNumberAsync(cardNumber);
-				if (card == null)
-					return NotFound();
-
-				return Ok(card);
-			}
-			catch (Exception ex)
-			{
-				return BadRequest(ex.Message);
-			}
-		}
+		
 
 		[HttpGet("user/{userId}")]
 		public async Task<IActionResult> GetCardsByUserId(int userId)

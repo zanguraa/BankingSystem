@@ -5,8 +5,7 @@ namespace BankingSystem.Core.Features.Cards
 {
 	public interface ICardService
 	{
-		Task<CardEntity> CreateCardAsync(CreateCardRequest createCardRequest);
-		Task<CardEntity> GetCardByNumberAsync(string cardNumber);
-		Task<List<CardEntity>> GetCardsByUserIdAsync(int userId);
+		Task<Card> CreateCardAsync(CreateCardRequest createCardRequest);
+		Task<List<Card>> GetCardsByUserIdAsync(int userId);
 	}
 }

@@ -8,52 +8,50 @@ using BankingSystem.Core.Features.Cards.CreateCard;
 
 namespace BankingSystem.Core.Features.Cards
 {
-	public class CardService :  ICardService
+	public class CardService : ICardService
 	{
 		private readonly ICardRepository _cardRepository;
 
 		public CardService(ICardRepository cardRepository)
 		{
-			_cardRepository = cardRepository;
+			_cardRepository = cardRepository ?? throw new ArgumentNullException(nameof(cardRepository));
 		}
 
-		public async Task<CardEntity> CreateCardAsync(CreateCardRequest createCardRequest)
+		public async Task<Card> CreateCardAsync(CreateCardRequest createCardRequest)
 		{
-			
-
-			var card = new CardEntity
+			var UserInfo = await _cardRepository.GetUserFullNameById(createCardRequest.UserId);
+			if (UserInfo == null) 
+			{
+				throw new Exception("user not found");
+			}
+			var card = new Card
 			{
 				CardNumber = GenerateCardNumber(),
-				FullName = createCardRequest.FullName,
+				FullName = UserInfo.FirstName + " " + UserInfo.LastName,
 				ExpirationDate = createCardRequest.ExpirationDate,
 				Cvv = createCardRequest.Cvv,
 				Pin = createCardRequest.Pin,
 				MaxTried = createCardRequest.MaxTried,
 				IsLocked = false,
 				CreatedAt = DateTime.UtcNow,
-				UserId = createCardRequest.UserId,  
-				AccountId = createCardRequest.AccountId 
+				UserId = createCardRequest.UserId,
+				AccountId = createCardRequest.AccountId
 			};
+			var result = await _cardRepository.CreateCardAsync(card);
+			return result;
+		}	
 
-			return await _cardRepository.CreateCardAsync(card);
-		}
-
-		public async Task<CardEntity> GetCardByNumberAsync(string cardNumber)
-		{
-			return await _cardRepository.GetCardByNumberAsync(cardNumber);
-		}
-
-		public async Task<List<CardEntity>> GetCardsByUserIdAsync(int userId)
+		public async Task<List<Card>> GetCardsByUserIdAsync(int userId)
 		{
 			return await _cardRepository.GetCardsByUserIdAsync(userId);
 		}
-
 
 		private string GenerateCardNumber()
 		{
 			
 			return "1234567890123456";
 		}
+
 	}
 
 }

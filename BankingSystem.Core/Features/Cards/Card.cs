@@ -3,10 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BankingSystem.Core.Data.Entities;
 
 namespace BankingSystem.Core.Features.Cards
 {
-	internal class Card
+	public class Card
 	{
+		public int Id { get; set; }
+		public string CardNumber { get; set; }
+		public string FullName { get; set; }
+		public DateTime ExpirationDate { get; set; }
+		public string Cvv { get; set; }
+		public string Pin { get; set; }
+		public int MaxTried { get; set; }
+		public bool IsLocked { get; set; }
+		public DateTime CreatedAt { get; set; }
+
+		
+		public int UserId { get; set; }
+		public int AccountId { get; set; }
+
+
 	}
 }

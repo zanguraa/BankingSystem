@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BankingSystem.Core.Data.Entities;
 
 namespace BankingSystem.Core.Features.Cards
 {
-	internal class ICardRepository
+	public interface ICardRepository
 	{
+		Task<CardEntity> CreateCardAsync(CardEntity card);
+		Task<CardEntity> GetCardByIdAsync(int cardId);
+		Task<CardEntity> GetCardByNumberAsync(string cardNumber);
 	}
 }

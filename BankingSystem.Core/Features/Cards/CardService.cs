@@ -19,7 +19,7 @@ namespace BankingSystem.Core.Features.Cards
 
 		public async Task<CardEntity> CreateCardAsync(CreateCardRequest createCardRequest)
 		{
-			// You might want to add additional validation logic here before creating a card
+			
 
 			var card = new CardEntity
 			{
@@ -31,8 +31,8 @@ namespace BankingSystem.Core.Features.Cards
 				MaxTried = createCardRequest.MaxTried,
 				IsLocked = false,
 				CreatedAt = DateTime.UtcNow,
-				UserId = createCardRequest.UserId,  // Assuming you have the UserId in the request
-				AccountId = createCardRequest.AccountId  // Assuming you have the AccountId in the request
+				UserId = createCardRequest.UserId,  
+				AccountId = createCardRequest.AccountId 
 			};
 
 			return await _cardRepository.CreateCardAsync(card);
@@ -51,8 +51,7 @@ namespace BankingSystem.Core.Features.Cards
 
 		private string GenerateCardNumber()
 		{
-			// Implement your logic to generate a unique card number
-			// This is just a placeholder; you should replace it with your own implementation
+			
 			return "1234567890123456";
 		}
 	}

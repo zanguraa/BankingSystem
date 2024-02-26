@@ -24,7 +24,7 @@ public class BankAccountService : IBankAccountService
             UserId = createBankAccountRequest.UserId,
             Iban = createBankAccountRequest.Iban,
             InitialAmount = createBankAccountRequest.InitialAmount,
-            Currency = (BankAccount.CurrencyType)createBankAccountRequest.Currency
+            Currency = createBankAccountRequest.Currency
         };
 
         // Save the bank account using the repository

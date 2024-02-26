@@ -20,6 +20,11 @@ public class BankAccountController : ControllerBase
     {
         try
         {
+            string countryCode = "GE";
+            string bankInitials = "CD";
+            string randomBban = IbanGenerator.GenerateRandomNumeric(16);
+            var iban = IbanGenerator.GenerateIban(countryCode, bankInitials, randomBban);
+
             // Convert Currency string to CurrencyType enum
             if (!Enum.TryParse(createBankAccountRequest.Currency.ToString(), out BankAccount.CurrencyType currency))
             {
@@ -30,7 +35,7 @@ public class BankAccountController : ControllerBase
             var bankAccount = new BankAccount
             {
                 UserId = createBankAccountRequest.UserId,
-                Iban = createBankAccountRequest.Iban,
+                Iban = iban,
                 InitialAmount = createBankAccountRequest.InitialAmount,
                 Currency = currency
             };
@@ -59,5 +64,7 @@ public class BankAccountController : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
+
+    
 }
 

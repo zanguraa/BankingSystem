@@ -1,5 +1,6 @@
 ﻿using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,19 +21,36 @@ public class BankAccountController : ControllerBase
     {
         try
         {
-            // Convert Currency string to CurrencyType enum
-            if (!Enum.TryParse(createBankAccountRequest.Currency.ToString(), out BankAccount.CurrencyType currency))
+            if (createBankAccountRequest == null || createBankAccountRequest.UserId == default(int))
             {
-                throw new ArgumentException($"Invalid currency: {createBankAccountRequest.Currency}");
+                return BadRequest("UserId is required.");
             }
+
+            if (createBankAccountRequest.InitialAmount <= 0)
+            {
+                return BadRequest("InitialAmount must be greater than zero.");
+            }
+
+            // Validate currency
+            if (!Enum.IsDefined(typeof(BankingSystem.Core.Features.BankAccounts.CreateBankAccount.CurrencyType), createBankAccountRequest.Currency))
+            {
+                return BadRequest($"Invalid currency: {createBankAccountRequest.Currency}");
+            }
+
+            // Additional business logic validations can be added here
+
+            string countryCode = "GE";
+            string bankInitials = "CD";
+            string randomBban = IbanGenerator.GenerateRandomNumeric(16);
+            var iban = IbanGenerator.GenerateIban(countryCode, bankInitials, randomBban);
 
             // Create BankAccount object
             var bankAccount = new BankAccount
             {
                 UserId = createBankAccountRequest.UserId,
-                Iban = createBankAccountRequest.Iban,
+                Iban = iban,
                 InitialAmount = createBankAccountRequest.InitialAmount,
-                Currency = currency
+                Currency = createBankAccountRequest.Currency
             };
 
             // Call repository to create bank account
@@ -45,6 +63,8 @@ public class BankAccountController : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
+
+
 
     [HttpGet]
     public async Task<IActionResult> GetBankAccounts()
@@ -59,5 +79,7 @@ public class BankAccountController : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
+
+    
 }
 

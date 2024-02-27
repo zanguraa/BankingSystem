@@ -1,5 +1,6 @@
 ﻿using BankingSystem.Core.Features.BankAccounts;
 using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
+using BankingSystem.Core.Features.BankAccounts.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -17,7 +18,7 @@ public class BankAccountController : ControllerBase
         _bankAccountService = bankAccountService;
     }
 
-    [HttpPost]
+    [HttpPost("create")]
     public async Task<IActionResult> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
     {
         try
@@ -43,20 +44,24 @@ public class BankAccountController : ControllerBase
         }
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetBankAccounts()
+    [HttpPost("addfunds")]
+    public async Task<IActionResult> AddFunds(AddFundsRequest addFundsRequest)
     {
         try
         {
-            var bankAccounts = await _bankAccountService.GetBankAccounts();
-            return Ok(bankAccounts);
+            if (addFundsRequest == null || addFundsRequest.Amount == default || addFundsRequest.Iban == null)
+            {
+                return BadRequest("Iban and Amount are required.");
+            }
+
+            await _bankAccountService.AddFunds(addFundsRequest);
+
+            return Ok();
         }
         catch (Exception ex)
         {
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
-
-
 }
 

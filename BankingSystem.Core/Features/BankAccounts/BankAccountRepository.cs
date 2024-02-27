@@ -53,16 +53,6 @@ public class BankAccountRepository : IBankAccountRepository
         return newBankAccount.Id;
     }
 
-    public async Task<List<BankAccount>> GetBankAccounts()
-    {
-        using (var connection = new SqlConnection("string"))
-        {
-            await connection.OpenAsync();
-            string query = "SELECT Id, UserId, Iban, InitialAmount, Currency FROM BankAccounts";
-            return (await connection.QueryAsync<BankAccount>(query)).ToList();
-        }
-    }
-
     public async Task<bool> ExistsWithCurrencyAsync(int userId, string currency)
     {
         string query = "SELECT COUNT(*) FROM BankAccounts WHERE UserId = @UserId AND Currency = @Currency";
@@ -70,12 +60,11 @@ public class BankAccountRepository : IBankAccountRepository
         return count.FirstOrDefault() > 0;
     }
 
- 
-    // Update the bank account amount
-       public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
+
+    public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
     {
-        string query = "UPDATE BankAccounts SET InitialAmount = @Amount WHERE Iban = @iban and @Currency = @currency";
-        var result = await _dataManager.Execute(query, new { Iban = addFundsRequest.Iban, Currency = addFundsRequest.Currency, Amount = addFundsRequest.Amount });
+        string query = "UPDATE BankAccounts SET InitialAmount = @Amount WHERE Iban = @iban AND Currency = @currency";
+        var result = await _dataManager.Execute(query, new { addFundsRequest.Iban, currency = addFundsRequest.Currency.ToString(), addFundsRequest.Amount });
         return result > 0;
     }
 

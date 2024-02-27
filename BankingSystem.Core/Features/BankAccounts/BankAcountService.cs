@@ -48,9 +48,4 @@ public class BankAccountService : IBankAccountService
         return await _bankAccountRepository.AddFunds(addFundsRequest);
 
     }
-
-    public async Task<List<BankAccount>> GetBankAccounts()
-    {
-        return await _bankAccountRepository.GetBankAccounts();
-    }
 }

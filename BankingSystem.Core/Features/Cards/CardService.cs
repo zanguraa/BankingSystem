@@ -11,6 +11,7 @@ namespace BankingSystem.Core.Features.Cards
 	public class CardService : ICardService
 	{
 		private readonly ICardRepository _cardRepository;
+		private static readonly Random random = new Random();
 
 		public CardService(ICardRepository cardRepository)
 		{
@@ -26,7 +27,7 @@ namespace BankingSystem.Core.Features.Cards
 			}
 			var card = new Card
 			{
-				CardNumber = GenerateCardNumber(),
+				CardNumber = GenerateCardNumber(16),
 				FullName = UserInfo.FirstName + " " + UserInfo.LastName,
 				ExpirationDate = createCardRequest.ExpirationDate,
 				Cvv = createCardRequest.Cvv,
@@ -46,10 +47,16 @@ namespace BankingSystem.Core.Features.Cards
 			return await _cardRepository.GetCardsByUserIdAsync(userId);
 		}
 
-		private string GenerateCardNumber()
+		private string GenerateCardNumber(int length)
 		{
+			char[] digits = new char[length];
+			for (int i = 0; i < length; i++)
+			{
+				digits[i] = (char)(random.Next(10) + '0');
+			}
+
+			return new string(digits);
 			
-			return "1234567890123456";
 		}
 
 	}

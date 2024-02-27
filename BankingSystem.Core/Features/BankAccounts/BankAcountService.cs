@@ -30,7 +30,6 @@ public class BankAccountService : IBankAccountService
             {
                 UserId = createBankAccountRequest.UserId,
                 Iban = iban,
-                InitialAmount = createBankAccountRequest.InitialAmount,
                 Currency = currency
             };
 

@@ -1,4 +1,4 @@
-﻿using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
+﻿using BankingSystem.Core.Features.BankAccounts;
 
 public class BankAccount
 {

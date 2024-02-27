@@ -26,19 +26,11 @@ public class BankAccountController : ControllerBase
             {
                 return BadRequest("UserId is required.");
             }
-
-            if (createBankAccountRequest.InitialAmount <= 0)
-            {
-                return BadRequest("InitialAmount must be greater than zero.");
-            }
-
-            
             // Create BankAccount object
             var bankAccount = new BankAccount
             {
                 UserId = createBankAccountRequest.UserId,
                 Iban = createBankAccountRequest.Iban,
-                InitialAmount = createBankAccountRequest.InitialAmount,
             };
 
             await _bankAccountService.CreateBankAccount(createBankAccountRequest);
@@ -51,6 +43,7 @@ public class BankAccountController : ControllerBase
         }
     }
 
+    [HttpPost]
 
 
 

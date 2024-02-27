@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
+using BankingSystem.Core.Features.BankAccounts.Requests;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -67,6 +68,15 @@ public class BankAccountRepository : IBankAccountRepository
         string query = "SELECT COUNT(*) FROM BankAccounts WHERE UserId = @UserId AND Currency = @Currency";
         var count = await _dataManager.Query<int, dynamic>(query, new { UserId = userId, Currency = currency });
         return count.FirstOrDefault() > 0;
+    }
+
+ 
+    // Update the bank account amount
+       public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
+    {
+        string query = "UPDATE BankAccounts SET InitialAmount = @Amount WHERE Iban = @iban and @Currency = @currency";
+        var result = await _dataManager.Execute(query, new { Iban = addFundsRequest.Iban, Currency = addFundsRequest.Currency, Amount = addFundsRequest.Amount });
+        return result > 0;
     }
 
 }

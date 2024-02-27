@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BankingSystem.Core.Features.BankAccounts;
 using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
+using BankingSystem.Core.Features.BankAccounts.Requests;
 
 public class BankAccountService : IBankAccountService
 {
@@ -40,6 +41,12 @@ public class BankAccountService : IBankAccountService
         }
         // Return the ID of the newly created bank account
         return accountIds;
+    }
+
+    public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
+    {
+        return await _bankAccountRepository.AddFunds(addFundsRequest);
+
     }
 
     public async Task<List<BankAccount>> GetBankAccounts()

@@ -43,10 +43,6 @@ public class BankAccountController : ControllerBase
         }
     }
 
-    [HttpPost]
-
-
-
     [HttpGet]
     public async Task<IActionResult> GetBankAccounts()
     {
@@ -61,6 +57,6 @@ public class BankAccountController : ControllerBase
         }
     }
 
-    
+
 }
 

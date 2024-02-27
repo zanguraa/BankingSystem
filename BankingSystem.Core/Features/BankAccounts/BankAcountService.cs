@@ -20,7 +20,6 @@ public class BankAccountService : IBankAccountService
         // Construct the bank account object using the request data
         BankAccount bankAccount = new BankAccount
         {
-            Id = createBankAccountRequest.UserId,
             UserId = createBankAccountRequest.UserId,
             Iban = createBankAccountRequest.Iban,
             InitialAmount = createBankAccountRequest.InitialAmount,

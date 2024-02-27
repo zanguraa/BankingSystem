@@ -37,6 +37,12 @@ public class BankAccountController : ControllerBase
                 return BadRequest($"Invalid currency: {createBankAccountRequest.Currency}");
             }
 
+            // Check if a bank account with the same currency already exists for the user
+            if (await _bankAccountRepository.ExistsWithCurrencyAsync(createBankAccountRequest.UserId, createBankAccountRequest.Currency.ToString()))
+            {
+                return BadRequest($"A bank account with currency {createBankAccountRequest.Currency} already exists for this user.");
+            }
+
             // Additional business logic validations can be added here
 
             string countryCode = "GE";
@@ -63,6 +69,7 @@ public class BankAccountController : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
+
 
 
 

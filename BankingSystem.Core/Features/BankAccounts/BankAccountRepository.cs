@@ -7,6 +7,7 @@ using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 public class BankAccountRepository : IBankAccountRepository
 {
@@ -49,23 +50,6 @@ public class BankAccountRepository : IBankAccountRepository
             throw new Exception("Failed to create bank account");
         }
         return newBankAccount.Id;
-
-        //using (var connection = new SqlConnection())
-        //{
-        //    await connection.OpenAsync();
-
-        //    var commandText = @"
-        //        INSERT INTO BankAccounts ( UserId, Iban, InitialAmount, Currency)
-        //        VALUES (@UserId, @Iban, @InitialAmount, @Currency);";
-
-        //    await connection.ExecuteAsync(commandText, new
-        //    {
-        //        bankAccount.UserId,
-        //        bankAccount.Iban,
-        //        bankAccount.InitialAmount,
-        //        Currency = bankAccount.Currency.ToString()
-        //    });
-        //}
     }
 
     public async Task<List<BankAccount>> GetBankAccounts()
@@ -77,4 +61,12 @@ public class BankAccountRepository : IBankAccountRepository
             return (await connection.QueryAsync<BankAccount>(query)).ToList();
         }
     }
+
+    public async Task<bool> ExistsWithCurrencyAsync(int userId, string currency)
+    {
+        string query = "SELECT COUNT(*) FROM BankAccounts WHERE UserId = @UserId AND Currency = @Currency";
+        var count = await _dataManager.Query<int, dynamic>(query, new { UserId = userId, Currency = currency });
+        return count.FirstOrDefault() > 0;
+    }
+
 }

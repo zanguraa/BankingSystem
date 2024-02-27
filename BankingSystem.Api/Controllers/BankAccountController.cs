@@ -1,4 +1,5 @@
-﻿using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
+﻿using BankingSystem.Core.Features.BankAccounts;
+using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -9,11 +10,11 @@ using System.Threading.Tasks;
 [Route("api/[controller]")]
 public class BankAccountController : ControllerBase
 {
-    private readonly IBankAccountRepository _bankAccountRepository;
+    private readonly IBankAccountService _bankAccountService;
 
-    public BankAccountController(IBankAccountRepository bankAccountRepository)
+    public BankAccountController(IBankAccountService bankAccountService)
     {
-        _bankAccountRepository = bankAccountRepository;
+        _bankAccountService = bankAccountService;
     }
 
     [HttpPost]
@@ -31,36 +32,16 @@ public class BankAccountController : ControllerBase
                 return BadRequest("InitialAmount must be greater than zero.");
             }
 
-            // Validate currency
-            if (!Enum.IsDefined(typeof(BankingSystem.Core.Features.BankAccounts.CreateBankAccount.CurrencyType), createBankAccountRequest.Currency))
-            {
-                return BadRequest($"Invalid currency: {createBankAccountRequest.Currency}");
-            }
-
-            // Check if a bank account with the same currency already exists for the user
-            if (await _bankAccountRepository.ExistsWithCurrencyAsync(createBankAccountRequest.UserId, createBankAccountRequest.Currency.ToString()))
-            {
-                return BadRequest($"A bank account with currency {createBankAccountRequest.Currency} already exists for this user.");
-            }
-
-            // Additional business logic validations can be added here
-
-            string countryCode = "GE";
-            string bankInitials = "CD";
-            string randomBban = IbanGenerator.GenerateRandomNumeric(16);
-            var iban = IbanGenerator.GenerateIban(countryCode, bankInitials, randomBban);
-
+            
             // Create BankAccount object
             var bankAccount = new BankAccount
             {
                 UserId = createBankAccountRequest.UserId,
-                Iban = iban,
+                Iban = createBankAccountRequest.Iban,
                 InitialAmount = createBankAccountRequest.InitialAmount,
-                Currency = createBankAccountRequest.Currency
             };
 
-            // Call repository to create bank account
-            await _bankAccountRepository.CreateBankAccountAsync(bankAccount);
+            await _bankAccountService.CreateBankAccount(createBankAccountRequest);
 
             return Ok(); // No need to return any data
         }
@@ -78,7 +59,7 @@ public class BankAccountController : ControllerBase
     {
         try
         {
-            var bankAccounts = await _bankAccountRepository.GetBankAccounts();
+            var bankAccounts = await _bankAccountService.GetBankAccounts();
             return Ok(bankAccounts);
         }
         catch (Exception ex)

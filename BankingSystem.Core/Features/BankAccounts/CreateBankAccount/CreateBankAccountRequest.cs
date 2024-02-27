@@ -19,6 +19,5 @@ namespace BankingSystem.Core.Features.BankAccounts.CreateBankAccount
         public int UserId { get; set; }
         public string Iban { get; set; }
         public decimal InitialAmount { get; set; }
-        public CurrencyType Currency { get; set; }
     }
 }

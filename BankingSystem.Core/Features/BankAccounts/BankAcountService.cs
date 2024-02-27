@@ -13,24 +13,34 @@ public class BankAccountService : IBankAccountService
         _bankAccountRepository = bankAccountRepository ?? throw new ArgumentNullException(nameof(bankAccountRepository));
     }
 
-    public async Task<int> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
+    public async Task<List<int>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
     {
-        
 
-        // Construct the bank account object using the request data
-        BankAccount bankAccount = new BankAccount
+        string countryCode = "GE";
+        string bankInitials = "CD";
+        string randomBban = IbanGenerator.GenerateRandomNumeric(16);
+        var iban = IbanGenerator.GenerateIban(countryCode, bankInitials, randomBban);
+
+
+        var currencies = Enum.GetValues<CurrencyType>();
+        var accountIds = new List<int>();
+        foreach (var currency in currencies)
         {
-            UserId = createBankAccountRequest.UserId,
-            Iban = createBankAccountRequest.Iban,
-            InitialAmount = createBankAccountRequest.InitialAmount,
-            Currency = createBankAccountRequest.Currency
-        };
+            BankAccount bankAccount = new BankAccount
+            {
+                UserId = createBankAccountRequest.UserId,
+                Iban = iban,
+                InitialAmount = createBankAccountRequest.InitialAmount,
+                Currency = currency
+            };
 
-        // Save the bank account using the repository
-       var result =  await _bankAccountRepository.CreateBankAccountAsync(bankAccount);
+            // Save the bank account using the repository
+            var accountId = await _bankAccountRepository.CreateBankAccountAsync(bankAccount);
+            accountIds.Add(accountId);
 
+        }
         // Return the ID of the newly created bank account
-        return result;
+        return accountIds;
     }
 
     public async Task<List<BankAccount>> GetBankAccounts()

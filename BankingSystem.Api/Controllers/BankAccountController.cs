@@ -49,11 +49,6 @@ public class BankAccountController : ControllerBase
     {
         try
         {
-            if (addFundsRequest == null || addFundsRequest.Amount == default || addFundsRequest.Iban == null)
-            {
-                return BadRequest("Iban and Amount are required.");
-            }
-
             await _bankAccountService.AddFunds(addFundsRequest);
 
             return Ok();

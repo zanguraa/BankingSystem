@@ -45,6 +45,10 @@ public class BankAccountService : IBankAccountService
 
     public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
     {
+        if (addFundsRequest == null || addFundsRequest.Amount == default || addFundsRequest.BankAccountId <= 0)
+        {
+           throw new Exception("Invalid request");
+        }
         return await _bankAccountRepository.AddFunds(addFundsRequest);
 
     }

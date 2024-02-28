@@ -12,6 +12,7 @@
     <None Remove="scripts\Script001 - CreateDatabase.sql" />
     <None Remove="scripts\Script003 - CreateCardTable.sql" />
     <None Remove="scripts\Script004 - CreateTransactionsTable.sql" />
+    <None Remove="scripts\Scritp005 - CreateTableDeposits.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +23,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="scripts\Script004 - CreateTransactionsTable.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scripts\Scritp005 - CreateTableDeposits.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

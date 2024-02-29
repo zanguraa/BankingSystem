@@ -63,8 +63,24 @@ public class BankAccountRepository : IBankAccountRepository
 
     public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
     {
-        string query = "UPDATE BankAccounts SET InitialAmount = @Amount WHERE Iban = @iban AND Currency = @currency";
-        var result = await _dataManager.Execute(query, new { addFundsRequest.Iban, currency = addFundsRequest.Currency.ToString(), addFundsRequest.Amount });
+        string query = "UPDATE BankAccounts SET InitialAmount = @Amount WHERE Id = @BankAccountId";
+        var result = await _dataManager.Execute(query, new { addFundsRequest.BankAccountId, addFundsRequest.Amount });
+        if (result > 0)
+        {
+            var logDepositRequest = new LogDepositRequest
+            {
+                BankAccountId = addFundsRequest.BankAccountId,
+                Amount = addFundsRequest.Amount
+            };
+            return await LogDeposit(logDepositRequest);
+        }
+        return false;
+    }
+
+    private async Task<bool> LogDeposit(LogDepositRequest logDepositRequest)
+    {
+        string query = "INSERT INTO Deposits (BankAccountId, Amount, Date) VALUES (@BankAccountId, @Amount, @Date)";
+        var result = await _dataManager.Execute(query, logDepositRequest);
         return result > 0;
     }
 

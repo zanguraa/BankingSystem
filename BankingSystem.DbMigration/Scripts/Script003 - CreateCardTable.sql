@@ -1,5 +1,6 @@
 USE [BankingSystem_db]
 GO
+
 CREATE TABLE BankingSystem_db.dbo.Cards(
     Id INT PRIMARY KEY IDENTITY(1,1),
     CardNumber CHAR(16) UNIQUE,

@@ -13,15 +13,19 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
         private readonly ITransactionRepository _transactionRepository;
         private readonly ICurrencyConversionService _currencyConversionService;
         private readonly IBankAccountService _bankAccountService;
+        private readonly IBankAccountRepository _bankAccountRepository;
 
         public TransactionService(
             IBankAccountService bankAccountService, 
             ITransactionRepository transactionRepository, 
-            ICurrencyConversionService currencyConversionService)
+            ICurrencyConversionService currencyConversionService,
+            IBankAccountRepository bankAccountRepository)
+            
         {
             _transactionRepository = transactionRepository;
             _currencyConversionService = currencyConversionService;
             _bankAccountService = bankAccountService;
+            _bankAccountRepository = bankAccountRepository;
         }
 
         public Task<int> AddTransactionAsync(Transaction transaction)
@@ -33,17 +37,23 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
         {
             // ექაუნთების ვალიდაცია
             // გვჭირდება აიდიების მიხედვით შემოწმება, თუ იუზერ აიდიები ერთნაირია, მაშინ ინტერნალ ტრანზაქციაა, თუ არა და მაშინ ექსტერნალ.
-          
-            var fromAccount = _accountRepository.GetAccountByIdAsync(request.FromAccountId);
-            var toAccount = _accountRepository.GetAccountByIdAsync(request.ToAccountId);
 
-            var transactionType = TransactionType.Internal;
-            var fee = 0.0M;
-            if(fromAccount.UserId != toAccount.UserId)
+            // Get accounts asynchronously
+            var fromAccount = await _bankAccountRepository.GetAccountByIdAsync(request.FromAccountId);
+            var toAccount = await _bankAccountRepository.GetAccountByIdAsync(request.ToAccountId);
+
+            // Check if accounts exist
+            if (!fromAccount || !toAccount)
             {
-                transactionType = TransactionType.External;
-                fee = 0.01M;
+                throw new ArgumentException("One or both account IDs are invalid.");
             }
+
+            // Determine transaction type based on user IDs
+            var transactionType = fromAccount == toAccount ? TransactionType.Internal : TransactionType.External;
+
+            // Calculate fee based on transaction type
+            var fee = transactionType == TransactionType.External ? 0.01M : 0.0M;
+
 
 
 
@@ -75,7 +85,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
                 FromAmount = request.Amount,
                 ToAmount = convertedAmount - transactionFee,
                 Fee = transactionFee,
-                TransactionType = transactionType,
+                TransactionType = (int)transactionType,
                 TransactionDate = DateTime.UtcNow
             };
 

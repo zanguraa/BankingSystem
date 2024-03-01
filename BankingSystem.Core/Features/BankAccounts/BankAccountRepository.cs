@@ -89,4 +89,12 @@ public class BankAccountRepository : IBankAccountRepository
 		return account.Count() > 0;
 	}
 
+    public async Task<bool> GetAccountByIdAsync(int fromAccountId)
+    {
+        var account = await _dataManager.Query<int, dynamic>(
+                       "SELECT * FROM BankAccounts WHERE Id = @AccountId", new { AccountId = fromAccountId });
+        return account.Count() > 0;
+    }
+
+
 }

@@ -45,9 +45,4 @@ namespace BankingSystem.Core.Features.Transactions
 			return 1;
 		}
 	}
-
-	public interface ICurrencyConversionService
-	{
-		Task<decimal> ConvertAsync(decimal amount, string currency, string v);
-	}
 }

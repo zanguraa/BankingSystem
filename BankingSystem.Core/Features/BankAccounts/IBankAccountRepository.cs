@@ -9,4 +9,6 @@ public interface IBankAccountRepository
     Task<int> CreateBankAccountAsync(BankAccount bankAccount);
     Task<bool> AddFunds(AddFundsRequest addFundsRequest);
     Task<bool> ExistsWithCurrencyAsync(int userId, string currency);
-    }
+	Task<bool> ContainsAccountAsync(int accountId);
+
+}

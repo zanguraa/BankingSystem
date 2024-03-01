@@ -11,11 +11,13 @@ namespace BankingSystem.Core.Features.Transactions.TransactionService
 	{
 		private readonly ITransactionRepository _transactionRepository;
 		private readonly ICurrencyConversionService _currencyConversionService;
+		private readonly IBankAccountService _bankAccountService;
 
-		public TransactionService(ITransactionRepository transactionRepository, ICurrencyConversionService currencyConversionService)
+		public TransactionService(IBankAccountService bankAccountService , ITransactionRepository transactionRepository, ICurrencyConversionService currencyConversionService)
 		{
 			_transactionRepository = transactionRepository;
 			_currencyConversionService = currencyConversionService;
+			_bankAccountService = bankAccountService;
 		}
 
 		public Task<int> AddTransactionAsync(Transaction transaction)

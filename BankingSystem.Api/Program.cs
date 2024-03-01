@@ -2,6 +2,8 @@
 using BankingSystem.Core.Data.Entities;
 using BankingSystem.Core.Features.BankAccounts;
 using BankingSystem.Core.Features.Cards;
+using BankingSystem.Core.Features.Transactions;
+using BankingSystem.Core.Features.Transactions.TransactionService;
 using BankingSystem.Core.Shared;
 using Classroom.TodoWithAuth.Auth.Db;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -55,6 +57,8 @@ namespace BankingSystem.Api
             builder.Services.AddScoped<IDataManager, DataManager>();
 			builder.Services.AddScoped<ICardRepository, CardRepository>(); 
 			builder.Services.AddScoped<ICardService, CardService>();
+			builder.Services.AddScoped<ITransactionService, TransactionService>();
+            builder.Services.AddScoped<ICurrencyConversionService, CurrencyConversionService>();
 
 
 
@@ -100,6 +104,7 @@ namespace BankingSystem.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddTransient<JwtTokenGenerator>();
+            
 
             var app = builder.Build();
 

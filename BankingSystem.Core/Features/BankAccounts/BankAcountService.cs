@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.BankAccounts;
 using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
 using BankingSystem.Core.Features.BankAccounts.Requests;
@@ -10,6 +11,7 @@ public class BankAccountService : IBankAccountService
 {
     private readonly IBankAccountRepository _bankAccountRepository;
     private readonly AppDbContext _context;
+
     public BankAccountService(AppDbContext context)
     {
         _context = context;
@@ -57,5 +59,9 @@ public class BankAccountService : IBankAccountService
         return await _bankAccountRepository.AddFunds(addFundsRequest);
 
     }
+	public async Task<bool> ValidateAccountAsync(int accountId)
+	{
+		return await _bankAccountRepository.ContainsAccountAsync(accountId);
+	}
 }
 	

@@ -25,7 +25,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionService
 
 		public async Task<TransactionResponse> CreateTransactionAsync(CreateTransactionRequest request)
 		{
-			// Validate accounts first
+			// ექაუნთების ვალიდაცია
 			bool fromAccountIsValid = await _bankAccountService.ValidateAccountAsync(request.FromAccountId);
 			bool toAccountIsValid = await _bankAccountService.ValidateAccountAsync(request.ToAccountId);
 
@@ -34,17 +34,17 @@ namespace BankingSystem.Core.Features.Transactions.TransactionService
 				throw new ArgumentException("One or both account IDs are invalid.");
 			}
 
-			// Calculate fees
+			// fee კალკულაცია
 			decimal transactionFee = CalculateTransactionFee(request.Amount);
 
-			// Convert currency if necessary
+			// currency კონვერტაცია
 			decimal convertedAmount = request.Amount;
 			if (request.Currency != "GEL") // Check if currency is not GEL
 			{
 				convertedAmount = await _currencyConversionService.ConvertAsync(request.Amount, request.Currency, "GEL");
 			}
 
-			// Create the transaction
+			// ტრანზაქციის შექმნა
 			var transaction = new Transaction
 			{
 				FromAccountId = request.FromAccountId,
@@ -59,7 +59,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionService
 
 			await _transactionRepository.CreateTransactionAsync(transaction);
 
-			// Convert to response DTO
+			
 			return new TransactionResponse
 			{
 				TransactionId = transaction.TransactionId,

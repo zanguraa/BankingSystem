@@ -1,5 +1,4 @@
 ﻿using BankingSystem.Core.Features.BankAccounts;
-using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
 using BankingSystem.Core.Features.BankAccounts.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;

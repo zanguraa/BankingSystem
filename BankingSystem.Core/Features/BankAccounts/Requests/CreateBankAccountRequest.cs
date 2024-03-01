@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankingSystem.Core.Features.BankAccounts.CreateBankAccount
+namespace BankingSystem.Core.Features.BankAccounts.Requests
 {
 
     public class CreateBankAccountRequest

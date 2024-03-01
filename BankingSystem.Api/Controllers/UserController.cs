@@ -1,5 +1,4 @@
-﻿using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
-using BankingSystem.Core.Features.Users;
+﻿using BankingSystem.Core.Features.Users;
 using BankingSystem.Core.Features.Users.CreateUser;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

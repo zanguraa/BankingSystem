@@ -1,5 +1,4 @@
-﻿using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
-using BankingSystem.Core.Features.BankAccounts.Requests;
+﻿using BankingSystem.Core.Features.BankAccounts.Requests;
 using System;
 using System.Threading.Tasks;
 
@@ -9,6 +8,6 @@ public interface IBankAccountRepository
     Task<int> CreateBankAccountAsync(BankAccount bankAccount);
     Task<bool> AddFunds(AddFundsRequest addFundsRequest);
     Task<bool> ExistsWithCurrencyAsync(int userId, string currency);
-	Task<bool> ContainsAccountAsync(int accountId);
+    Task<bool> ContainsAccountAsync(int accountId);
 
 }

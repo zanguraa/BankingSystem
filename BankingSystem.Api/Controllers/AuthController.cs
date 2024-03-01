@@ -1,6 +1,5 @@
 ﻿using BankingSystem.Core.Data.Entities;
 using BankingSystem.Core.Features.Users.Authorization;
-using BankingSystem.Core.Features.Users.Login;
 using BankingSystem.Core.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

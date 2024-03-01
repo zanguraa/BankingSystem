@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using BankingSystem.Core.Data;
-using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
 using BankingSystem.Core.Features.BankAccounts.Requests;
 using Dapper;
 using Microsoft.Data.SqlClient;

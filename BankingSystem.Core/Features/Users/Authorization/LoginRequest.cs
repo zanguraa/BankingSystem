@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankingSystem.Core.Features.Users.Login
+namespace BankingSystem.Core.Features.Users.Authorization
 {
     public class LoginRequest
     {

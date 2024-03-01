@@ -1,5 +1,4 @@
-﻿using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
-using BankingSystem.Core.Features.BankAccounts.Requests;
+﻿using BankingSystem.Core.Features.BankAccounts.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;

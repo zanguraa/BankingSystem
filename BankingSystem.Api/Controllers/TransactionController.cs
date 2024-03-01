@@ -1,5 +1,5 @@
-﻿using BankingSystem.Core.Features.Transactions.CreateTransaction;
-using BankingSystem.Core.Features.Transactions.TransactionService;
+﻿using BankingSystem.Core.Features.Transactions.CreateTransactions;
+using BankingSystem.Core.Features.Transactions.TransactionServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

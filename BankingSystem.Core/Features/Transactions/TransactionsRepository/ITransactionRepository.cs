@@ -1,4 +1,4 @@
-﻿namespace BankingSystem.Core.Features.Transactions.TransactionRepository
+﻿namespace BankingSystem.Core.Features.Transactions.TransactionsRepository
 {
     public interface ITransactionRepository
     {

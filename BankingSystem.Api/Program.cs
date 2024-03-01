@@ -2,10 +2,10 @@
 using BankingSystem.Core.Data.Entities;
 using BankingSystem.Core.Features.BankAccounts;
 using BankingSystem.Core.Features.Cards;
-using BankingSystem.Core.Features.Transactions;
-using BankingSystem.Core.Features.Transactions.TransactionService;
+using BankingSystem.Core.Features.Transactions.Currency;
+using BankingSystem.Core.Features.Transactions.TransactionServices;
+using BankingSystem.Core.Features.Transactions.TransactionsRepository;
 using BankingSystem.Core.Shared;
-using Classroom.TodoWithAuth.Auth.Db;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -57,7 +57,8 @@ namespace BankingSystem.Api
             builder.Services.AddScoped<IDataManager, DataManager>();
 			builder.Services.AddScoped<ICardRepository, CardRepository>(); 
 			builder.Services.AddScoped<ICardService, CardService>();
-			builder.Services.AddScoped<ITransactionService, TransactionService>();
+			builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+            builder.Services.AddScoped<ITransactionService, TransactionService>();
             builder.Services.AddScoped<ICurrencyConversionService, CurrencyConversionService>();
 
 

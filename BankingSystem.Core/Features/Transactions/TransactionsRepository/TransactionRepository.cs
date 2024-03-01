@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.Transactions;
-using BankingSystem.Core.Features.Transactions.TransactionRepository;
+using BankingSystem.Core.Features.Transactions.TransactionsRepository;
 using Dapper;
 
 public class TransactionRepository : ITransactionRepository
@@ -18,12 +18,12 @@ public class TransactionRepository : ITransactionRepository
 	public async Task<int> AddTransactionAsync(Transaction transaction)
 	{
 		string query = @"
-            INSERT INTO Transactions (FromAccountId, ToAccountId, FromAccountCurrency, ToAccountCurrency, FromAmount, ToAmount, Fee, TransactionDate)
-            VALUES (@FromAccountId, @ToAccountId, @FromAccountCurrency, @ToAccountCurrency, @FromAmount, @ToAmount, @Fee, @TransactionDate);
+            INSERT INTO Transactions (FromAccountId, ToAccountId, FromAccountCurrency, ToAccountCurrency, FromAmount, ToAmount, TransactionDate, TransactionType)
+            VALUES (@FromAccountId, @ToAccountId, @FromAccountCurrency, @ToAccountCurrency, @FromAmount, @ToAmount, @TransactionDate, @TransactionType);
             SELECT CAST(SCOPE_IDENTITY() as int);";
 
-		var transactionId = await _dataManager.Query<int, Transaction>(query, transaction);
-		return transactionId.FirstOrDefault();
+		var transactionId = await _dataManager.Execute(query, transaction);
+		return transactionId;
 	}
 
 	public async Task<Transaction> CreateTransactionAsync(Transaction transaction)

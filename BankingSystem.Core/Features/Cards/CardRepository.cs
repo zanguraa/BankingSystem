@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using BankingSystem.Core.Data;
 using BankingSystem.Core.Data.Entities;
 using BankingSystem.Core.Features.Cards.CreateCard;
-using Classroom.TodoWithAuth.Auth.Db;
 
 namespace BankingSystem.Core.Features.Cards
 {

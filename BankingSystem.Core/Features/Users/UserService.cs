@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BankingSystem.Core.Data.Entities;
 using BankingSystem.Core.Features.Users.CreateUser;
-using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
+using BankingSystem.Core.Features.BankAccounts.Requests;
 
 namespace BankingSystem.Core.Features.Users
 {

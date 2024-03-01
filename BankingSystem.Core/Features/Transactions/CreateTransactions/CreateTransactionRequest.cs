@@ -14,7 +14,6 @@ namespace BankingSystem.Core.Features.Transactions.CreateTransactions
         public string Currency { get; set; }
         public string ToCurrency { get; set; }
         public DateTime TransactionDate { get; set; }
-
         public CreateTransactionRequest()
         {
             TransactionDate = DateTime.UtcNow;

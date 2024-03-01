@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BankingSystem.Core.Features.Transactions.TransactionService
+﻿namespace BankingSystem.Core.Features.Transactions.TransactionService
 {
-	internal class ITransactionService
+	public interface ITransactionService
 	{
+		Task<int> AddTransactionAsync(Transaction transaction);
+		Task<List<Transaction>> GetTransactionsByAccountIdAsync(int accountId);
 	}
 }

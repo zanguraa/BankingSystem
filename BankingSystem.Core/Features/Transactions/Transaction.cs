@@ -20,11 +20,6 @@ namespace BankingSystem.Core.Features.Transactions
 		public decimal Fee { get; set; }
 		public DateTime TransactionDate { get; set; }
 
-		[ForeignKey("FromAccountId")]
-		public virtual Account FromAccount { get; set; }
-
-		[ForeignKey("ToAccountId")]
-		public virtual Account ToAccount { get; set; }
 	}
 
 }

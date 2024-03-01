@@ -32,6 +32,21 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
         public async Task<TransactionResponse> CreateTransactionAsync(CreateTransactionRequest request)
         {
             // ექაუნთების ვალიდაცია
+            // გვჭირდება აიდიების მიხედვით შემოწმება, თუ იუზერ აიდიები ერთნაირია, მაშინ ინტერნალ ტრანზაქციაა, თუ არა და მაშინ ექსტერნალ.
+          
+            var fromAccount = _accountRepository.GetAccountByIdAsync(request.FromAccountId);
+            var toAccount = _accountRepository.GetAccountByIdAsync(request.ToAccountId);
+
+            var transactionType = TransactionType.Internal;
+            var fee = 0.0M;
+            if(fromAccount.UserId != toAccount.UserId)
+            {
+                transactionType = TransactionType.External;
+                fee = 0.01M;
+            }
+
+
+
             bool fromAccountIsValid = await _bankAccountService.ValidateAccountAsync(request.FromAccountId);
             bool toAccountIsValid = await _bankAccountService.ValidateAccountAsync(request.ToAccountId);
 
@@ -60,6 +75,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
                 FromAmount = request.Amount,
                 ToAmount = convertedAmount - transactionFee,
                 Fee = transactionFee,
+                TransactionType = transactionType,
                 TransactionDate = DateTime.UtcNow
             };
 

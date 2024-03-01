@@ -16,8 +16,8 @@ namespace BankingSystem.Api.Controllers
 			_transactionService = transactionService;
 		}
 
-		[HttpPost("create")]
-		public async Task<IActionResult> CreateTransaction(CreateTransactionRequest request)
+		[HttpPost("create-internal")]
+		public async Task<IActionResult> CreateInternalTransaction(CreateTransactionRequest request)
 		{
 			try
 			{
@@ -33,5 +33,5 @@ namespace BankingSystem.Api.Controllers
 				return StatusCode(500, "Internal server error");
 			}
 		}
-	}
+    }
 }

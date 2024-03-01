@@ -12,5 +12,6 @@ namespace BankingSystem.Core.Features.BankAccounts
     {
         Task<List<int>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest);
         Task<bool> AddFunds(AddFundsRequest addFundsRequest);
-    }
+
+	}
 }

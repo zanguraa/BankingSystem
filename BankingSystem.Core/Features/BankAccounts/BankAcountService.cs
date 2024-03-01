@@ -4,11 +4,16 @@ using System.Threading.Tasks;
 using BankingSystem.Core.Features.BankAccounts;
 using BankingSystem.Core.Features.BankAccounts.CreateBankAccount;
 using BankingSystem.Core.Features.BankAccounts.Requests;
+using Classroom.TodoWithAuth.Auth.Db;
 
 public class BankAccountService : IBankAccountService
 {
     private readonly IBankAccountRepository _bankAccountRepository;
-
+    private readonly AppDbContext _context;
+    public BankAccountService(AppDbContext context)
+    {
+        _context = context;
+    }
     public BankAccountService(IBankAccountRepository bankAccountRepository)
     {
         _bankAccountRepository = bankAccountRepository ?? throw new ArgumentNullException(nameof(bankAccountRepository));
@@ -47,9 +52,10 @@ public class BankAccountService : IBankAccountService
     {
         if (addFundsRequest == null || addFundsRequest.Amount == default || addFundsRequest.BankAccountId <= 0)
         {
-           throw new Exception("Invalid request");
+            throw new Exception("Invalid request");
         }
         return await _bankAccountRepository.AddFunds(addFundsRequest);
 
     }
 }
+	

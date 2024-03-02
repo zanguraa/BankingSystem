@@ -5,6 +5,7 @@ using BankingSystem.Core.Features.Cards;
 using BankingSystem.Core.Features.Transactions.Currency;
 using BankingSystem.Core.Features.Transactions.TransactionServices;
 using BankingSystem.Core.Features.Transactions.TransactionsRepository;
+using BankingSystem.Core.Features.Users;
 using BankingSystem.Core.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -52,7 +53,7 @@ namespace BankingSystem.Api
             var connectionString = builder.Configuration.GetConnectionString("Zangura")!;
 
 
-
+            builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
             builder.Services.AddScoped<IBankAccountService, BankAccountService>();
             builder.Services.AddScoped<IDataManager, DataManager>();

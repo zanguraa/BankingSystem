@@ -44,7 +44,7 @@ namespace BankingSystem.Core.Features.Users
             return newUser;
         }
 
-        public async Task<UserEntity> GetUserByEmail(string email)
+        public async Task<UserEntity?> GetUserByEmail(string email)
         {
             return await _userManager.FindByEmailAsync(email);
         }

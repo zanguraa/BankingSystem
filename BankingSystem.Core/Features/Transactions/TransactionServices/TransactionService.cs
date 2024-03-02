@@ -89,9 +89,18 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
 
         private decimal CalculateTransactionFee(decimal amount, TransactionType transactionType)
         {
-            // Calculate fee based on transaction type
-            var fee = transactionType == TransactionType.External ? 0.01M + 0.5m: 0;
-            return amount * fee; // 2% transaction fee
+            decimal feePercentage = 0; // Initial fee percentage
+            decimal fixedFee = 0; // Initial fixed fee
+
+            if (transactionType == TransactionType.External)
+            {
+                feePercentage = 0.01M; // 1% fee for external transactions
+                fixedFee = 0.5M; // Additional fixed fee for external transactions
+            }
+
+            // Calculate the total fee by applying the percentage to the amount and adding the fixed fee
+            decimal totalFee = (amount * feePercentage) + fixedFee;
+            return totalFee;
         }
     }
 }

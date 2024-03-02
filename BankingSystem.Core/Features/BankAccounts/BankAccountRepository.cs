@@ -82,18 +82,18 @@ public class BankAccountRepository : IBankAccountRepository
         var result = await _dataManager.Execute(query, logDepositRequest);
         return result > 0;
     }
-	public async Task<bool> ContainsAccountAsync(int accountId)
-	{
-		var account = await _dataManager.Query<int, dynamic> (
-			"SELECT * FROM BankAccounts WHERE Id = @AccountId", new { AccountId = accountId });
-		return account.Count() > 0;
-	}
-
-    public async Task<bool> GetAccountByIdAsync(int fromAccountId)
+    public async Task<bool> ContainsAccountAsync(int accountId)
     {
         var account = await _dataManager.Query<int, dynamic>(
-                       "SELECT * FROM BankAccounts WHERE Id = @AccountId", new { AccountId = fromAccountId });
+            "SELECT * FROM BankAccounts WHERE Id = @AccountId", new { AccountId = accountId });
         return account.Count() > 0;
+    }
+
+    public async Task<BankAccount?> GetAccountByIdAsync(int AccountId)
+    {
+        var account = await _dataManager.Query<BankAccount, dynamic>(
+                       "SELECT * FROM BankAccounts WHERE Id = @AccountId", new { AccountId });
+        return account.FirstOrDefault();
     }
 
 

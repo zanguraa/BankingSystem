@@ -13,10 +13,6 @@ namespace BankingSystem.Core.Features.Transactions.CreateTransactions
         public decimal Amount { get; set; }
         public string Currency { get; set; }
         public string ToCurrency { get; set; }
-        public DateTime TransactionDate { get; set; }
-        public CreateTransactionRequest()
-        {
-            TransactionDate = DateTime.UtcNow;
-        }
+        public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
     }
 }

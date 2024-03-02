@@ -16,11 +16,11 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
         private readonly IBankAccountRepository _bankAccountRepository;
 
         public TransactionService(
-            IBankAccountService bankAccountService, 
-            ITransactionRepository transactionRepository, 
+            IBankAccountService bankAccountService,
+            ITransactionRepository transactionRepository,
             ICurrencyConversionService currencyConversionService,
             IBankAccountRepository bankAccountRepository)
-            
+
         {
             _transactionRepository = transactionRepository;
             _currencyConversionService = currencyConversionService;
@@ -28,10 +28,6 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
             _bankAccountRepository = bankAccountRepository;
         }
 
-        public Task<int> AddTransactionAsync(Transaction transaction)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<TransactionResponse> CreateTransactionAsync(CreateTransactionRequest request)
         {
@@ -43,37 +39,24 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
             var toAccount = await _bankAccountRepository.GetAccountByIdAsync(request.ToAccountId);
 
             // Check if accounts exist
-            if (!fromAccount || !toAccount)
+            if (fromAccount == null || toAccount == null)
             {
                 throw new ArgumentException("One or both account IDs are invalid.");
             }
 
+            var fromAccountUser = fromAccount.UserId;
+            var toAccountUser = toAccount.UserId;
             // Determine transaction type based on user IDs
-            var transactionType = fromAccount == toAccount ? TransactionType.Internal : TransactionType.External;
-
-            // Calculate fee based on transaction type
-            var fee = transactionType == TransactionType.External ? 0.01M : 0.0M;
+            var transactionType = fromAccountUser == toAccountUser ? TransactionType.Internal : TransactionType.External;
 
 
-
-
-            bool fromAccountIsValid = await _bankAccountService.ValidateAccountAsync(request.FromAccountId);
-            bool toAccountIsValid = await _bankAccountService.ValidateAccountAsync(request.ToAccountId);
-
-            if (!fromAccountIsValid || !toAccountIsValid)
-            {
-                throw new ArgumentException("One or both account IDs are invalid.");
-            }
 
             // fee კალკულაცია
-            decimal transactionFee = CalculateTransactionFee(request.Amount);
+            decimal transactionFee = CalculateTransactionFee(request.Amount, transactionType);
 
             // currency კონვერტაცია
-            decimal convertedAmount = request.Amount;
-            if (request.Currency != "GEL") // Check if currency is not GEL
-            {
-                convertedAmount = await _currencyConversionService.ConvertAsync(request.Amount, request.Currency, "GEL");
-            }
+
+            decimal convertedAmount = _currencyConversionService.Convert(request.Amount, request.Currency, request.ToCurrency);
 
             // ტრანზაქციის შექმნა
             var transaction = new Transaction
@@ -81,9 +64,9 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
                 FromAccountId = request.FromAccountId,
                 ToAccountId = request.ToAccountId,
                 FromAccountCurrency = request.Currency,
-                ToAccountCurrency = "GEL",
-                FromAmount = request.Amount,
-                ToAmount = convertedAmount - transactionFee,
+                ToAccountCurrency = request.ToCurrency,
+                FromAmount = request.Amount + transactionFee,
+                ToAmount = convertedAmount,
                 Fee = transactionFee,
                 TransactionType = (int)transactionType,
                 TransactionDate = DateTime.UtcNow
@@ -104,14 +87,11 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
             };
         }
 
-        public Task<List<Transaction>> GetTransactionsByAccountIdAsync(int accountId)
+        private decimal CalculateTransactionFee(decimal amount, TransactionType transactionType)
         {
-            throw new NotImplementedException();
-        }
-
-        private decimal CalculateTransactionFee(decimal amount)
-        {
-            return amount * 0.02m; // 2% transaction fee
+            // Calculate fee based on transaction type
+            var fee = transactionType == TransactionType.External ? 0.01M + 0.5m: 0;
+            return amount * fee; // 2% transaction fee
         }
     }
 }

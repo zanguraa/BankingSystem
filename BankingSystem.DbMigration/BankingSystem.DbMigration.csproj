@@ -10,6 +10,7 @@
   <ItemGroup>
     <None Remove="scripts\.sql" />
     <None Remove="scripts\Script001 - CreateDatabase.sql" />
+    <None Remove="Scripts\Script002 - CreateBankAccounstTable.sql" />
     <None Remove="scripts\Script003 - CreateCardTable.sql" />
     <None Remove="scripts\Script004 - CreateTransactionsTable.sql" />
     <None Remove="scripts\Scritp005 - CreateTableDeposits.sql" />
@@ -17,6 +18,9 @@
 
   <ItemGroup>
     <EmbeddedResource Include="scripts\Script001 - CreateDatabase.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Scripts\Script002 - CreateBankAccounstTable.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="scripts\Script003 - CreateCardTable.sql">
@@ -35,7 +39,6 @@
     <PackageReference Include="dbup-sqlserver" Version="5.0.40" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>

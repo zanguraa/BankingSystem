@@ -43,33 +43,10 @@ public class TransactionRepository : ITransactionRepository
 		return transactions;
 	}
 
-	public async Task<bool> UpdateTransactionAsync(Transaction transaction)
-	{
-		string query = @"
-            UPDATE Transactions
-            SET FromAccountId = @FromAccountId, ToAccountId = @ToAccountId, FromAccountCurrency = @FromAccountCurrency, ToAccountCurrency = @ToAccountCurrency, FromAmount = @FromAmount, ToAmount = @ToAmount, Fee = @Fee, TransactionDate = @TransactionDate
-            WHERE TransactionId = @TransactionId";
-
-		var result = await _dataManager.Execute(query, transaction);
-		return result > 0;
-	}
-
-	public async Task<bool> DeleteTransactionAsync(int transactionId)
-	{
-		string query = "DELETE FROM Transactions WHERE TransactionId = @TransactionId";
-		var result = await _dataManager.Execute(query, new { TransactionId = transactionId });
-		return result > 0;
-	}
-
 	public async Task<Transaction> GetTransactionByIdAsync(int transactionId)
 	{
 		string query = "SELECT * FROM Transactions WHERE TransactionId = @TransactionId";
 		var transaction = await _dataManager.Query<Transaction, dynamic>(query, new { TransactionId = transactionId });
 		return transaction.FirstOrDefault();
-	}
-
-	Task<List<Transaction>> ITransactionRepository.GetTransactionsByAccountIdAsync(int accountId)
-	{
-		throw new NotImplementedException();
 	}
 }

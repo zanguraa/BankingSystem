@@ -16,7 +16,7 @@ namespace BankingSystem.Api.Controllers
 			_transactionService = transactionService;
 		}
 
-		[HttpPost("create-internal")]
+		[HttpPost("create-transaction")]
 		public async Task<IActionResult> CreateInternalTransaction(CreateTransactionRequest request)
 		{
 			try

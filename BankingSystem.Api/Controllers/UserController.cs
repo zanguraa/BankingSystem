@@ -18,22 +18,7 @@ namespace BankingSystem.Api.Controllers
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
-		[HttpPost("register")]
-		public async Task<IActionResult> Register([FromBody] RegisterUserRequest registerRequest)
-		{
-			try
-			{
-				var newUser = await _userService.RegisterUser(registerRequest);
-				return Ok(newUser);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError($"Error during user registration: {ex.Message}");
-				return StatusCode(500, "Internal Server Error");
-			}
-		}
-
-		[HttpGet("{email}")]
+        [HttpGet("{email}")]
 		public async Task<IActionResult> GetUserByEmail(string email)
 		{
 			try

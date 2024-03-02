@@ -9,7 +9,7 @@ using BankingSystem.Core.Features.BankAccounts.Requests;
 
 namespace BankingSystem.Core.Features.Users
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly UserManager<UserEntity> _userManager;
 
@@ -30,7 +30,7 @@ namespace BankingSystem.Core.Features.Users
             {
                 FirstName = registerRequest.FirstName,
                 LastName = registerRequest.LastName,
-                PersonalId = registerRequest.PersonalId, // Make sure to set PersonalNumber
+                PersonalId = registerRequest.PersonalId,
                 BirthdayDate = registerRequest.BirthdayDate,
                 Email = registerRequest.Email,
             };
@@ -48,6 +48,7 @@ namespace BankingSystem.Core.Features.Users
         {
             return await _userManager.FindByEmailAsync(email);
         }
+
 
         public Task RegisterUser(CreateBankAccountRequest registerRequest)
         {

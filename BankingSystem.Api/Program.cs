@@ -52,6 +52,7 @@ namespace BankingSystem.Api
             var connectionString = builder.Configuration.GetConnectionString("Zangura")!;
 
 
+
             builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
             builder.Services.AddScoped<IBankAccountService, BankAccountService>();
             builder.Services.AddScoped<IDataManager, DataManager>();

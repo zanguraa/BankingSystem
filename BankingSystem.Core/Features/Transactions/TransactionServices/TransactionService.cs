@@ -34,29 +34,26 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
             // ექაუნთების ვალიდაცია
             // გვჭირდება აიდიების მიხედვით შემოწმება, თუ იუზერ აიდიები ერთნაირია, მაშინ ინტერნალ ტრანზაქციაა, თუ არა და მაშინ ექსტერნალ.
 
-            // Get accounts asynchronously
+            // Validate and fetch accounts
             var fromAccount = await _bankAccountRepository.GetAccountByIdAsync(request.FromAccountId);
             var toAccount = await _bankAccountRepository.GetAccountByIdAsync(request.ToAccountId);
-
-            // Check if accounts exist
             if (fromAccount == null || toAccount == null)
             {
                 throw new ArgumentException("One or both account IDs are invalid.");
             }
 
-            var fromAccountUser = fromAccount.UserId;
-            var toAccountUser = toAccount.UserId;
-            // Determine transaction type based on user IDs
-            var transactionType = fromAccountUser == toAccountUser ? TransactionType.Internal : TransactionType.External;
+            // Determine transaction type
+            var transactionType = fromAccount.UserId == toAccount.UserId ? TransactionType.Internal : TransactionType.External;
 
-
-
-            // fee კალკულაცია
+            // Calculate fee and convert amount
             decimal transactionFee = CalculateTransactionFee(request.Amount, transactionType);
-
-            // currency კონვერტაცია
-
             decimal convertedAmount = _currencyConversionService.Convert(request.Amount, request.Currency, request.ToCurrency);
+
+            // Check if the fromAccount has enough balance
+            if (fromAccount.InitialAmount < (request.Amount + transactionFee))
+            {
+                throw new InvalidOperationException("Insufficient funds to complete this transaction.");
+            }
 
             // ტრანზაქციის შექმნა
             var transaction = new Transaction
@@ -72,8 +69,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
                 TransactionDate = DateTime.UtcNow
             };
 
-            await _transactionRepository.CreateTransactionAsync(transaction);
-
+            await _transactionRepository.AddTransactionAsync(transaction);
 
             return new TransactionResponse
             {

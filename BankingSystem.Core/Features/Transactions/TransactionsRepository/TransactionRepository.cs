@@ -18,19 +18,11 @@ public class TransactionRepository : ITransactionRepository
 	public async Task<int> AddTransactionAsync(Transaction transaction)
 	{
 		string query = @"
-            INSERT INTO Transactions (FromAccountId, ToAccountId, FromAccountCurrency, ToAccountCurrency, FromAmount, ToAmount, TransactionDate, TransactionType)
-            VALUES (@FromAccountId, @ToAccountId, @FromAccountCurrency, @ToAccountCurrency, @FromAmount, @ToAmount, @TransactionDate, @TransactionType);
-            SELECT CAST(SCOPE_IDENTITY() as int);";
+            INSERT INTO Transactions (FromAccountId, ToAccountId, FromAccountCurrency, ToAccountCurrency, FromAmount, ToAmount, TransactionDate, TransactionType, Fee)
+            VALUES (@FromAccountId, @ToAccountId, @FromAccountCurrency, @ToAccountCurrency, @FromAmount, @ToAmount, @TransactionDate, @TransactionType, @Fee);";
 
-		var transactionId = await _dataManager.Execute(query, transaction);
-		return transactionId;
-	}
-
-	public async Task<Transaction> CreateTransactionAsync(Transaction transaction)
-	{
-		var transactionId = await AddTransactionAsync(transaction);
-		transaction.TransactionId = transactionId;
-		return transaction;
+		var rows = await _dataManager.Execute(query, transaction);
+		return rows;
 	}
 
 	public async Task<IEnumerable<Transaction>> GetTransactionsByAccountIdAsync(int accountId)

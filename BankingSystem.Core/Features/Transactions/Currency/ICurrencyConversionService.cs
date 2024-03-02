@@ -2,6 +2,6 @@
 {
     public interface ICurrencyConversionService
     {
-        Task<decimal> ConvertAsync(decimal amount, string currency, string v);
+        decimal Convert(decimal amount, string fromCurrency, string toCurrency);
     }
 }

@@ -39,13 +39,6 @@ public class TransactionRepository : ITransactionRepository
 		return transactions;
 	}
 
-	public async Task<Transaction> GetTransactionByIdAsync(int transactionId)
-	{
-		string query = "SELECT * FROM Transactions WHERE TransactionId = @TransactionId";
-		var transaction = await _dataManager.Query<Transaction, dynamic>(query, new { TransactionId = transactionId });
-		return transaction.FirstOrDefault();
-	}
-
     private async Task UpdateAccountBalancesAsync(Transaction transaction)
     {
         // Assume accounts have columns: AccountId, InitialAmount, Currency

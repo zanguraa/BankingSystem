@@ -5,5 +5,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
     public interface ITransactionService
 	{
         Task<TransactionResponse> CreateTransactionAsync(CreateTransactionRequest request);
-	}
+        Task<IEnumerable<Transaction>> GetTransactionsByAccountIdAsync(int accountId);
+
+    }
 }

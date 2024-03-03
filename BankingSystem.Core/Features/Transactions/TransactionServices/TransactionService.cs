@@ -83,6 +83,11 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
             };
         }
 
+        public async Task<IEnumerable<Transaction>> GetTransactionsByAccountIdAsync(int accountId)
+        {
+            return await _transactionRepository.GetTransactionsByAccountIdAsync(accountId);
+        }
+
         private decimal CalculateTransactionFee(decimal amount, TransactionType transactionType)
         {
             decimal feePercentage = 0; // Initial fee percentage

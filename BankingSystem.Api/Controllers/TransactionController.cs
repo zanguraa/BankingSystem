@@ -33,5 +33,24 @@ namespace BankingSystem.Api.Controllers
 				return StatusCode(500, ex.Message);
 			}
 		}
+
+        [HttpGet("get-transactions/{accountId}")]
+        public async Task<IActionResult> GetTransactionsByAccountId(int accountId)
+        {
+            try
+            {
+                var transactions = await _transactionService.GetTransactionsByAccountIdAsync(accountId);
+                return Ok(transactions);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception for further investigation
+                Console.WriteLine($"An error occurred while fetching transactions for account ID {accountId}: {ex}");
+
+                // Return an appropriate error response
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+
     }
 }

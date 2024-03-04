@@ -8,7 +8,6 @@ namespace BankingSystem.Core.Features.Transactions.CreateTransactions
 {
     public class TransactionResponse
     {
-        public int TransactionId { get; set; }
         public int FromAccountId { get; set; }
         public int ToAccountId { get; set; }
         public decimal Amount { get; set; }

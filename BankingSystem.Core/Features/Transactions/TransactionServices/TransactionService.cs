@@ -73,7 +73,6 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
 
             return new TransactionResponse
             {
-                TransactionId = transaction.TransactionId,
                 FromAccountId = transaction.FromAccountId,
                 ToAccountId = transaction.ToAccountId,
                 Amount = transaction.FromAmount,

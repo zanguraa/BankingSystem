@@ -62,7 +62,7 @@ namespace BankingSystem.Api
 			builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
             builder.Services.AddScoped<ITransactionService, TransactionService>();
             builder.Services.AddScoped<ICurrencyConversionService, CurrencyConversionService>();
-
+            builder.Services.AddScoped<ICurrencyConversionRepository, CurrencyConversionRepository>();
 
 
 			// საჭირო სერვისების IoC-ში რეგისტრაცია

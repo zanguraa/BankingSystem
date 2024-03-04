@@ -8,14 +8,32 @@ namespace BankingSystem.Core.Features.Transactions.Currency
 {
     public class CurrencyConversionService : ICurrencyConversionService
     {
-        private readonly I
+        private readonly ICurrencyConversionRepository _currencyConversionRepository;
+        private readonly Dictionary<string, decimal> _currencyPairs = new Dictionary<string, decimal>();
 
-        private readonly Dictionary<string, decimal> _baseRatesToGEL = new Dictionary<string, decimal>
+        public CurrencyConversionService(ICurrencyConversionRepository currencyConversionRepository)
         {
-            {"USD", 2.65m}, // 1 USD = 2.65 GEL
-            {"EUR", 2.85m}, // 1 EUR = 2.85 GEL
-            {"GEL", 1m}     // Base rate for GEL to GEL
-        };
+            _currencyConversionRepository = currencyConversionRepository;
+            LoadCurrencyPairs().Wait();
+        }
+
+        private async Task LoadCurrencyPairs()
+        {
+            var currencies = await _currencyConversionRepository.GetAllCurrencies();
+            foreach (var currency in currencies)
+            {
+                _currencyPairs.Add(currency.Code, currency.Rate);
+            }
+        }
+
+        //private readonly Dictionary<string, decimal> _baseRatesToGEL = new Dictionary<string, decimal>
+        //{
+        //    {"USD", 2.65m}, // 1 USD = 2.65 GEL
+        //    {"EUR", 2.85m}, // 1 EUR = 2.85 GEL
+        //    {"GEL", 1m}     // Base rate for GEL to GEL
+        //};
+
+
 
         public decimal Convert(decimal amount, string fromCurrency, string toCurrency)
         {
@@ -32,7 +50,7 @@ namespace BankingSystem.Core.Features.Transactions.Currency
 
         private void ValidateCurrency(string currency)
         {
-            if (!_baseRatesToGEL.ContainsKey(currency))
+            if (!_currencyPairs.ContainsKey(currency))
             {
                 throw new ArgumentException($"Unsupported currency: {currency}");
             }
@@ -41,13 +59,13 @@ namespace BankingSystem.Core.Features.Transactions.Currency
         private decimal GetRateToGEL(string currency)
         {
             // Directly return the rate to convert to GEL
-            return _baseRatesToGEL[currency];
+            return _currencyPairs[currency];
         }
 
         private decimal ConvertFromGEL(decimal amount, string toCurrency)
         {
             // If converting to GEL, rate is 1, otherwise, use the inverse of the rate from GEL
-            decimal rateFromGEL = toCurrency == "GEL" ? 1 : 1 / _baseRatesToGEL[toCurrency];
+            decimal rateFromGEL = toCurrency == "GEL" ? 1 : 1 / _currencyPairs[toCurrency];
             return amount * rateFromGEL;
         }
     }

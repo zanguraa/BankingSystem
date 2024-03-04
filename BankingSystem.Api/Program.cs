@@ -79,6 +79,7 @@ namespace BankingSystem.Api
             {
                 options.AddPolicy("MyApiUserPolicy", policy =>
                 {
+                    policy.RequireAuthenticatedUser();
                     policy.RequireClaim(ClaimTypes.Role, "user");
                 });
 

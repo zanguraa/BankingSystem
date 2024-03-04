@@ -1,7 +1,10 @@
-﻿using BankingSystem.Core.Features.Transactions.CreateTransactions;
+﻿using BankingSystem.Core.Features.BankAccounts;
+using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Transactions.TransactionServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BankingSystem.Api.Controllers
 {
@@ -17,11 +20,23 @@ namespace BankingSystem.Api.Controllers
 		}
 
 		[HttpPost("create-transaction")]
-		public async Task<IActionResult> CreateInternalTransaction(CreateTransactionRequest request)
+        [Authorize(Policy = "MyApiUserPolicy")]
+        public async Task<IActionResult> CreateInternalTransaction(CreateTransactionRequest request)
 		{
 			try
 			{
-				var transactionResponse = await _transactionService.CreateTransactionAsync(request);
+
+                // Retrieve current user's ID from the claim
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                // Check if the AccountId belongs to the current user
+                var ownsAccount = await _bankAccountService.CheckAccountOwnershipAsync(request.AccountId, userId);
+                if (!ownsAccount)
+                {
+                    return Forbid("You do not have permission to access this account.");
+                }
+
+                var transactionResponse = await _transactionService.CreateTransactionAsync(request);
 				return Ok(transactionResponse);
 			}
 			catch (ArgumentException ex)

@@ -5,6 +5,7 @@ using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.Transactions;
 using BankingSystem.Core.Features.Transactions.TransactionsRepository;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 
 public class TransactionRepository : ITransactionRepository
 {
@@ -38,6 +39,14 @@ public class TransactionRepository : ITransactionRepository
 		var transactions = await _dataManager.Query<Transaction, dynamic>(query, new { AccountId = accountId });
 		return transactions;
 	}
+
+    public async Task<bool> CheckAccountOwnershipAsync(int accountId, string userId)
+    {
+        var sql = @"SELECT COUNT(1) FROM [BankingSystem_db].[dbo].[BankAccounts] WHERE Id = @AccountId AND UserId = @UserId";
+        var parameters = new { AccountId = accountId, UserId = userId };
+        var count = await _dataManager.Query<int, dynamic>(sql, parameters);
+        return count.FirstOrDefault() > 0;
+    }
 
     private async Task UpdateAccountBalancesAsync(Transaction transaction)
     {

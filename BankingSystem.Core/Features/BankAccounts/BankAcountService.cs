@@ -4,15 +4,18 @@ using System.Threading.Tasks;
 using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.BankAccounts;
 using BankingSystem.Core.Features.BankAccounts.Requests;
+using BankingSystem.Core.Features.Transactions.TransactionsRepository;
 
 public class BankAccountService : IBankAccountService
 {
     private readonly IBankAccountRepository _bankAccountRepository;
+    private readonly ITransactionRepository _transactionRepository;
 
-   
-    public BankAccountService(IBankAccountRepository bankAccountRepository)
+
+    public BankAccountService(IBankAccountRepository bankAccountRepository, ITransactionRepository transactionRepository)
     {
         _bankAccountRepository = bankAccountRepository ?? throw new ArgumentNullException(nameof(bankAccountRepository));
+        _transactionRepository = transactionRepository;
     }
 
     public async Task<List<int>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
@@ -53,7 +56,13 @@ public class BankAccountService : IBankAccountService
         return await _bankAccountRepository.AddFunds(addFundsRequest);
 
     }
-	public async Task<bool> ValidateAccountAsync(int accountId)
+
+    public async Task<bool> CheckAccountOwnershipAsync(int accountId, string userId)
+    {
+        return await _transactionRepository.CheckAccountOwnershipAsync(accountId, userId);
+    }
+
+    public async Task<bool> ValidateAccountAsync(int accountId)
 	{
 		return await _bankAccountRepository.ContainsAccountAsync(accountId);
 	}

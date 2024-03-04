@@ -12,5 +12,6 @@ namespace BankingSystem.Core.Features.BankAccounts
         Task<List<int>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest);
         Task<bool> AddFunds(AddFundsRequest addFundsRequest);
 		Task<bool> ValidateAccountAsync(int accountId);
-	}
+        Task<bool> CheckAccountOwnershipAsync(int accountId, string userId);
+    }
 }

@@ -56,10 +56,10 @@ public class TransactionRepository : ITransactionRepository
         // Update FromAccountId balance
         string updateFromAccountQuery = @"
             UPDATE BankAccounts
-            SET InitialAmount = InitialAmount - @FromAmount - @Fee
+            SET InitialAmount = InitialAmount - @FromAmount 
             WHERE Id = @FromAccountId";
 
-        await _dataManager.Execute(updateFromAccountQuery, new { transaction.FromAccountId, transaction.FromAmount, transaction.Fee });
+        await _dataManager.Execute(updateFromAccountQuery, new { transaction.FromAccountId, transaction.FromAmount  });
 
         // Update ToAccountId balance
         string updateToAccountQuery = @"

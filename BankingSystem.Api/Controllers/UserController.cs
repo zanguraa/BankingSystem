@@ -38,7 +38,16 @@ namespace BankingSystem.Api.Controllers
                     return NotFound("User not found");
                 }
 
-                return Ok(user);
+                var userDto = new UserDto
+                {
+                    PersonalId = user.PersonalId,
+                    BirthdayDate = user.BirthdayDate,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    PhoneNumber = user.PhoneNumber
+                };
+                return Ok(userDto);
             }
             catch (Exception ex)
             {

@@ -1,0 +1,10 @@
+USE BankingSystem_db
+GO
+
+CREATE TABLE Currencies
+(
+Id INT IDENTITY(1,1) PRIMARY KEY,
+Name VARCHAR(100),
+Code VARCHAR(4),
+Rate DECIMAL(18,5)
+)

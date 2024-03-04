@@ -62,7 +62,7 @@ public class BankAccountRepository : IBankAccountRepository
 
     public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
     {
-        string query = "UPDATE BankAccounts SET InitialAmount = @Amount WHERE Id = @BankAccountId";
+        string query = "UPDATE BankAccounts SET InitialAmount = InitialAmount + @Amount WHERE Id = @BankAccountId";
         var result = await _dataManager.Execute(query, new { addFundsRequest.BankAccountId, addFundsRequest.Amount });
         if (result > 0)
         {

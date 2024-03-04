@@ -13,41 +13,41 @@ namespace BankingSystem.Api.Controllers
 	public class TransactionController : ControllerBase
 	{
 		private readonly ITransactionService _transactionService;
+        private readonly IBankAccountService _bankAccountService;
 
-		public TransactionController(ITransactionService transactionService)
+		public TransactionController(ITransactionService transactionService, IBankAccountService bankAccountService )
 		{
 			_transactionService = transactionService;
+            _bankAccountService = bankAccountService;
 		}
 
-		[HttpPost("create-transaction")]
-        [Authorize(Policy = "MyApiUserPolicy")]
-        public async Task<IActionResult> CreateInternalTransaction(CreateTransactionRequest request)
-		{
-			try
-			{
-
-                // Retrieve current user's ID from the claim
+        [HttpPost("create-transaction")]
+        [Authorize("MyApiUserPolicy", AuthenticationSchemes = "Bearer")]
+        public async Task<IActionResult> CreateInternalTransaction([FromBody] CreateTransactionRequest request)
+        {
+            try
+            {
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                // Check if the AccountId belongs to the current user
-                var ownsAccount = await _bankAccountService.CheckAccountOwnershipAsync(request.AccountId, userId);
+                var ownsAccount = await _bankAccountService.CheckAccountOwnershipAsync(request.FromAccountId, userId);
                 if (!ownsAccount)
                 {
-                    return Forbid("You do not have permission to access this account.");
+                    // Correctly signal a 403 Forbidden with a custom message
+                    return StatusCode(StatusCodes.Status403Forbidden, new { message = "You do not have permission to access this account." });
                 }
 
                 var transactionResponse = await _transactionService.CreateTransactionAsync(request);
-				return Ok(transactionResponse);
-			}
-			catch (ArgumentException ex)
-			{
-				return BadRequest(ex.Message);
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, ex.Message);
-			}
-		}
+                return Ok(transactionResponse);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
+        }
 
         [HttpGet("get-transactions/{accountId}")]
         public async Task<IActionResult> GetTransactionsByAccountId(int accountId)

@@ -29,5 +29,11 @@ namespace BankingSystem.Core.Data
 			using IDbConnection connection = new SqlConnection(_connectionString);
 			return await connection.QueryAsync<T>(sql, parameters);
 		}
-	}
+
+        public async Task<IEnumerable<T>> Query<T>(string sql)
+        {
+            using IDbConnection connection = new SqlConnection(_connectionString);
+            return await connection.QueryAsync<T>(sql);
+        }
+    }
 }

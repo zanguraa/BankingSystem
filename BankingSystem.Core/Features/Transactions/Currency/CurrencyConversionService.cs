@@ -8,6 +8,8 @@ namespace BankingSystem.Core.Features.Transactions.Currency
 {
     public class CurrencyConversionService : ICurrencyConversionService
     {
+        private readonly I
+
         private readonly Dictionary<string, decimal> _baseRatesToGEL = new Dictionary<string, decimal>
         {
             {"USD", 2.65m}, // 1 USD = 2.65 GEL

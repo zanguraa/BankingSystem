@@ -16,6 +16,7 @@
     <None Remove="scripts\Script005 - CreateTableDeposits.sql" />
     <None Remove="Scripts\Script006 - CreateTableCurrencies.sql" />
     <None Remove="Scripts\Script007 - InsertIntoCurrencies.sql" />
+    <None Remove="scripts\Script008 -  CreateAuthorizationAttemptsTable.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +36,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Scripts\Script006 - CreateTableCurrencies.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scripts\Script008 -  CreateAuthorizationAttemptsTable.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Scripts\Script007 - InsertIntoCurrencies.sql">

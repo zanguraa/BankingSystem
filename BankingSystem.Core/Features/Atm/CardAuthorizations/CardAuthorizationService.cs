@@ -1,34 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using BankingSystem.Core.Features.Atm.CardAuthorization;
+using BankingSystem.Core.Data;
 
-namespace BankingSystem.Core.Features.Atm.CardAuthorization
+public class CardAuthorizationService : ICardAuthorizationService
 {
-	public class CardAuthorizationService : ICardAuthorizationService, ICardAuthorizationService
+	private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
+
+	public CardAuthorizationService(
+		ICardAuthorizationRepository cardAuthorizationRepository)
 	{
-		private readonly IBankAccountRepository _bankAccountRepository;
+		_cardAuthorizationRepository = cardAuthorizationRepository;
+	}
 
-		public CardAuthorizationService(IBankAccountRepository bankAccountRepository)
+	public async Task<bool> AuthorizeCardAsync(string cardNumber, string pin)
+	{
+		var card = await _cardAuthorizationRepository.GetCardByNumberAsync(cardNumber);
+
+		if (card == null || !card.IsActive || IsCardExpired(card.ExpirationDate))
 		{
-			_bankAccountRepository = bankAccountRepository;
+			return false;
 		}
+		return true;
+	}
 
-		public async Task<bool> AuthorizeCardAsync(string cardNumber, string pinCode)
-		{
-			// Retrieve the bank account using the card number
-			var bankAccount = await _bankAccountRepository.GetBankAccountByCardNumberAsync(cardNumber);
-
-			// Check if the bank account exists and the card has not expired
-			if (bankAccount == null || bankAccount.ExpiryDate < DateTime.UtcNow)
-			{
-				return false; // Card not found or expired
-			}
-
-			// Verify the PIN code, ensure you are using a secure method for storing and checking PIN codes
-			// In a real-world scenario, the PIN would be hashed and you would compare the hashes here
-			return bankAccount.PinCode == pinCode;
-		}
+	private bool IsCardExpired(DateTime expirationDate)
+	{
+		return expirationDate < DateTime.UtcNow;
 	}
 }

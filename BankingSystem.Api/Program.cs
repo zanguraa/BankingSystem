@@ -64,7 +64,9 @@ namespace BankingSystem.Api
             builder.Services.AddScoped<ITransactionService, TransactionService>();
             builder.Services.AddScoped<ICurrencyConversionService, CurrencyConversionService>();
             builder.Services.AddScoped<ICurrencyConversionRepository, CurrencyConversionRepository>();
+			builder.Services.AddScoped<ICardAuthorizationRepository, CardAuthorizationRepository>();
 			builder.Services.AddScoped<ICardAuthorizationService, CardAuthorizationService>();
+
 
 
 

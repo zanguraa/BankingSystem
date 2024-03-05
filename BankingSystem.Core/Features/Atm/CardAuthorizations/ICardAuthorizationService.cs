@@ -2,6 +2,7 @@
 {
 	public interface ICardAuthorizationService
 	{
-		Task<bool> AuthorizeCardAsync(string cardNumber, string pinCode);
+		Task<bool> AuthorizeCardAsync(string cardNumber, string pin);
+
 	}
 }

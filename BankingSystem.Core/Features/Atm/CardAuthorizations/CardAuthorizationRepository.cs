@@ -15,7 +15,7 @@ public class CardAuthorizationRepository : ICardAuthorizationRepository
 	{
 		var query = "SELECT * FROM Cards WHERE CardNumber = @CardNumber";
 		var result = await _dataManager.Query<Card,dynamic>(query, new { CardNumber = cardNumber });
-		return result.FirstOrDefault();
+		return result.First();
 	}
 
 	public async Task<bool> UpdatePinAsync(string cardNumber, string newPinHash)

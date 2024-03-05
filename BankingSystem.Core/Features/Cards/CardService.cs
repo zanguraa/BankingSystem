@@ -31,7 +31,7 @@ namespace BankingSystem.Core.Features.Cards
 				FullName = UserInfo.FirstName + " " + UserInfo.LastName,
 				ExpirationDate = createCardRequest.ExpirationDate,
 				Cvv = createCardRequest.Cvv,
-				Pin = createCardRequest.Pin,
+				Pin = createCardRequest.Pin.ToString(),
 				MaxTried = createCardRequest.MaxTried,
 				IsLocked = false,
 				CreatedAt = DateTime.UtcNow,

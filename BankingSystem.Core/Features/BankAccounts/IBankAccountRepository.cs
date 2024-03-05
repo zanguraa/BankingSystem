@@ -10,4 +10,6 @@ public interface IBankAccountRepository
     Task<bool> ExistsWithCurrencyAsync(int userId, string currency);
     Task<bool> ContainsAccountAsync(int accountId);
     Task<BankAccount?> GetAccountByIdAsync(int AccountId);
+    Task<BankAccount?> GetBankAccountByCardNumberAsync(string cardNumber);
+
 }

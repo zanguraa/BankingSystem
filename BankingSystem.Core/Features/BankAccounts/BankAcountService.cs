@@ -21,10 +21,8 @@ public class BankAccountService : IBankAccountService
     public async Task<List<int>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
     {
 
-        string countryCode = "GE";
-        string bankInitials = "CD";
-        string randomBban = IbanGenerator.GenerateRandomNumeric(16);
-        var iban = IbanGenerator.GenerateIban(countryCode, bankInitials, randomBban);
+        
+        var iban = IbanGenerator.GenerateIban();
 
 
         var currencies = Enum.GetValues<CurrencyType>();

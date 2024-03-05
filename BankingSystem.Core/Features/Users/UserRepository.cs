@@ -12,6 +12,6 @@ namespace BankingSystem.Core.Features.Users
 {
     public class UserRepository : IUserRepository
     {
-        
+
     }
 }

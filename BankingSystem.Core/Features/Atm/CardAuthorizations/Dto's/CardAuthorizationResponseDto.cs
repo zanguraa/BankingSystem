@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Features.Atm.CardAuthorizations.Dto_s
 {
-	internal class CardAuthorizationResponseDto
+	public class CardAuthorizationResponseDto
 	{
+		public bool IsAuthorized { get; set; }
+		public string Message { get; set; }
 	}
 }

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Features.Atm.CardAuthorizations.Dto_s
 {
-	internal class CardAuthorizationRequestDto
+	public class CardAuthorizationRequestDto
 	{
+		public string CardNumber { get; set; }
+		public string Pin { get; set; }
+
 	}
 }

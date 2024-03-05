@@ -24,7 +24,6 @@ public class BankAccountService : IBankAccountService
         
         var iban = IbanGenerator.GenerateIban();
 
-
         var currencies = Enum.GetValues<CurrencyType>();
         var accountIds = new List<int>();
         foreach (var currency in currencies)

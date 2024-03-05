@@ -29,7 +29,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
         }
 
 
-        public async Task<TransactionResponse> CreateTransactionAsync(CreateTransactionRequest request)
+        public async Task<TransactionResponse> TransferTransactionAsync(CreateTransactionRequest request)
         {
             // ექაუნთების ვალიდაცია
             // გვჭირდება აიდიების მიხედვით შემოწმება, თუ იუზერ აიდიები ერთნაირია, მაშინ ინტერნალ ტრანზაქციაა, თუ არა და მაშინ ექსტერნალ.

@@ -21,9 +21,9 @@ namespace BankingSystem.Api.Controllers
             _bankAccountService = bankAccountService;
 		}
 
-        [HttpPost("create-transaction")]
+        [HttpPost("transfer-transaction")]
         [Authorize("MyApiUserPolicy", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> CreateInternalTransaction([FromBody] CreateTransactionRequest request)
+        public async Task<IActionResult> TransferTransaction([FromBody] CreateTransactionRequest request)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace BankingSystem.Api.Controllers
                     return StatusCode(StatusCodes.Status403Forbidden, new { message = "You do not have permission to access this account." });
                 }
 
-                var transactionResponse = await _transactionService.CreateTransactionAsync(request);
+                var transactionResponse = await _transactionService.TransferTransactionAsync(request);
                 return Ok(transactionResponse);
             }
             catch (ArgumentException ex)

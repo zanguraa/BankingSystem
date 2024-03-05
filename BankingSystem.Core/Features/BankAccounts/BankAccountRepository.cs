@@ -95,6 +95,13 @@ public class BankAccountRepository : IBankAccountRepository
                        "SELECT * FROM BankAccounts WHERE Id = @AccountId", new { AccountId });
         return account.FirstOrDefault();
     }
+	public async Task<BankAccount?> GetBankAccountByCardNumberAsync(string cardNumber)
+	{
+		var query = "SELECT * FROM BankAccounts WHERE CardNumber = @CardNumber";
+		var account = await _dataManager.Query<BankAccount, dynamic>(
+						query, new { CardNumber = cardNumber });
+		return account.FirstOrDefault();
+	}
 
 
 }

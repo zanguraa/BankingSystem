@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BankingSystem.Core.Features.Atm.CardAuthorization
+﻿namespace BankingSystem.Core.Features.Atm.CardAuthorization
 {
-	internal class ICardAuthorizationService
+	public interface ICardAuthorizationService
 	{
+		Task<bool> AuthorizeCardAsync(string cardNumber, string pinCode);
 	}
 }

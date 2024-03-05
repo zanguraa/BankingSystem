@@ -26,15 +26,6 @@ namespace BankingSystem.Core.Features.Transactions.Currency
             }
         }
 
-        //private readonly Dictionary<string, decimal> _baseRatesToGEL = new Dictionary<string, decimal>
-        //{
-        //    {"USD", 2.65m}, // 1 USD = 2.65 GEL
-        //    {"EUR", 2.85m}, // 1 EUR = 2.85 GEL
-        //    {"GEL", 1m}     // Base rate for GEL to GEL
-        //};
-
-
-
         public decimal Convert(decimal amount, string fromCurrency, string toCurrency)
         {
             // Ensure both currencies are supported

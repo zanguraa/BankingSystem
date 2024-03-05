@@ -13,7 +13,7 @@ public class CardAuthorizationService : ICardAuthorizationService
 		_cardAuthorizationRepository = cardAuthorizationRepository;
 	}
 
-	public async Task<bool> AuthorizeCardAsync(string cardNumber, string pin)
+	public async Task<bool> AuthorizeCardAsync(string cardNumber, string Pin)
 	{
 		var card = await _cardAuthorizationRepository.GetCardByNumberAsync(cardNumber);
 

@@ -25,10 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Atm\CardAuthorization\" />
-    <Folder Include="Features\Atm\ChangePin\" />
-    <Folder Include="Features\Atm\WithdrawMoney\" />
-    <Folder Include="Features\Atm\ViewBalance\" />
+    <Folder Include="Features\Atm\WithdrawMoney\Dto%27s\" />
     <Folder Include="Features\Reports\" />
   </ItemGroup>
 

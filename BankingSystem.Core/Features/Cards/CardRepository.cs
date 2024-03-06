@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,25 +30,27 @@ namespace BankingSystem.Core.Features.Cards
             return result.FirstOrDefault();
         }
 
-        public async Task<Card> CreateCardAsync(Card card)
-        {
-            string query = @"
-                INSERT INTO Cards (CardNumber, FullName, ExpirationDate, Cvv, Pin, MaxTried, isLocked, CreatedAt, UserId, AccountId)
-                VALUES (@CardNumber, @FullName, @ExpirationDate, @Cvv, @Pin, @MaxTried, @IsLocked, @CreatedAt, @UserId, @AccountId);";
+		public async Task<Card> CreateCardAsync(Card card)
+		{
+			string query = @"
+                INSERT INTO Cards (CardNumber, FullName, ExpirationDate, Cvv, Pin, MaxTried, isLocked, IsActive, CreatedAt, UserId, AccountId)
+                VALUES (@CardNumber, @FullName, @ExpirationDate, @Cvv, @Pin, @MaxTried, @IsLocked, @IsActive, @CreatedAt, @UserId, @AccountId);";
 
-            var result = await _dataManager.Execute(query, new
-            {
-                card.CardNumber,
-                card.FullName,
-                card.ExpirationDate,
-                card.Cvv,
-                card.Pin,
-                card.MaxTried,
-                card.IsLocked,
-                card.CreatedAt,
-                card.UserId,
-                card.AccountId
-            });
+			var result = await _dataManager.Execute(query, new
+			{
+				card.CardNumber,
+				card.FullName,
+				card.ExpirationDate,
+				card.Cvv,
+				card.Pin,
+				card.MaxTried,
+				card.IsLocked,
+				card.IsActive,
+				card.CreatedAt,
+				card.UserId,
+				card.AccountId
+			});
+
 
             if (result == 0)
             {

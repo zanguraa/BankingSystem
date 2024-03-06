@@ -95,6 +95,4 @@ public class BankAccountRepository : IBankAccountRepository
                        "SELECT * FROM BankAccounts WHERE Id = @AccountId", new { AccountId });
         return account.FirstOrDefault();
     }
-
-
 }

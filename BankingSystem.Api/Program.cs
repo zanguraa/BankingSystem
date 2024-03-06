@@ -1,5 +1,8 @@
 ﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Data.Entities;
+using BankingSystem.Core.Features.Atm.CardAuthorization;
+using BankingSystem.Core.Features.Atm.ChangePin;
+using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Features.BankAccounts;
 using BankingSystem.Core.Features.Cards;
 using BankingSystem.Core.Features.Transactions.Currency;
@@ -63,6 +66,14 @@ namespace BankingSystem.Api
             builder.Services.AddScoped<ITransactionService, TransactionService>();
             builder.Services.AddScoped<ICurrencyConversionService, CurrencyConversionService>();
             builder.Services.AddScoped<ICurrencyConversionRepository, CurrencyConversionRepository>();
+			builder.Services.AddScoped<ICardAuthorizationRepository, CardAuthorizationRepository>();
+			builder.Services.AddScoped<ICardAuthorizationService, CardAuthorizationService>();
+			builder.Services.AddScoped<IChangePinService, ChangePinService>();
+			builder.Services.AddScoped<IChangePinRepository, ChangePinRepository>();
+			builder.Services.AddScoped<IViewBalanceRepository, ViewBalanceRepository>();
+			builder.Services.AddScoped<IViewBalanceService, ViewBalanceService>();
+
+
 
 
 			// საჭირო სერვისების IoC-ში რეგისტრაცია

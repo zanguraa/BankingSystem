@@ -10,14 +10,13 @@
   <ItemGroup>
     <None Remove="scripts\.sql" />
     <None Remove="scripts\Script001 - CreateDatabase.sql" />
-    <None Remove="Scripts\Script002 - CreateBankAccounstTable.sql" />
-    <None Remove="scripts\Script003 - CreateCardTable.sql" />
+    <None Remove="scripts\Script003 - CreateCardssTable.sql" />
     <None Remove="scripts\Script004 - CreateTransactionsTable.sql" />
     <None Remove="scripts\Script005 - CreateTableDeposits.sql" />
     <None Remove="Scripts\Script006 - CreateTableCurrencies.sql" />
     <None Remove="Scripts\Script007 - InsertIntoCurrencies.sql" />
     <None Remove="scripts\Script008 -  CreateAuthorizationAttemptsTable.sql" />
-    <None Remove="scripts\Script009 -  CreateChangePinAttemptsTable.sql" />
+    <None Remove="scripts\Script009 -  CreateChangePinsAttemptsTable.sql" />
     <None Remove="Scripts\Script010 -  CreateViewBalanceTable.sql" />
   </ItemGroup>
 
@@ -25,10 +24,7 @@
     <EmbeddedResource Include="scripts\Script001 - CreateDatabase.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Scripts\Script002 - CreateBankAccounstTable.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="scripts\Script003 - CreateCardTable.sql">
+    <EmbeddedResource Include="scripts\Script003 - CreateCardssTable.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="scripts\Script004 - CreateTransactionsTable.sql">
@@ -43,7 +39,7 @@
     <EmbeddedResource Include="Scripts\Script010 -  CreateViewBalanceTable.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="scripts\Script009 -  CreateChangePinAttemptsTable.sql">
+    <EmbeddedResource Include="scripts\Script009 -  CreateChangePinsAttemptsTable.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="scripts\Script008 -  CreateAuthorizationAttemptsTable.sql">

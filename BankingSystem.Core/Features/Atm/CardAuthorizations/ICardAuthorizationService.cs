@@ -1,8 +1,11 @@
-﻿namespace BankingSystem.Core.Features.Atm.CardAuthorization
+﻿using Azure.Core;
+using BankingSystem.Core.Features.Atm.CardAuthorizations.Dto_s;
+
+namespace BankingSystem.Core.Features.Atm.CardAuthorization
 {
 	public interface ICardAuthorizationService
 	{
-		Task<bool> AuthorizeCardAsync(string cardNumber, string Pin);
+		Task<bool> AuthorizeCardAsync(CardAuthorizationRequestDto request);
 
 	}
 }

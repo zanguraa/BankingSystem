@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using BankingSystem.Core.Features.Atm.CardAuthorization;
 using BankingSystem.Core.Data;
+using BankingSystem.Core.Features.Atm.CardAuthorizations.Dto_s;
+using BankingSystem.Core.Features.Cards;
 
 public class CardAuthorizationService : ICardAuthorizationService
 {
@@ -13,19 +15,15 @@ public class CardAuthorizationService : ICardAuthorizationService
 		_cardAuthorizationRepository = cardAuthorizationRepository;
 	}
 
-	public async Task<bool> AuthorizeCardAsync(string cardNumber, string Pin)
+	public async Task<bool> AuthorizeCardAsync(CardAuthorizationRequestDto request)
 	{
-		var card = await _cardAuthorizationRepository.GetCardByNumberAsync(cardNumber);
-
-		if (card == null || !card.IsActive || IsCardExpired(card.ExpirationDate))
-		{
-			return false;
-		}
-		return true;
+		var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request);
+		return card != null && !IsCardExpired(card) && card.IsActive;
 	}
 
-	private bool IsCardExpired(DateTime expirationDate)
+	
+	private bool IsCardExpired(Card card )
 	{
-		return expirationDate < DateTime.UtcNow;
+		return card.ExpirationDate < DateTime.UtcNow;
 	}
 }

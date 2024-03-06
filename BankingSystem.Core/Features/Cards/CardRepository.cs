@@ -33,8 +33,8 @@ namespace BankingSystem.Core.Features.Cards
 		public async Task<Card> CreateCardAsync(Card card)
 		{
 			string query = @"
-                INSERT INTO Cards (CardNumber, FullName, ExpirationDate, Cvv, Pin, MaxTried, isLocked, CreatedAt, UserId, AccountId)
-                VALUES (@CardNumber, @FullName, @ExpirationDate, @Cvv, @Pin, @MaxTried, @IsLocked, @CreatedAt, @UserId, @AccountId);";
+                INSERT INTO Cards (CardNumber, FullName, ExpirationDate, Cvv, Pin, MaxTried, isLocked, IsActive, CreatedAt, UserId, AccountId)
+                VALUES (@CardNumber, @FullName, @ExpirationDate, @Cvv, @Pin, @MaxTried, @IsLocked, @IsActive, @CreatedAt, @UserId, @AccountId);";
 
 			var result = await _dataManager.Execute(query, new
 			{
@@ -45,6 +45,7 @@ namespace BankingSystem.Core.Features.Cards
 				card.Pin,
 				card.MaxTried,
 				card.IsLocked,
+				card.IsActive,
 				card.CreatedAt,
 				card.UserId,
 				card.AccountId

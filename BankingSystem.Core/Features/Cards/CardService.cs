@@ -33,6 +33,7 @@ namespace BankingSystem.Core.Features.Cards
 				Cvv = createCardRequest.Cvv,
 				Pin = createCardRequest.Pin.ToString(),
 				MaxTried = createCardRequest.MaxTried,
+				IsActive = true,
 				IsLocked = false,
 				CreatedAt = DateTime.UtcNow,
 				UserId = createCardRequest.UserId,

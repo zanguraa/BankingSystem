@@ -23,8 +23,8 @@ public class CardAuthorizationController : ControllerBase
 		}
 
 		try
-		{
-			var isAuthorized = await _cardAuthorizationService.AuthorizeCardAsync(request.CardNumber, request.Pin);
+		 {
+			var isAuthorized = await _cardAuthorizationService.AuthorizeCardAsync(request);
 
 			var responseDto = new CardAuthorizationResponseDto
 			{

@@ -2,16 +2,21 @@
 {
     private static Random random = new Random();
 
-    public static string GenerateIban(string countryCode, string bankInitials, string bban)
+    public static string GenerateIban()
     {
-        if (bban.Length != 16 || !bban.All(char.IsDigit))
+
+        string countryCode = "GE";
+        string bankInitials = "CD";
+        string randomBban = IbanGenerator.GenerateRandomNumeric(16);
+
+        if (randomBban.Length != 16 || !randomBban.All(char.IsDigit))
         {
             throw new ArgumentException("BBAN must be 16 digits.");
         }
 
-        string tempIban = bban + GetCountryCodeNumeric(countryCode) + GetBankInitialsNumeric(bankInitials) + "00"; // Adding "00" as placeholder for check digits
+        string tempIban = randomBban + GetCountryCodeNumeric(countryCode) + GetBankInitialsNumeric(bankInitials) + "00"; // Adding "00" as placeholder for check digits
         int checkDigits = CalculateCheckDigits(tempIban);
-        return countryCode + checkDigits.ToString("D2") + bankInitials + bban;
+        return countryCode + checkDigits.ToString("D2") + bankInitials + randomBban;
     }
 
     private static string GetCountryCodeNumeric(string countryCode)

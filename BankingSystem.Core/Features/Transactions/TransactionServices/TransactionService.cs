@@ -29,10 +29,8 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
         }
 
 
-        public async Task<TransactionResponse> CreateTransactionAsync(CreateTransactionRequest request)
+        public async Task<TransactionResponse> TransferTransactionAsync(CreateTransactionRequest request)
         {
-            // ექაუნთების ვალიდაცია
-            // გვჭირდება აიდიების მიხედვით შემოწმება, თუ იუზერ აიდიები ერთნაირია, მაშინ ინტერნალ ტრანზაქციაა, თუ არა და მაშინ ექსტერნალ.
 
             // Validate and fetch accounts
             var fromAccount = await _bankAccountRepository.GetAccountByIdAsync(request.FromAccountId);
@@ -69,7 +67,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
                 TransactionDate = DateTime.UtcNow
             };
 
-            await _transactionRepository.AddTransactionAsync(transaction);
+            await _transactionRepository.UpdateAccountBalancesAsync(transaction);
 
             return new TransactionResponse
             {

@@ -10,6 +10,5 @@ namespace BankingSystem.Core.Features.Cards
 	{
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
-
 	}
 }

@@ -21,6 +21,5 @@ namespace BankingSystem.Core.Features.Cards
 		public DateTime CreatedAt { get; set; }
 		public int UserId { get; set; }
 		public int AccountId { get; set; }
-
 	}
 }

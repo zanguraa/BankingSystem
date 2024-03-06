@@ -11,6 +11,5 @@ namespace BankingSystem.Core.Features.Cards
 		Task<List<Card>> GetCards();
 		Task<List<Card>> GetCardsByUserIdAsync(int userId);
 		Task<UserResponse?> GetUserFullNameById(int userId);
-
 	}
 }

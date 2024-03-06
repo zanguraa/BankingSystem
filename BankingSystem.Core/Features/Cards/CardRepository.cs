@@ -51,7 +51,6 @@ namespace BankingSystem.Core.Features.Cards
 				card.AccountId
 			});
 
-
             if (result == 0)
             {
                 throw new Exception("Failed to create card");
@@ -64,7 +63,6 @@ namespace BankingSystem.Core.Features.Cards
             }
             return newCard;
         }
-
         public async Task<List<Card>> GetCards()
         {
             string query = "SELECT Id, CardNumber, FullName, ExpirationDate, Cvv, Pin, MaxTried, isLocked, CreatedAt, UserId, AccountId FROM Cards";
@@ -83,6 +81,5 @@ namespace BankingSystem.Core.Features.Cards
             var result = await _dataManager.Query<UserResponse, dynamic>(query, new { userId });
             return result.FirstOrDefault();
         }
-
     }
 }

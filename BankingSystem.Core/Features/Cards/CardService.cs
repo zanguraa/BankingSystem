@@ -59,7 +59,5 @@ namespace BankingSystem.Core.Features.Cards
 			return new string(digits);
 			
 		}
-
 	}
-
 }

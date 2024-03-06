@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Features.Atm.WithdrawMoney.Dto_s
 {
-	internal class WithdrawMoneyRequestDto
+	internal class WithdrawRequestDto
 	{
 	}
 }

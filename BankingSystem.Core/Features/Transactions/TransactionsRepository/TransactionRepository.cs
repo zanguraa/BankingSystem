@@ -50,8 +50,7 @@ public class TransactionRepository : ITransactionRepository
 
     private async Task UpdateAccountBalancesAsync(Transaction transaction)
     {
-        // Assume accounts have columns: AccountId, InitialAmount, Currency
-        // Adjust the queries based on your actual schema and logic for currency conversion if necessary
+       
 
         // Update FromAccountId balance
         string updateFromAccountQuery = @"

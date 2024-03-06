@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Atm\WithdrawMoney\Dto%27s\" />
     <Folder Include="Features\Reports\" />
   </ItemGroup>
 

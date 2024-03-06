@@ -56,7 +56,7 @@ namespace BankingSystem.Core.Data
                 await transaction.CommitAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 return false;

@@ -3,6 +3,6 @@
     public class SqlCommandRequest
     {
         public string Query { get; set; }
-        public object Params { get; set; } = new { };
+        public object Params { get; set; } = new ();
     }
 }

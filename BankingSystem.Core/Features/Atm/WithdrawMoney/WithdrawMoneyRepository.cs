@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using BankingSystem.Core.Data;
 
 namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 {
-	public class WithdrawMoneyRepository : IWithdrawMoneyRepository, IWithdrawMoneyRepository
+	public class WithdrawMoneyRepository : IWithdrawMoneyRepository
 	{
 		private readonly IDataManager _dataManager;
 
 		public WithdrawMoneyRepository(IDataManager dataManager)
 		{
 			_dataManager = dataManager;
+		}
+		public Task<bool> RecordTransactionAsync(Transaction transaction)
+		{
+			throw new NotImplementedException();
 		}
 
 		public async Task<bool> WithdrawAsync(int accountId, decimal amount, string currency)
@@ -52,6 +57,11 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 			}
 
 			return success;
+		}
+
+		public Task<bool> WithdrawAsync(string accountNumber, decimal amount)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

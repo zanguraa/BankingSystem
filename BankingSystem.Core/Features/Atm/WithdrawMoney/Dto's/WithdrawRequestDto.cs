@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Features.Atm.WithdrawMoney.Dto_s
 {
-	internal class WithdrawRequestDto
+	public class WithdrawRequestDto
 	{
+		public string AccountNumber { get; set; }
+		public decimal Amount { get; set; }
+		public string Currency { get; set; }
 	}
 }

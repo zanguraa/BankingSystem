@@ -2,80 +2,56 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BankingSystem.Core.Data;
+using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Features.Transactions;
 using BankingSystem.Core.Features.Transactions.TransactionsRepository;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 
-public class TransactionRepository : ITransactionRepository
+public class WithdrawMoneyRepository : IWithdrawMoneyRepository
 {
-    private readonly IDataManager _dataManager;
+	private readonly IDataManager _dataManager;
 
-    public TransactionRepository(IDataManager dataManager)
-    {
-        _dataManager = dataManager;
-    }
+	public WithdrawMoneyRepository(IDataManager dataManager)
+	{
+		_dataManager = dataManager;
+	}
 
-
-    public async Task<IEnumerable<Transaction>> GetTransactionsByAccountIdAsync(int accountId)
-    {
-        string query = @"
-            SELECT * FROM Transactions
-            WHERE FromAccountId = @AccountId OR ToAccountId = @AccountId";
-
-        var transactions = await _dataManager.Query<Transaction, dynamic>(query, new { AccountId = accountId });
-        return transactions;
-    }
-
-    public async Task<bool> CheckAccountOwnershipAsync(int accountId, string userId)
-    {
-        var sql = @"SELECT COUNT(1) FROM [BankingSystem_db].[dbo].[BankAccounts] WHERE Id = @AccountId AND UserId = @UserId";
-        var parameters = new { AccountId = accountId, UserId = userId };
-        var count = await _dataManager.Query<int, dynamic>(sql, parameters);
-        return count.FirstOrDefault() > 0;
-    }
-
-    public async Task UpdateAccountBalancesAsync(Transaction transaction)
-    {
-
-        SqlCommandRequest decreasAmountFromAccountIdCommand = new()
-        {
-            Query = @"
+	public async Task<bool> WithdrawAsync(int accountId, decimal amount, string currency)
+	{
+		// Prepare SQL commands for the withdrawal operation
+		SqlCommandRequest decreaseAccountBalanceCommand = new()
+		{
+			Query = @"
                 UPDATE BankAccounts
-                SET InitialAmount = InitialAmount - @FromAmount 
-                WHERE Id = @FromAccountId",
-            Params = new { transaction.FromAccountId, transaction.FromAmount }
-        };
+                SET InitialAmount = InitialAmount - @Amount
+                WHERE Id = @AccountId AND Currency = @Currency",
+			Params = new { AccountId = accountId, Amount = amount, Currency = currency }
+		};
 
-        SqlCommandRequest increaseAmountToAccountIdCommand = new()
-        {
-            Query = @"
-                UPDATE BankAccounts
-                SET InitialAmount = InitialAmount + @ToAmount
-                WHERE Id = @ToAccountId",
-            Params = new { transaction.ToAccountId, transaction.ToAmount }
-        };
-
-        SqlCommandRequest insertTransactionLogCommand = new()
-        {
-            Query = @"
+		SqlCommandRequest insertWithdrawalTransactionCommand = new()
+		{
+			Query = @"
             INSERT INTO Transactions (FromAccountId, ToAccountId, FromAccountCurrency, ToAccountCurrency, FromAmount, ToAmount, TransactionDate, TransactionType, Fee)
-            VALUES (@FromAccountId, @ToAccountId, @FromAccountCurrency, @ToAccountCurrency, @FromAmount, @ToAmount, @TransactionDate, @TransactionType, @Fee);",
-            Params = transaction
-        };
+            VALUES (@FromAccountId, NULL, @Currency, NULL, @Amount, 0, GETDATE(), 'Withdrawal', 0);",
+			Params = new { FromAccountId = accountId, Currency = currency, Amount = amount }
+		};
 
-        var sqlCommandRequests = new List<SqlCommandRequest>
-        {
-            decreasAmountFromAccountIdCommand,
-            increaseAmountToAccountIdCommand,
-            insertTransactionLogCommand
-        };
+		// Execute the SQL commands within a transaction
+		var sqlCommandRequests = new List<SqlCommandRequest>
+		{
+			decreaseAccountBalanceCommand,
+			insertWithdrawalTransactionCommand
+		};
 
-        bool success = await _dataManager.ExecuteWithTransaction(sqlCommandRequests);
+		bool success = await _dataManager.ExecuteWithTransaction(sqlCommandRequests);
 
-        if (!success)
-        {
-            throw new Exception("An error occurred while processing your request.");
-        }
-    }
+		if (!success)
+		{
+			// Consider more specific exception types based on the failure reason
+			throw new Exception("Failed to complete the withdrawal operation.");
+		}
+
+		return success;
+	}
 }

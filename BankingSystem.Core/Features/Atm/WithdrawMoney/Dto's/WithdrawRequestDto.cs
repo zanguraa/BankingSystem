@@ -8,7 +8,7 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney.Dto_s
 {
 	public class WithdrawRequestDto
 	{
-		public string AccountNumber { get; set; }
+		public int AccountId { get; set; }
 		public decimal Amount { get; set; }
 		public string Currency { get; set; }
 	}

@@ -18,6 +18,7 @@
     <None Remove="scripts\Script008 -  CreateAuthorizationAttemptsTable.sql" />
     <None Remove="scripts\Script009 -  CreateChangePinsAttemptsTable.sql" />
     <None Remove="Scripts\Script010 -  CreateViewBalanceTable.sql" />
+    <None Remove="scripts\Script011 -  CreateDailyWithdrawalTable.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +35,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Scripts\Script006 - CreateTableCurrencies.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="scripts\Script011 -  CreateDailyWithdrawalTable.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Scripts\Script010 -  CreateViewBalanceTable.sql">

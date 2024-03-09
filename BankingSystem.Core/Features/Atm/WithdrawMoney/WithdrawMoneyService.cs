@@ -2,8 +2,7 @@
 using System.Threading.Tasks;
 using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.Atm.WithdrawMoney;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.Dto_s; // Adjust namespace based on your project structure
-
+using BankingSystem.Core.Features.Atm.WithdrawMoney.Dto_s; 
 public class WithdrawMoneyService : IWithdrawMoneyService
 {
 	private readonly IWithdrawMoneyRepository _withdrawMoneyRepository;

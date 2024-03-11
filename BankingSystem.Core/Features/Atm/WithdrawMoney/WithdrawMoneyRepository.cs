@@ -44,21 +44,21 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 
 			return await _dataManager.ExecuteWithTransaction(transactionCommands);
 		}
-		public async Task<DecimalSum?> GetWithdrawalsOf24hoursByCardId(WithdrawalCheckDto options)
-		{
-			var query = @"SELECT SUM(d.TotalAmount * c.Rate) AS Sum FROM DailyWithdrawals AS d
-                          INNER JOIN Currencies AS c ON d.Currency = c.Code
-                          WHERE d.BankAccountId = @BankAccountId AND WithdrawalDate >= @WithdrawalDate";
+	//	public async Task<DecimalSum?> GetWithdrawalsOf24hoursByCardId(WithdrawalCheckDto options)
+	//	{
+	//		var query = @"SELECT SUM(d.TotalAmount * c.Rate) AS Sum FROM DailyWithdrawals AS d
+ //                         INNER JOIN Currencies AS c ON d.Currency = c.Code
+ //                         WHERE d.BankAccountId = @BankAccountId AND WithdrawalDate >= @WithdrawalDate";
 
-			var result = await _dataManager.Query<DecimalSum, dynamic>(query, options);
-			return
-				result.FirstOrDefault();
-		}
+	//		var result = await _dataManager.Query<DecimalSum, dynamic>(query, options);
+	//		return
+	//			result.FirstOrDefault();
+	//	}
 
-		public Task<bool> WithdrawAsync(string accountNumber, decimal amount)
-		{
-			throw new NotImplementedException();
-		}
-	}
+	//	public Task<bool> WithdrawAsync(string accountNumber, decimal amount)
+	//	{
+	//		throw new NotImplementedException();
+	//	}
+	//}
 }
 

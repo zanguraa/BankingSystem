@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 using BankingSystem.Core.Data;
+using BankingSystem.Core.Features.Atm.WithdrawMoney.Dto_s;
 
 namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 {
@@ -16,47 +15,44 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 		{
 			_dataManager = dataManager;
 		}
+
 		public Task<bool> RecordTransactionAsync(Transaction transaction)
 		{
 			throw new NotImplementedException();
 		}
 
-		public async Task<bool> WithdrawAsync(int accountId, decimal amount, string currency)
+		public async Task<bool> WithdrawAsync(WithdrawRequestDto request)
 		{
-			// Prepare SQL commands for the withdrawal operation
-			SqlCommandRequest decreaseAccountBalanceCommand = new()
+			var transactionCommands = new List<SqlCommandRequest>
 			{
-				Query = @"
-                UPDATE BankAccounts
-                SET InitialAmount = InitialAmount - @Amount
-                WHERE Id = @AccountId AND Currency = @Currency",
-				Params = new { AccountId = accountId, Amount = amount, Currency = currency }
+				new SqlCommandRequest
+				{
+					Query = @"
+                        UPDATE BankAccounts
+                        SET InitialAmount = InitialAmount - @Amount
+                        WHERE Id = @AccountId",
+					Params = new { request.AccountId, request.Amount}
+				},
+				new SqlCommandRequest
+				{
+					Query = @"
+                        INSERT INTO DailyWithdrawals (BankAccountId, WithdrawalDate, TotalAmount, Currency)
+                        VALUES (@BankAccountId, GETDATE(), @TotalAmount, @Currency)",
+					Params = new { BankAccountId = request.AccountId, TotalAmount = request.Amount, Currency = request.Currency }
+				}
 			};
 
-			SqlCommandRequest insertWithdrawalTransactionCommand = new()
-			{
-				Query = @"
-            INSERT INTO Transactions (FromAccountId, ToAccountId, FromAccountCurrency, ToAccountCurrency, FromAmount, ToAmount, TransactionDate, TransactionType, Fee)
-            VALUES (@FromAccountId, NULL, @Currency, NULL, @Amount, 0, GETDATE(), 'Withdrawal', 0);",
-				Params = new { FromAccountId = accountId, Currency = currency, Amount = amount }
-			};
-
-			// Execute the SQL commands within a transaction
-			var sqlCommandRequests = new List<SqlCommandRequest>
+			return await _dataManager.ExecuteWithTransaction(transactionCommands);
+		}
+		public async Task<DecimalSum?> GetWithdrawalsOf24hoursByCardId(WithdrawalCheckDto options)
 		{
-			decreaseAccountBalanceCommand,
-			insertWithdrawalTransactionCommand
-		};
+			var query = @"SELECT SUM(d.TotalAmount * c.Rate) AS Sum FROM DailyWithdrawals AS d
+                          INNER JOIN Currencies AS c ON d.Currency = c.Code
+                          WHERE d.BankAccountId = @BankAccountId AND WithdrawalDate >= @WithdrawalDate";
 
-			bool success = await _dataManager.ExecuteWithTransaction(sqlCommandRequests);
-
-			if (!success)
-			{
-				// Consider more specific exception types based on the failure reason
-				throw new Exception("Failed to complete the withdrawal operation.");
-			}
-
-			return success;
+			var result = await _dataManager.Query<DecimalSum, dynamic>(query, options);
+			return
+				result.FirstOrDefault();
 		}
 
 		public Task<bool> WithdrawAsync(string accountNumber, decimal amount)
@@ -65,3 +61,4 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 		}
 	}
 }
+

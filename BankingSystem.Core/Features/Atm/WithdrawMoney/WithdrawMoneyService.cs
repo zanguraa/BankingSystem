@@ -1,49 +1,84 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Azure.Core;
 using BankingSystem.Core.Data;
-using BankingSystem.Core.Features.Atm.WithdrawMoney;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.Dto_s; 
-public class WithdrawMoneyService : IWithdrawMoneyService
+using BankingSystem.Core.Features.Atm.WithdrawMoney.Dto_s;
+using BankingSystem.Core.Features.BankAccounts;
+
+namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 {
-	private readonly IWithdrawMoneyRepository _withdrawMoneyRepository;
-	private readonly IBankAccountRepository _bankAccountRepository; // Assumed to check account details
-
-	public WithdrawMoneyService(
-		IWithdrawMoneyRepository withdrawMoneyRepository,
-		IBankAccountRepository bankAccountRepository)
+	public class WithdrawMoneyService : IWithdrawMoneyService
 	{
-		_withdrawMoneyRepository = withdrawMoneyRepository;
-		_bankAccountRepository = bankAccountRepository;
-	}
-
-	public async Task<WithdrawResponseDto> WithdrawAsync(WithdrawRequestDto requestDto)
-	{
-		// Check for valid account and sufficient balance
-		var account = await _bankAccountRepository.GetAccountByIdAsync(requestDto.AccountId);
-		if (account == null)
+		private readonly IWithdrawMoneyRepository _withdrawMoneyRepository;
+		private readonly IBankAccountRepository _bankAccountRepository;
+		private readonly int _dailyWithdrawalLimitInGel = 10000;
+		public WithdrawMoneyService(IWithdrawMoneyRepository withdrawMoneyRepository, IBankAccountRepository bankAccountRepository)
 		{
-			return new WithdrawResponseDto { IsSuccessful = false, Message = "Account not found." };
+			_withdrawMoneyRepository = withdrawMoneyRepository;
+			_bankAccountRepository = bankAccountRepository;
 		}
 
-		if (account.InitialAmount < requestDto.Amount)
+		public async Task<WithdrawResponseDto> WithdrawAsync(WithdrawRequestDto requestDto)
 		{
-			return new WithdrawResponseDto { IsSuccessful = false, Message = "Insufficient funds." };
+			var account = await _bankAccountRepository.GetAccountByIdAsync(requestDto.AccountId);
+			if (account == null)
+			{
+				return new WithdrawResponseDto { IsSuccessful = false, Message = "Account not found." };
+			}
+
+			if (!Enum.TryParse<CurrencyType>(requestDto.Currency, out var requestedCurrency))
+			{
+				return new WithdrawResponseDto { IsSuccessful = false, Message = "Invalid currency specified." };
+			}
+
+			if (account.InitialAmount < requestDto.Amount || account.Currency != requestedCurrency)
+			{
+				return new WithdrawResponseDto { IsSuccessful = false, Message = "Insufficient funds or currency mismatch." };
+			}
+
+			// Re-fetch the account to get the updated balance, assuming balance is updated
+			account = await _bankAccountRepository.GetAccountByIdAsync(requestDto.AccountId);
+
+			var commission = requestDto.Amount * 0.02m;
+			var DeductAmount  = commission + requestDto.Amount;
+			if (DeductAmount >= account.InitialAmount ) 
+			{
+				return new WithdrawResponseDto { IsSuccessful = false, Message = "Insufficient Balancer Or Bad Request.", RemainingBalance = account.InitialAmount };
+			}
+			
+			
+			WithdrawalCheckDto withdrawalCheckDto = new() { 
+				BankAccountId = requestDto.AccountId,
+				WithdrawalDate = DateTime.Now.AddDays(-1),
+			};
+
+			var TotalWithdrawedAmountInGel = await _withdrawMoneyRepository.GetWithdrawalsOf24hoursByCardId(withdrawalCheckDto);
+
+			if (TotalWithdrawedAmountInGel == null) 
+			{
+		         return new WithdrawResponseDto { IsSuccessful = false, Message = "Server Error. Failed To Get Withdrawal Data  " };
+
+			}
+
+			if (TotalWithdrawedAmountInGel.Sum >= _dailyWithdrawalLimitInGel) 
+			{
+				return new WithdrawResponseDto { IsSuccessful = false, Message = "24 hours limit reached." , RemainingBalance = account.InitialAmount };
+
+			}
+			WithdrawRequestDto withdrawRequest = new() { 
+				AccountId = requestDto.AccountId,
+				Currency= requestDto.Currency,
+				Amount = DeductAmount,
+			};
+
+
+			//var result = await _withdrawMoneyRepository.WithdrawAsync(withdrawRequest);
+
+			//return new WithdrawResponseDto
+			//{
+			//	IsSuccessful = true,
+			//	Message = $"Withdrawal of {requestDto.Amount} {requestDto.Currency} was successful.",
+			//	RemainingBalance = account.InitialAmount - DeductAmount,
+			//};
 		}
-
-		// Attempt to perform the withdrawal
-		bool success = await _withdrawMoneyRepository.WithdrawAsync(requestDto.AccountId, requestDto.Amount, requestDto.Currency);
-
-		if (!success)
-		{
-			return new WithdrawResponseDto { IsSuccessful = false, Message = "Withdrawal failed due to a technical issue." };
-		}
-
-		// Assuming success and account balance is updated in the WithdrawAsync method
-		return new WithdrawResponseDto
-		{
-			IsSuccessful = true,
-			Message = $"Withdrawal of {requestDto.Amount} {requestDto.Currency} was successful.",
-			RemainingBalance = account.InitialAmount - requestDto.Amount // Make sure the balance is updated in the database first
-		};
 	}
 }

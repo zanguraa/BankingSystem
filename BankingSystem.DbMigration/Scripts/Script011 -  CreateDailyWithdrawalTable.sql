@@ -8,6 +8,7 @@ BEGIN
         [BankAccountId] INT NOT NULL,
         [WithdrawalDate] DATE NOT NULL,
         [TotalAmount] DECIMAL(18,2) NOT NULL,
+        [Currency] NVARCHAR(5) NOT NULL, /**chavamatet**/
         CONSTRAINT [FK_DailyWithdrawals_BankAccounts] FOREIGN KEY ([BankAccountId]) REFERENCES [dbo].[BankAccounts]([Id])
     );
     END

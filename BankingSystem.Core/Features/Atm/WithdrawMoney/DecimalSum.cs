@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 {
-	//public class DecimalSum
-	//{
-	//	public decimal Sum { get; set; }
-	//}
+	public class DecimalSum
+	{
+		public decimal Sum { get; set; }
+	}
 
 }

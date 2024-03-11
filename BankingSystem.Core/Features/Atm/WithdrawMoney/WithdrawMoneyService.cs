@@ -71,14 +71,14 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 			};
 
 
-			//var result = await _withdrawMoneyRepository.WithdrawAsync(withdrawRequest);
+			var result = await _withdrawMoneyRepository.WithdrawAsync(withdrawRequest);
 
-			//return new WithdrawResponseDto
-			//{
-			//	IsSuccessful = true,
-			//	Message = $"Withdrawal of {requestDto.Amount} {requestDto.Currency} was successful.",
-			//	RemainingBalance = account.InitialAmount - DeductAmount,
-			//};
+			return new WithdrawResponseDto
+			{
+				IsSuccessful = true,
+				Message = $"Withdrawal of {requestDto.Amount} {requestDto.Currency} was successful.",
+				RemainingBalance = account.InitialAmount - DeductAmount,
+			};
 		}
 	}
 }

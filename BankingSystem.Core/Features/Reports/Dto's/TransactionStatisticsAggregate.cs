@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Features.Reports.Dto_s
 {
-	//public class TransactionStatisticsAggregate
-	//{
-	//	public int NumberOfTransactions { get; set; }
-	//	public decimal IncomeLastMonthGEL { get; set; }
-	//	public decimal IncomeLastMonthUSD { get; set; }
-	//	public decimal IncomeLastMonthEUR { get; set; }
-	//}
+	public class TransactionStatisticsAggregate
+	{
+		public int NumberOfTransactions { get; set; }
+		public decimal IncomeLastMonthGEL { get; set; }
+		public decimal IncomeLastMonthUSD { get; set; }
+		public decimal IncomeLastMonthEUR { get; set; }
+	}
 }

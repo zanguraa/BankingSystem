@@ -6,6 +6,7 @@ using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Features.BankAccounts;
 using BankingSystem.Core.Features.Cards;
+using BankingSystem.Core.Features.Reports;
 using BankingSystem.Core.Features.Transactions.Currency;
 using BankingSystem.Core.Features.Transactions.TransactionServices;
 using BankingSystem.Core.Features.Transactions.TransactionsRepository;
@@ -75,7 +76,8 @@ namespace BankingSystem.Api
 			builder.Services.AddScoped<IViewBalanceService, ViewBalanceService>();
 			builder.Services.AddScoped<IWithdrawMoneyRepository,WithdrawMoneyRepository>();
 			builder.Services.AddScoped<IWithdrawMoneyService, WithdrawMoneyService>();
-
+			builder.Services.AddScoped<IReportsService, ReportsService>();
+			builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
 
 
 			// საჭირო სერვისების IoC-ში რეგისტრაცია

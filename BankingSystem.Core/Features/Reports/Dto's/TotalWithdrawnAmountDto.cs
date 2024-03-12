@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Features.Reports.Dto_s
 {
-	internal class TotalWithdrawnAmountDto
+	public class TotalWithdrawnAmountDto
 	{
+		public decimal TotalWithdrawnAmountGEL { get; set; }
+		public decimal TotalWithdrawnAmountUSD { get; set; }
+		public decimal TotalWithdrawnAmountEUR { get; set; }
 	}
 }

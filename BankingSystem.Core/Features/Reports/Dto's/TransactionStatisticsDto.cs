@@ -27,4 +27,7 @@ namespace BankingSystem.Core.Features.Reports.Dto_s
 		public decimal AverageRevenuePerTransactionGEL { get; set; }
 		public decimal AverageRevenuePerTransactionUSD { get; set; }
 		public decimal AverageRevenuePerTransactionEUR { get; set; }
+	
 	}
+}
+

@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using BankingSystem.Core.Features.Reports.Dto_s;
 
 namespace BankingSystem.Core.Features.Reports
 {
-	internal class IReportsRepository
+	public interface IReportsRepository
 	{
+		Task<UserStatisticsDto> GetUserStatisticsAsync();
+		Task<TransactionStatisticsDto> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate);
+		Task<IEnumerable<DailyTransactionCountDto>> GetDailyTransactionCountsAsync(DateTime startDate, DateTime endDate);
+		Task<TotalWithdrawnAmountDto> GetTotalWithdrawnAmountAsync(DateTime startDate, DateTime endDate);
+		Task<TransactionStatisticsDto> GetAverageRevenuePerTransactionAsync(DateTime startDate, DateTime endDate);
 	}
 }

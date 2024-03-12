@@ -24,8 +24,4 @@
     <ProjectReference Include="..\BankingSystem.DbMigration\BankingSystem.DbMigration.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Reports\Dto%27s\" />
-  </ItemGroup>
-
 </Project>

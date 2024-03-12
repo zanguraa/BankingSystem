@@ -8,5 +8,8 @@ namespace BankingSystem.Core.Features.Reports.Dto_s
 {
 	public class UserStatisticsDto
 	{
+		public int NumberOfUsersRegisteredCurrentYear { get; set; }
+		public int NumberOfUsersRegisteredLastYear { get; set; }
+		public int NumberOfUsersRegisteredLast30Days { get; set; }
 	}
 }

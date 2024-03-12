@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Reports\" />
+    <Folder Include="Features\Reports\Dto%27s\" />
   </ItemGroup>
 
 </Project>

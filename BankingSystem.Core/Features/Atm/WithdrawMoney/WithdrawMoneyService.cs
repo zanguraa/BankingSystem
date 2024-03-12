@@ -35,7 +35,7 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 				return new WithdrawResponseDto { IsSuccessful = false, Message = "Insufficient funds or currency mismatch." };
 			}
 
-			// Re-fetch the account to get the updated balance, assuming balance is updated
+			//ახლიდან ვიძახებ account რო მივიღო განახლებული ბალანსი
 			account = await _bankAccountRepository.GetAccountByIdAsync(requestDto.AccountId);
 
 			var commission = requestDto.Amount * 0.02m;

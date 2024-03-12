@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Features.Reports.Dto_s
 {
-	internal class DailyTransactionCountDto
+	public class DailyTransactionCountDto
 	{
 	}
 }

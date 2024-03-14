@@ -10,6 +10,7 @@
         public string PhoneNumber { get; set; }
         public DateTime BirthdayDate { get; set; }
         public string PersonalId { get; set; }
+		public DateTime RegistrationDate { get; set; }
 
-    }
+	}
 }

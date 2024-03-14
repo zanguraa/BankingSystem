@@ -20,6 +20,8 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 		public async Task<WithdrawResponseDto> WithdrawAsync(WithdrawRequestDto requestDto)
 		{
 			var account = await _bankAccountRepository.GetAccountByIdAsync(requestDto.AccountId);
+			var commission = requestDto.Amount * 0.02m;
+			var DeductAmount  = commission + requestDto.Amount;
 			if (account == null)
 			{
 				return new WithdrawResponseDto { IsSuccessful = false, Message = "Account not found." };
@@ -32,18 +34,18 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 
 			if (account.InitialAmount < requestDto.Amount || account.Currency != requestedCurrency)
 			{
-				return new WithdrawResponseDto { IsSuccessful = false, Message = "Insufficient funds or currency mismatch." };
-			}
-
-			//ახლიდან ვიძახებ account რო მივიღო განახლებული ბალანსი
-			account = await _bankAccountRepository.GetAccountByIdAsync(requestDto.AccountId);
-
-			var commission = requestDto.Amount * 0.02m;
-			var DeductAmount  = commission + requestDto.Amount;
+				return new WithdrawResponseDto { IsSuccessful = false, Message = "Insufficient funds or currency mismatch.", RemainingBalance = account.InitialAmount };
+			}	
+			
 			if (DeductAmount >= account.InitialAmount ) 
 			{
 				return new WithdrawResponseDto { IsSuccessful = false, Message = "Insufficient Balancer Or Bad Request.", RemainingBalance = account.InitialAmount };
 			}
+
+			////ახლიდან ვიძახებ account რო მივიღო განახლებული ბალანსი
+			account = await _bankAccountRepository.GetAccountByIdAsync(requestDto.AccountId);
+
+		
 			
 			
 			WithdrawalCheckDto withdrawalCheckDto = new() { 

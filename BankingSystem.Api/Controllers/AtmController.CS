@@ -3,6 +3,8 @@ using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
 using BankingSystem.Core.Features.Atm.ChangePin;
 using BankingSystem.Core.Features.Atm.ChangePin.Requests;
 using BankingSystem.Core.Features.Atm.ViewBalance;
+using BankingSystem.Core.Features.Atm.WithdrawMoney;
+using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -15,15 +17,14 @@ namespace BankingSystem.Api.Controllers
         private readonly ICardAuthorizationService _cardAuthorizationService;
         private readonly IChangePinService _changePinService;
         private readonly IViewBalanceService _viewBalanceService;
+        private readonly IWithdrawMoneyService _withdrawMoneyService;
 
-
-
-        public AtmController(ICardAuthorizationService cardAuthorizationService, IChangePinService changePinService, IViewBalanceService viewBalanceService)
+        public AtmController(ICardAuthorizationService cardAuthorizationService, IChangePinService changePinService, IViewBalanceService viewBalanceService, IWithdrawMoneyService withdrawMoneyService)
         {
             _cardAuthorizationService = cardAuthorizationService;
             _changePinService = changePinService;
             _viewBalanceService = viewBalanceService;
-
+            _withdrawMoneyService = withdrawMoneyService;
         }
 
         [HttpPost("card-authorize")]
@@ -94,6 +95,32 @@ namespace BankingSystem.Api.Controllers
             catch (KeyNotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPost("withdraw-money")]
+        public async Task<IActionResult> Withdraw([FromBody] WithdrawRequest requestDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var responseDto = await _withdrawMoneyService.WithdrawAsync(requestDto);
+                if (responseDto.IsSuccessful)
+                {
+                    return Ok(responseDto);
+                }
+                else
+                {
+                    return BadRequest(responseDto);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An internal server error has occurred.");
             }
         }
     }

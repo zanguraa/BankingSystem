@@ -2,6 +2,7 @@
 using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
 using BankingSystem.Core.Features.Atm.ChangePin;
 using BankingSystem.Core.Features.Atm.ChangePin.Requests;
+using BankingSystem.Core.Features.Atm.ViewBalance;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -13,12 +14,15 @@ namespace BankingSystem.Api.Controllers
     {
         private readonly ICardAuthorizationService _cardAuthorizationService;
         private readonly IChangePinService _changePinService;
+        private readonly IViewBalanceService _viewBalanceService;
 
 
-        public AtmController(ICardAuthorizationService cardAuthorizationService, IChangePinService changePinService)
+
+        public AtmController(ICardAuthorizationService cardAuthorizationService, IChangePinService changePinService, IViewBalanceService viewBalanceService)
         {
             _cardAuthorizationService = cardAuthorizationService;
             _changePinService = changePinService;
+            _viewBalanceService = viewBalanceService;
 
         }
 
@@ -48,7 +52,7 @@ namespace BankingSystem.Api.Controllers
             }
         }
 
-        [HttpPost("ChangePin")]
+        [HttpPost("change-pin")]
         public async Task<IActionResult> ChangePin([FromBody] ChangePinRequest request)
         {
             if (!ModelState.IsValid)
@@ -72,6 +76,24 @@ namespace BankingSystem.Api.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new ChangePinResponse { Success = false, Message = "An internal error occurred. Please try again later." });
+            }
+        }
+
+        [HttpGet("view-balance{userId}")]
+        public async Task<IActionResult> GetBalance(string userId)
+        {
+            try
+            {
+                var balanceDto = await _viewBalanceService.GetBalanceByUserIdAsync(userId);
+                if (balanceDto == null)
+                {
+                    return NotFound($"No balance information found for user ID: {userId}.");
+                }
+                return Ok(balanceDto);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
         }
     }

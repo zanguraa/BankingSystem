@@ -9,13 +9,13 @@ namespace BankingSystem.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AtmOperations : ControllerBase
+    public class AtmController : ControllerBase
     {
         private readonly ICardAuthorizationService _cardAuthorizationService;
         private readonly IChangePinService _changePinService;
 
 
-        public AtmOperations(ICardAuthorizationService cardAuthorizationService, IChangePinService changePinService)
+        public AtmController(ICardAuthorizationService cardAuthorizationService, IChangePinService changePinService)
         {
             _cardAuthorizationService = cardAuthorizationService;
             _changePinService = changePinService;

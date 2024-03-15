@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BankingSystem.Core.Features.Atm.ChangePin.Dto_s;
+using BankingSystem.Core.Features.Atm.ChangePin.Requests;
 
 namespace BankingSystem.Core.Features.Atm.ChangePin
 {

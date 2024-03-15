@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankingSystem.Core.Features.Atm.CardAuthorizations.Dto_s
+namespace BankingSystem.Core.Features.Atm.CardAuthorizations.Requests
 {
-	public class CardAuthorizationRequestDto
+	public class CardAuthorizationRequest
 	{
 		public string CardNumber { get; set; }
 		public string Pin { get; set; }

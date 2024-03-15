@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Azure.Core;
 using BankingSystem.Core.Data;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.Dto_s;
+using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
 using BankingSystem.Core.Features.BankAccounts;
 
 namespace BankingSystem.Core.Features.Atm.WithdrawMoney
@@ -17,29 +17,29 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 			_bankAccountRepository = bankAccountRepository;
 		}
 
-		public async Task<WithdrawResponseDto> WithdrawAsync(WithdrawRequestDto requestDto)
+		public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequest requestDto)
 		{
 			var account = await _bankAccountRepository.GetAccountByIdAsync(requestDto.AccountId);
 			var commission = requestDto.Amount * 0.02m;
 			var DeductAmount  = commission + requestDto.Amount;
 			if (account == null)
 			{
-				return new WithdrawResponseDto { IsSuccessful = false, Message = "Account not found." };
+				return new WithdrawResponse { IsSuccessful = false, Message = "Account not found." };
 			}
 
 			if (!Enum.TryParse<CurrencyType>(requestDto.Currency, out var requestedCurrency))
 			{
-				return new WithdrawResponseDto { IsSuccessful = false, Message = "Invalid currency specified." };
+				return new WithdrawResponse { IsSuccessful = false, Message = "Invalid currency specified." };
 			}
 
 			if (account.InitialAmount < requestDto.Amount || account.Currency != requestedCurrency)
 			{
-				return new WithdrawResponseDto { IsSuccessful = false, Message = "Insufficient funds or currency mismatch.", RemainingBalance = account.InitialAmount };
+				return new WithdrawResponse { IsSuccessful = false, Message = "Insufficient funds or currency mismatch.", RemainingBalance = account.InitialAmount };
 			}	
 			
 			if (DeductAmount >= account.InitialAmount ) 
 			{
-				return new WithdrawResponseDto { IsSuccessful = false, Message = "Insufficient Balancer Or Bad Request.", RemainingBalance = account.InitialAmount };
+				return new WithdrawResponse { IsSuccessful = false, Message = "Insufficient Balancer Or Bad Request.", RemainingBalance = account.InitialAmount };
 			}
 
 			////ახლიდან ვიძახებ account რო მივიღო განახლებული ბალანსი
@@ -48,7 +48,7 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 		
 			
 			
-			WithdrawalCheckDto withdrawalCheckDto = new() { 
+			WithdrawalCheck withdrawalCheckDto = new() { 
 				BankAccountId = requestDto.AccountId,
 				WithdrawalDate = DateTime.Now.AddDays(-1),
 			};
@@ -57,16 +57,16 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 
 			if (TotalWithdrawedAmountInGel == null) 
 			{
-		         return new WithdrawResponseDto { IsSuccessful = false, Message = "Server Error. Failed To Get Withdrawal Data  " };
+		         return new WithdrawResponse { IsSuccessful = false, Message = "Server Error. Failed To Get Withdrawal Data  " };
 
 			}
 
 			if (TotalWithdrawedAmountInGel.Sum >= _dailyWithdrawalLimitInGel) 
 			{
-				return new WithdrawResponseDto { IsSuccessful = false, Message = "24 hours limit reached." , RemainingBalance = account.InitialAmount };
+				return new WithdrawResponse { IsSuccessful = false, Message = "24 hours limit reached." , RemainingBalance = account.InitialAmount };
 
 			}
-			WithdrawRequestDto withdrawRequest = new() { 
+			WithdrawRequest withdrawRequest = new() { 
 				AccountId = requestDto.AccountId,
 				Currency= requestDto.Currency,
 				Amount = DeductAmount,
@@ -75,7 +75,7 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 
 			var result = await _withdrawMoneyRepository.WithdrawAsync(withdrawRequest);
 
-			return new WithdrawResponseDto
+			return new WithdrawResponse
 			{
 				IsSuccessful = true,
 				Message = $"Withdrawal of {requestDto.Amount} {requestDto.Currency} was successful.",

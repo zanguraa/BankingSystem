@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankingSystem.Core.Features.Atm.ChangePin.Dto_s
+namespace BankingSystem.Core.Features.Atm.ChangePin.Requests
 {
-	public class ChangePinResponseDto
+	public class ChangePinResponse
 	{
 		public bool Success { get; set; }
 		public string Message { get; set; }

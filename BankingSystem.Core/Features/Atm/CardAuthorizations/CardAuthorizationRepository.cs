@@ -1,6 +1,6 @@
 ﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.Atm.CardAuthorization;
-using BankingSystem.Core.Features.Atm.CardAuthorizations.Dto_s;
+using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
 using BankingSystem.Core.Features.Cards;
 
 public class CardAuthorizationRepository : ICardAuthorizationRepository
@@ -18,7 +18,7 @@ public class CardAuthorizationRepository : ICardAuthorizationRepository
 		var result = await _dataManager.Query<Card,dynamic>(query, new { CardNumber });
 		return result.FirstOrDefault();
 	}
-	public async Task<Card> GetCardFromRequestAsync(CardAuthorizationRequestDto request)
+	public async Task<Card> GetCardFromRequestAsync(CardAuthorizationRequest request)
 	{
 		var query = "SELECT * FROM Cards WHERE CardNumber = @CardNumber and Pin = @Pin";
 		var result = await _dataManager.Query<Card, dynamic>(query,request);

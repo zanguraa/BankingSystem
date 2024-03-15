@@ -1,5 +1,5 @@
 ﻿using BankingSystem.Core.Features.Atm.CardAuthorization;
-using BankingSystem.Core.Features.Atm.CardAuthorizations.Dto_s;
+using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -15,7 +15,7 @@ public class CardAuthorizationController : ControllerBase
 	}
 
 	[HttpPost("Authorize")]
-	public async Task<IActionResult> Authorize([FromBody] CardAuthorizationRequestDto request)
+	public async Task<IActionResult> Authorize([FromBody] CardAuthorizationRequest request)
 	{
 		if (!ModelState.IsValid)
 		{
@@ -26,7 +26,7 @@ public class CardAuthorizationController : ControllerBase
 		 {
 			var isAuthorized = await _cardAuthorizationService.AuthorizeCardAsync(request);
 
-			var responseDto = new CardAuthorizationResponseDto
+			var responseDto = new CardAuthorizationResponse
 			{
 				IsAuthorized = isAuthorized,
 				Message = isAuthorized ? "Authorization successful." : "Authorization failed."

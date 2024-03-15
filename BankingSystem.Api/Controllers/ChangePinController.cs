@@ -1,5 +1,5 @@
 ﻿using BankingSystem.Core.Features.Atm.ChangePin;
-using BankingSystem.Core.Features.Atm.ChangePin.Dto_s;
+using BankingSystem.Core.Features.Atm.ChangePin.Requests;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -16,7 +16,7 @@ public class ChangePinController : ControllerBase
 	}
 
 	[HttpPost("ChangePin")]
-	public async Task<IActionResult> ChangePin([FromBody] ChangePinRequestDto request)
+	public async Task<IActionResult> ChangePin([FromBody] ChangePinRequest request)
 	{
 		if (!ModelState.IsValid)
 		{
@@ -29,16 +29,16 @@ public class ChangePinController : ControllerBase
 
 			if (result)
 			{
-				return Ok(new ChangePinResponseDto { Success = true, Message = "PIN changed successfully." });
+				return Ok(new ChangePinResponse { Success = true, Message = "PIN changed successfully." });
 			}
 			else
 			{
-				return BadRequest(new ChangePinResponseDto { Success = false, Message = "Failed to change PIN. Please check the current PIN and try again." });
+				return BadRequest(new ChangePinResponse { Success = false, Message = "Failed to change PIN. Please check the current PIN and try again." });
 			}
 		}
 		catch (Exception ex)
 		{
-			return StatusCode(500, new ChangePinResponseDto { Success = false, Message = "An internal error occurred. Please try again later." });
+			return StatusCode(500, new ChangePinResponse { Success = false, Message = "An internal error occurred. Please try again later." });
 		}
 	}
 }

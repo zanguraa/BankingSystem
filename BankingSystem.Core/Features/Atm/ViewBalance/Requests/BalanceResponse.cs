@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankingSystem.Core.Features.Atm.ViewBalance.Dto_s
+namespace BankingSystem.Core.Features.Atm.ViewBalance.Requests
 {
-	public class BalanceResponseDto
+	public class BalanceResponse
 	{
 		public string? UserId { get; set; }
 		public decimal InitialAmount { get; set; }

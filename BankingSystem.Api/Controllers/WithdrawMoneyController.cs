@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using BankingSystem.Core.Features.Transactions;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.Dto_s;
+using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
 using BankingSystem.Core.Features.Atm.WithdrawMoney;
 
 [Route("api/[controller]")]
@@ -16,7 +16,7 @@ public class WithdrawMoneyController : ControllerBase
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Withdraw([FromBody] WithdrawRequestDto requestDto)
+	public async Task<IActionResult> Withdraw([FromBody] WithdrawRequest requestDto)
 	{
 		if (!ModelState.IsValid)
 		{

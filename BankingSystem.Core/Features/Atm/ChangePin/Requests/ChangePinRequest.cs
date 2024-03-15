@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankingSystem.Core.Features.Atm.ChangePin.Dto_s
+namespace BankingSystem.Core.Features.Atm.ChangePin.Requests
 {
-	public class ChangePinRequestDto
+	public class ChangePinRequest
 	{
 		public string CardNumber { get; set; }
 		public string CurrentPin { get; set; }

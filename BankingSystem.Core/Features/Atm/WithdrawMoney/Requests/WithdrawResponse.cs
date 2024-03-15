@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankingSystem.Core.Features.Atm.WithdrawMoney.Dto_s
+namespace BankingSystem.Core.Features.Atm.WithdrawMoney.Requests
 {
-	public class WithdrawResponseDto
+	public class WithdrawResponse
 	{
 		public bool IsSuccessful { get; set; }
 		public string Message { get; set; }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankingSystem.Core.Features.Atm.WithdrawMoney.Dto_s
+namespace BankingSystem.Core.Features.Atm.WithdrawMoney.Requests
 {
-	public class WithdrawRequestDto
+	public class WithdrawRequest
 	{
 		public int AccountId { get; set; }
 		public decimal Amount { get; set; }

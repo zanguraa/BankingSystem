@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using BankingSystem.Core.Features.Atm.CardAuthorization;
 using BankingSystem.Core.Data;
-using BankingSystem.Core.Features.Atm.CardAuthorizations.Dto_s;
+using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
 using BankingSystem.Core.Features.Cards;
 
 public class CardAuthorizationService : ICardAuthorizationService
@@ -15,7 +15,7 @@ public class CardAuthorizationService : ICardAuthorizationService
 		_cardAuthorizationRepository = cardAuthorizationRepository;
 	}
 
-	public async Task<bool> AuthorizeCardAsync(CardAuthorizationRequestDto request)
+	public async Task<bool> AuthorizeCardAsync(CardAuthorizationRequest request)
 	{
 		var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request);
 		return card != null && !IsCardExpired(card) && card.IsActive;

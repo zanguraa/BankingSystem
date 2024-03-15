@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Transactions;
 using BankingSystem.Core.Data;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.Dto_s;
+using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
 
 namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 {
@@ -21,7 +21,7 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 			throw new NotImplementedException();
 		}
 
-		public async Task<bool> WithdrawAsync(WithdrawRequestDto request)
+		public async Task<bool> WithdrawAsync(WithdrawRequest request)
 		{
 			var transactionCommands = new List<SqlCommandRequest>
 			{
@@ -44,7 +44,7 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 
 			return await _dataManager.ExecuteWithTransaction(transactionCommands);
 		}
-		public async Task<DecimalSum?> GetWithdrawalsOf24hoursByCardId(WithdrawalCheckDto options)
+		public async Task<DecimalSum?> GetWithdrawalsOf24hoursByCardId(WithdrawalCheck options)
 		{
 			var query = @"SELECT SUM(d.TotalAmount * c.Rate) AS Sum FROM DailyWithdrawals AS d
                           INNER JOIN Currencies AS c ON d.Currency = c.Code

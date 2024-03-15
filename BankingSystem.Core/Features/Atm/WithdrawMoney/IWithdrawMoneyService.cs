@@ -1,9 +1,9 @@
-﻿using BankingSystem.Core.Features.Atm.WithdrawMoney.Dto_s;
+﻿using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
 
 namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 {
 	public interface IWithdrawMoneyService
 	{
-		Task<WithdrawResponseDto> WithdrawAsync(WithdrawRequestDto requestDto);
+		Task<WithdrawResponse> WithdrawAsync(WithdrawRequest requestDto);
 	}
 }

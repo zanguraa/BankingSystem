@@ -28,7 +28,7 @@ namespace BankingSystem.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            
+
 
             // Token-ის შემქნელი
             var issuer = "myapp.com";
@@ -46,7 +46,7 @@ namespace BankingSystem.Api
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 ValidateLifetime = true,
-                ValidateIssuerSigningKey = false,
+                ValidateIssuerSigningKey = true,
                 ValidIssuer = issuer,
                 ValidAudience = audience,
                 ClockSkew = TimeSpan.Zero,
@@ -55,34 +55,36 @@ namespace BankingSystem.Api
 
             builder.Services.AddTransient<JwtTokenGenerator>();
 
-            var connectionString = builder.Configuration.GetConnectionString("Zangura")!;
+            var userName = Environment.UserName; // Gets the current user's system username
+            var connectionStringName = userName; // Directly use the username as the key
+            var connectionString = builder.Configuration.GetConnectionString(connectionStringName)!;
 
 
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
             builder.Services.AddScoped<IBankAccountService, BankAccountService>();
             builder.Services.AddScoped<IDataManager, DataManager>();
-			builder.Services.AddScoped<ICardRepository, CardRepository>(); 
-			builder.Services.AddScoped<ICardService, CardService>();
-			builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+            builder.Services.AddScoped<ICardRepository, CardRepository>();
+            builder.Services.AddScoped<ICardService, CardService>();
+            builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
             builder.Services.AddScoped<ITransactionService, TransactionService>();
             builder.Services.AddScoped<ICurrencyConversionService, CurrencyConversionService>();
             builder.Services.AddScoped<ICurrencyConversionRepository, CurrencyConversionRepository>();
-			builder.Services.AddScoped<ICardAuthorizationRepository, CardAuthorizationRepository>();
-			builder.Services.AddScoped<ICardAuthorizationService, CardAuthorizationService>();
-			builder.Services.AddScoped<IChangePinService, ChangePinService>();
-			builder.Services.AddScoped<IChangePinRepository, ChangePinRepository>();
-			builder.Services.AddScoped<IViewBalanceRepository, ViewBalanceRepository>();
-			builder.Services.AddScoped<IViewBalanceService, ViewBalanceService>();
-			builder.Services.AddScoped<IWithdrawMoneyRepository,WithdrawMoneyRepository>();
-			builder.Services.AddScoped<IWithdrawMoneyService, WithdrawMoneyService>();
-			builder.Services.AddScoped<IReportsService, ReportsService>();
-			builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
+            builder.Services.AddScoped<ICardAuthorizationRepository, CardAuthorizationRepository>();
+            builder.Services.AddScoped<ICardAuthorizationService, CardAuthorizationService>();
+            builder.Services.AddScoped<IChangePinService, ChangePinService>();
+            builder.Services.AddScoped<IChangePinRepository, ChangePinRepository>();
+            builder.Services.AddScoped<IViewBalanceRepository, ViewBalanceRepository>();
+            builder.Services.AddScoped<IViewBalanceService, ViewBalanceService>();
+            builder.Services.AddScoped<IWithdrawMoneyRepository, WithdrawMoneyRepository>();
+            builder.Services.AddScoped<IWithdrawMoneyService, WithdrawMoneyService>();
+            builder.Services.AddScoped<IReportsService, ReportsService>();
+            builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
 
 
-			// საჭირო სერვისების IoC-ში რეგისტრაცია
+            // საჭირო სერვისების IoC-ში რეგისტრაცია
 
-			builder.Services
+            builder.Services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => { options.TokenValidationParameters = tokenValidationParameters; });
 
@@ -102,6 +104,10 @@ namespace BankingSystem.Api
                 {
                     policy.RequireClaim(ClaimTypes.Role, "operator");
                 });
+
+                options.AddPolicy("CardHolder", policy =>
+                    policy.RequireClaim("CardHolderStatus", "Active")
+                );
             });
 
             //UserEntity და RoleEntity კლასების მიხედვით მოხდება ბაზაში ცხრილების შექმნა
@@ -123,7 +129,7 @@ namespace BankingSystem.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddTransient<JwtTokenGenerator>();
-            
+
 
             var app = builder.Build();
 
@@ -134,6 +140,7 @@ namespace BankingSystem.Api
                 app.UseSwaggerUI();
             }
 
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
 

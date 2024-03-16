@@ -5,6 +5,8 @@ using BankingSystem.Core.Features.Atm.ChangePin.Requests;
 using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
+using BankingSystem.Core.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -18,13 +20,16 @@ namespace BankingSystem.Api.Controllers
         private readonly IChangePinService _changePinService;
         private readonly IViewBalanceService _viewBalanceService;
         private readonly IWithdrawMoneyService _withdrawMoneyService;
+        private readonly JwtTokenGenerator _jwtTokenGenerator;
 
-        public AtmController(ICardAuthorizationService cardAuthorizationService, IChangePinService changePinService, IViewBalanceService viewBalanceService, IWithdrawMoneyService withdrawMoneyService)
+
+        public AtmController(ICardAuthorizationService cardAuthorizationService, IChangePinService changePinService, IViewBalanceService viewBalanceService, IWithdrawMoneyService withdrawMoneyService, JwtTokenGenerator jwtTokenGenerator)
         {
             _cardAuthorizationService = cardAuthorizationService;
             _changePinService = changePinService;
             _viewBalanceService = viewBalanceService;
             _withdrawMoneyService = withdrawMoneyService;
+            _jwtTokenGenerator = jwtTokenGenerator;
         }
 
         [HttpPost("card-authorize")]
@@ -39,13 +44,22 @@ namespace BankingSystem.Api.Controllers
             {
                 var isAuthorized = await _cardAuthorizationService.AuthorizeCardAsync(request);
 
-                var responseDto = new CardAuthorizationResponse
+                if (isAuthorized)
                 {
-                    IsAuthorized = isAuthorized,
-                    Message = isAuthorized ? "Authorization successful." : "Authorization failed."
-                };
+                    // Assuming the card number can be used as a unique identifier for JWT claims
+                    var token = _jwtTokenGenerator.GenerateTokenForAtmOperations(request.CardNumber, "CustomRoleOrClaimHere");
 
-                return Ok(responseDto);
+                    return Ok(new
+                    {
+                        IsAuthorized = isAuthorized,
+                        Message = "Authorization successful.",
+                        Token = token
+                    });
+                }
+                else
+                {
+                    return BadRequest(new { IsAuthorized = false, Message = "Authorization failed." });
+                }
             }
             catch (Exception ex)
             {
@@ -53,7 +67,10 @@ namespace BankingSystem.Api.Controllers
             }
         }
 
+
         [HttpPost("change-pin")]
+        [Authorize("CardHolder", AuthenticationSchemes = "Bearer")]
+
         public async Task<IActionResult> ChangePin([FromBody] ChangePinRequest request)
         {
             if (!ModelState.IsValid)

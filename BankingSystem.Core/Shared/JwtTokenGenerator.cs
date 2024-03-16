@@ -31,14 +31,16 @@ namespace BankingSystem.Core.Shared
         public string GenerateTokenForAtmOperations(string cardNumber, string pinCode)
         {
             var claims = new List<Claim>
-            {
-                new Claim("CardNumber", cardNumber),
-                new Claim("PinCode", pinCode)
-            };
+    {
+        new Claim("CardNumber", cardNumber),
+        // Since the pinCode is sensitive, ensure you're handling it securely and consider if it should be included
+        new Claim("PinCode", pinCode),
+        // Add the required claim for the "CardHolder" policy
+        new Claim("CardHolderStatus", "Active")
+    };
 
             return GenerateToken(claims);
         }
-
         private string GenerateToken(List<Claim> claims)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtTokenSecretKey"]!));

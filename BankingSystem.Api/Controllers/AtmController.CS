@@ -46,7 +46,6 @@ namespace BankingSystem.Api.Controllers
 
                 if (isAuthorized)
                 {
-                    // Assuming the card number can be used as a unique identifier for JWT claims
                     var token = _jwtTokenGenerator.GenerateTokenForAtmOperations(request.CardNumber, "CustomRoleOrClaimHere");
 
                     return Ok(new
@@ -97,23 +96,28 @@ namespace BankingSystem.Api.Controllers
             }
         }
 
-        [HttpGet("view-balance{userId}")]
-        public async Task<IActionResult> GetBalance(string userId)
+        [HttpGet("view-balance")]
+        [Authorize("CardHolder", AuthenticationSchemes = "Bearer")]
+        public async Task<IActionResult> GetBalance()
         {
-            try
+            // Extract the card number from the authenticated user's claims
+            var cardNumberClaim = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
+
+            if (string.IsNullOrEmpty(cardNumberClaim))
             {
-                var balanceDto = await _viewBalanceService.GetBalanceByUserIdAsync(userId);
-                if (balanceDto == null)
-                {
-                    return NotFound($"No balance information found for user ID: {userId}.");
-                }
-                return Ok(balanceDto);
+                return BadRequest("Invalid token: Card number claim is missing.");
             }
-            catch (KeyNotFoundException ex)
+
+            var balanceInfo = await _viewBalanceService.GetBalanceByCardNumberAsync(cardNumberClaim);
+            if (balanceInfo == null)
             {
-                return NotFound(ex.Message);
+                return NotFound("No balance information found for the provided card number.");
             }
+
+            return Ok(balanceInfo);
         }
+
+
 
         [HttpPost("withdraw-money")]
         public async Task<IActionResult> Withdraw([FromBody] WithdrawRequest requestDto)

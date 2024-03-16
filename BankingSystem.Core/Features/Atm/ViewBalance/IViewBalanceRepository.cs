@@ -6,4 +6,5 @@ public interface IViewBalanceRepository
 {
 	Task<BalanceInfo?> GetBalanceUserIdAsync(string userId);
 	Task<BalanceInfo?> GetBalanceInfoByUserIdAsync(string userId);
+	Task<BalanceInfo?> GetBalanceInfoByCardNumberAsync(string cardNumber);
 }

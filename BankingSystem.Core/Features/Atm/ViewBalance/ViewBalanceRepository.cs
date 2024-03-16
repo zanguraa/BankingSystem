@@ -1,6 +1,8 @@
 ﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.Atm.ViewBalance;
+using BankingSystem.Core.Features.Atm.ViewBalance.Requests;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Threading.Tasks;
 
@@ -29,8 +31,20 @@ public class ViewBalanceRepository : IViewBalanceRepository
 		var balanceInfo = await _dataManager.Query<BalanceInfo,dynamic>(query, parameters);
 		return balanceInfo.FirstOrDefault();
 	}
-	public Task<BalanceInfo> GetBalanceInfoAsync(string identifier)
-	{
-		throw new NotImplementedException();
-	}
+
+    public async Task<BalanceInfo?> GetBalanceInfoByCardNumberAsync(string cardNumber)
+    {
+        var query = @"
+        SELECT b.UserId, b.InitialAmount, b.Currency 
+        FROM BankAccounts b
+        INNER JOIN Cards c ON b.Id = c.AccountId
+        WHERE c.CardNumber = @CardNumber AND c.IsActive = 1";
+
+        var parameters = new { CardNumber = cardNumber };
+        var balanceInfo = await _dataManager.Query<BalanceInfo, dynamic>(query, parameters);
+
+        return balanceInfo.FirstOrDefault();
+    }
+
+
 }

@@ -31,13 +31,11 @@ namespace BankingSystem.Core.Shared
         public string GenerateTokenForAtmOperations(string cardNumber, string pinCode)
         {
             var claims = new List<Claim>
-    {
-        new Claim("CardNumber", cardNumber),
-        // Since the pinCode is sensitive, ensure you're handling it securely and consider if it should be included
-        new Claim("PinCode", pinCode),
-        // Add the required claim for the "CardHolder" policy
-        new Claim("CardHolderStatus", "Active")
-    };
+         {
+               new Claim("CardNumber", cardNumber),
+               new Claim("PinCode", pinCode),
+               new Claim("CardHolderStatus", "Active")
+         };
 
             return GenerateToken(claims);
         }
@@ -50,7 +48,7 @@ namespace BankingSystem.Core.Shared
                 issuer: "myapp.com",
                 audience: "myapp.com",
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(3600), // Adjust token lifetime as necessary
+                expires: DateTime.Now.AddMinutes(3600),
                 signingCredentials: credentials);
 
             var tokenGenerator = new JwtSecurityTokenHandler();

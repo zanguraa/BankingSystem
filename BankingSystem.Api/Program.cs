@@ -28,18 +28,11 @@ namespace BankingSystem.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
-
-            // Token-ის შემქნელი
             var issuer = "myapp.com";
 
-            //Token-ის აუდიტორია
             var audience = "myapp.com";
 
-            // Token-ის გასაღები 
             var secretKey = builder.Configuration["JwtTokenSecretKey"]!;
-
-            // Token-ის ვალიდაციის პარამეტრები, რის მიხედვითაც aspn.net მოახდენს ვალიდაციას.
 
             var tokenValidationParameters = new TokenValidationParameters
             {
@@ -55,8 +48,8 @@ namespace BankingSystem.Api
 
             builder.Services.AddTransient<JwtTokenGenerator>();
 
-            var userName = Environment.UserName; // Gets the current user's system username
-            var connectionStringName = userName; // Directly use the username as the key
+            var userName = Environment.UserName; 
+            var connectionStringName = userName; 
             var connectionString = builder.Configuration.GetConnectionString(connectionStringName)!;
 
 
@@ -82,8 +75,6 @@ namespace BankingSystem.Api
             builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
 
 
-            // საჭირო სერვისების IoC-ში რეგისტრაცია
-
             builder.Services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => { options.TokenValidationParameters = tokenValidationParameters; });
@@ -91,7 +82,6 @@ namespace BankingSystem.Api
             builder.Services
          .AddDbContext<AppDbContext>(c => c.UseSqlServer(builder.Configuration.GetConnectionString(Environment.UserName)));
 
-            // Policy-ს შექმნა და კონტეინერში დამატება
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("MyApiUserPolicy", policy =>
@@ -110,7 +100,6 @@ namespace BankingSystem.Api
                 );
             });
 
-            //UserEntity და RoleEntity კლასების მიხედვით მოხდება ბაზაში ცხრილების შექმნა
             builder.Services
                 .AddIdentity<UserEntity, RoleEntity>(o =>
                 {
@@ -133,7 +122,6 @@ namespace BankingSystem.Api
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

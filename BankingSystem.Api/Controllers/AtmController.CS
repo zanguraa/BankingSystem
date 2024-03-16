@@ -120,11 +120,21 @@ namespace BankingSystem.Api.Controllers
 
 
         [HttpPost("withdraw-money")]
+        [Authorize("CardHolder", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Withdraw([FromBody] WithdrawRequest requestDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            // Extract the card number from the JWT token's claims
+            var tokenCardNumber = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
+
+            // Check if the card number in the token matches the card number in the request
+            if (tokenCardNumber == null || requestDto.CardNumber != tokenCardNumber)
+            {
+                return Unauthorized("The card number does not match the authorized user.");
             }
 
             try
@@ -144,5 +154,6 @@ namespace BankingSystem.Api.Controllers
                 return StatusCode(500, "An internal server error has occurred.");
             }
         }
+
     }
 }

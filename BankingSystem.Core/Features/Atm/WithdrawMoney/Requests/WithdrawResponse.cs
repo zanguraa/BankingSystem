@@ -11,5 +11,7 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney.Requests
 		public bool IsSuccessful { get; set; }
 		public string Message { get; set; }
 		public decimal RemainingBalance { get; set; }
-	}
+		public decimal Commision {  get; set; }
+
+    }
 }

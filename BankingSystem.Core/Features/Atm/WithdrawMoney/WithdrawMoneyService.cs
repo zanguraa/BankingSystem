@@ -1,86 +1,93 @@
-﻿using System.Threading.Tasks;
-using Azure.Core;
-using BankingSystem.Core.Data;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
-using BankingSystem.Core.Features.BankAccounts;
+﻿using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
+using BankingSystem.Core.Features.Atm.WithdrawMoney;
+using BankingSystem.Core.Features.Transactions.Currency;
+using BankingSystem.Core.Features.Atm.CardAuthorization;
 
-namespace BankingSystem.Core.Features.Atm.WithdrawMoney
+public class WithdrawMoneyService : IWithdrawMoneyService
 {
-	public class WithdrawMoneyService : IWithdrawMoneyService
-	{
-		private readonly IWithdrawMoneyRepository _withdrawMoneyRepository;
-		private readonly IBankAccountRepository _bankAccountRepository;
-		private readonly int _dailyWithdrawalLimitInGel = 10000;
-		public WithdrawMoneyService(IWithdrawMoneyRepository withdrawMoneyRepository, IBankAccountRepository bankAccountRepository)
-		{
-			_withdrawMoneyRepository = withdrawMoneyRepository;
-			_bankAccountRepository = bankAccountRepository;
-		}
-
-		public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequest requestDto)
-		{
-			var account = await _bankAccountRepository.GetAccountByIdAsync(requestDto.AccountId);
-			var commission = requestDto.Amount * 0.02m;
-			var DeductAmount  = commission + requestDto.Amount;
-			if (account == null)
-			{
-				return new WithdrawResponse { IsSuccessful = false, Message = "Account not found." };
-			}
-
-			if (!Enum.TryParse<CurrencyType>(requestDto.Currency, out var requestedCurrency))
-			{
-				return new WithdrawResponse { IsSuccessful = false, Message = "Invalid currency specified." };
-			}
-
-			if (account.InitialAmount < requestDto.Amount || account.Currency != requestedCurrency)
-			{
-				return new WithdrawResponse { IsSuccessful = false, Message = "Insufficient funds or currency mismatch.", RemainingBalance = account.InitialAmount };
-			}	
-			
-			if (DeductAmount >= account.InitialAmount ) 
-			{
-				return new WithdrawResponse { IsSuccessful = false, Message = "Insufficient Balancer Or Bad Request.", RemainingBalance = account.InitialAmount };
-			}
-
-			////ახლიდან ვიძახებ account რო მივიღო განახლებული ბალანსი
-			account = await _bankAccountRepository.GetAccountByIdAsync(requestDto.AccountId);
-
-		
-			
-			
-			WithdrawalCheck withdrawalCheckDto = new() { 
-				BankAccountId = requestDto.AccountId,
-				WithdrawalDate = DateTime.Now.AddDays(-1),
-			};
-
-			var TotalWithdrawedAmountInGel = await _withdrawMoneyRepository.GetWithdrawalsOf24hoursByCardId(withdrawalCheckDto);
-
-			if (TotalWithdrawedAmountInGel == null) 
-			{
-		         return new WithdrawResponse { IsSuccessful = false, Message = "Server Error. Failed To Get Withdrawal Data  " };
-
-			}
-
-			if (TotalWithdrawedAmountInGel.Sum >= _dailyWithdrawalLimitInGel) 
-			{
-				return new WithdrawResponse { IsSuccessful = false, Message = "24 hours limit reached." , RemainingBalance = account.InitialAmount };
-
-			}
-			WithdrawRequest withdrawRequest = new() { 
-				AccountId = requestDto.AccountId,
-				Currency= requestDto.Currency,
-				Amount = DeductAmount,
-			};
+    private readonly IWithdrawMoneyRepository _withdrawMoneyRepository;
+    private readonly IBankAccountRepository _bankAccountRepository;
+    private readonly ICurrencyConversionService _currencyConversionService;
+    private readonly int _dailyWithdrawalLimitInGel = 10000;
+    private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
+    public readonly IViewBalanceRepository _viewBalanceRepository;
 
 
-			var result = await _withdrawMoneyRepository.WithdrawAsync(withdrawRequest);
+    public WithdrawMoneyService(
+        IWithdrawMoneyRepository withdrawMoneyRepository,
+        IBankAccountRepository bankAccountRepository,
+        ICurrencyConversionService currencyConversionService, 
+        ICardAuthorizationRepository cardAuthorizationRepository,
+        IViewBalanceRepository viewBalanceRepository)
+    {
+        _withdrawMoneyRepository = withdrawMoneyRepository;
+        _bankAccountRepository = bankAccountRepository;
+        _currencyConversionService = currencyConversionService;
+        _cardAuthorizationRepository = cardAuthorizationRepository;
+        _viewBalanceRepository = viewBalanceRepository;
 
-			return new WithdrawResponse
-			{
-				IsSuccessful = true,
-				Message = $"Withdrawal of {requestDto.Amount} {requestDto.Currency} was successful.",
-				RemainingBalance = account.InitialAmount - DeductAmount,
-			};
-		}
-	}
+    }
+
+    public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequest requestDto)
+    {
+
+        var card = await _cardAuthorizationRepository.GetCardByNumberAsync(requestDto.CardNumber);
+        if (card == null)
+        {
+            return new WithdrawResponse { IsSuccessful = false, Message = "card not found." };
+        }
+
+        var accountInfo = await _viewBalanceRepository.GetBalanceInfoByCardNumberAsync(card.CardNumber);
+
+       
+
+        decimal amountToDeduct = requestDto.Amount;
+        if (requestDto.Currency != accountInfo.Currency)
+        {
+            // Convert the withdrawal amount to the account's currency using the conversion service
+            amountToDeduct = _currencyConversionService.Convert(
+                requestDto.Amount,
+                requestDto.Currency,
+                 accountInfo.Currency
+            );
+        }
+
+        // Calculate the commission on the amount to be deducted
+        var commission = amountToDeduct * 0.02m;
+        var totalDeduction = amountToDeduct + commission;
+
+        // Check if the total amount to deduct (including commission) exceeds the account balance
+        if (totalDeduction > accountInfo.InitialAmount)
+        {
+            return new WithdrawResponse { IsSuccessful = false, Message = "Insufficient funds.", RemainingBalance = accountInfo.InitialAmount };
+        }
+
+        var report24HoursRequest = new WithdrawalCheck() { BankAccountId = card.AccountId, WithdrawalDate = DateTime.Now.AddDays(-1) };
+
+        // Check the total withdrawal amount in the last 24 hours to ensure it's within the daily limit
+        var totalWithdrawnAmountInGel = await _withdrawMoneyRepository.GetWithdrawalsOf24hoursByCardId(report24HoursRequest);
+        if (totalWithdrawnAmountInGel.Sum + totalDeduction > _dailyWithdrawalLimitInGel)
+        {
+            return new WithdrawResponse { IsSuccessful = false, Message = "Daily withdrawal limit exceeded.", RemainingBalance = accountInfo.InitialAmount };
+        }
+
+
+        WithdrawRequest withdrawRequest = new()
+        {
+            AccountId = card.AccountId,
+            Currency = requestDto.Currency,
+            Amount = totalDeduction,
+        };
+
+
+        var result = await _withdrawMoneyRepository.WithdrawAsync(withdrawRequest);
+
+        return new WithdrawResponse
+        {
+            IsSuccessful = true,
+            Message = $"Withdrawal of {requestDto.Amount} {requestDto.Currency} was successful.",
+            RemainingBalance = accountInfo.InitialAmount - totalDeduction,
+            Commision = commission
+        };
+    }
 }

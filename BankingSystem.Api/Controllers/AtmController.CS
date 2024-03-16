@@ -100,7 +100,6 @@ namespace BankingSystem.Api.Controllers
         [Authorize("CardHolder", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> GetBalance()
         {
-            // Extract the card number from the authenticated user's claims
             var cardNumberClaim = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
 
             if (string.IsNullOrEmpty(cardNumberClaim))

@@ -120,7 +120,7 @@ namespace BankingSystem.Api.Controllers
 
         [HttpPost("withdraw-money")]
         [Authorize("CardHolder", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Withdraw([FromBody] WithdrawRequest requestDto)
+        public async Task<IActionResult> Withdraw([FromBody] WithdrawAmountCurrency requestDto)
         {
             if (!ModelState.IsValid)
             {
@@ -131,14 +131,21 @@ namespace BankingSystem.Api.Controllers
             var tokenCardNumber = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
 
             // Check if the card number in the token matches the card number in the request
-            if (tokenCardNumber == null || requestDto.CardNumber != tokenCardNumber)
+            if (tokenCardNumber == null)
             {
                 return Unauthorized("The card number does not match the authorized user.");
             }
 
             try
             {
-                var responseDto = await _withdrawMoneyService.WithdrawAsync(requestDto);
+                var requestWithCardNumber = new WithdrawRequestWithCardNumber()
+                {
+                    Amount = requestDto.Amount,
+                    CardNumber = tokenCardNumber,
+                    Currency = requestDto.Currency
+                };
+
+                var responseDto = await _withdrawMoneyService.WithdrawAsync(requestWithCardNumber);
                 if (responseDto.IsSuccessful)
                 {
                     return Ok(responseDto);

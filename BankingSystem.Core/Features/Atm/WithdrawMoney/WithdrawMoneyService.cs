@@ -16,7 +16,7 @@ public class WithdrawMoneyService : IWithdrawMoneyService
     public WithdrawMoneyService(
         IWithdrawMoneyRepository withdrawMoneyRepository,
         IBankAccountRepository bankAccountRepository,
-        ICurrencyConversionService currencyConversionService, 
+        ICurrencyConversionService currencyConversionService,
         ICardAuthorizationRepository cardAuthorizationRepository,
         IViewBalanceRepository viewBalanceRepository)
     {
@@ -28,7 +28,7 @@ public class WithdrawMoneyService : IWithdrawMoneyService
 
     }
 
-    public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequest requestDto)
+    public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequestWithCardNumber requestDto)
     {
 
         var card = await _cardAuthorizationRepository.GetCardByNumberAsync(requestDto.CardNumber);
@@ -39,20 +39,18 @@ public class WithdrawMoneyService : IWithdrawMoneyService
 
         var accountInfo = await _viewBalanceRepository.GetBalanceInfoByCardNumberAsync(card.CardNumber);
 
-       
 
         decimal amountToDeduct = requestDto.Amount;
         if (requestDto.Currency != accountInfo.Currency)
         {
             // Convert the withdrawal amount to the account's currency using the conversion service
             amountToDeduct = _currencyConversionService.Convert(
-                requestDto.Amount,
-                requestDto.Currency,
-                 accountInfo.Currency
-            );
+            requestDto.Amount,
+            requestDto.Currency,
+            accountInfo.Currency
+        );
         }
 
-        // Calculate the commission on the amount to be deducted
         var commission = amountToDeduct * 0.02m;
         var totalDeduction = amountToDeduct + commission;
 

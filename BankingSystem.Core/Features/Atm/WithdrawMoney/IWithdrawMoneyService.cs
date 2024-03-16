@@ -4,6 +4,6 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 {
 	public interface IWithdrawMoneyService
 	{
-		Task<WithdrawResponse> WithdrawAsync(WithdrawRequest requestDto);
+		Task<WithdrawResponse> WithdrawAsync(WithdrawRequestWithCardNumber requestDto);
 	}
 }

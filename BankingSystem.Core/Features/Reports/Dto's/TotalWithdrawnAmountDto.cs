@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Features.Reports.Dto_s
 {
-	public class TotalWithdrawnAmountDto
-	{
-		public decimal TotalWithdrawnAmountGEL { get; set; }
-		public decimal TotalWithdrawnAmountUSD { get; set; }
-		public decimal TotalWithdrawnAmountEUR { get; set; }
-	}
+    public class TotalWithdrawnAmountDto
+    {
+        // This dictionary will store the total withdrawn amounts for each currency.
+        public Dictionary<string, decimal> TotalWithdrawnAmountsByCurrency { get; set; } = new Dictionary<string, decimal>();
+    }
 }

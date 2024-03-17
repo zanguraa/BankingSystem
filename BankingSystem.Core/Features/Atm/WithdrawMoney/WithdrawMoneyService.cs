@@ -50,11 +50,7 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         decimal amountToDeduct = requestDto.Amount;
         if (requestDto.Currency != accountInfo.Currency)
         {
-            amountToDeduct = _currencyConversionService.Convert(
-                requestDto.Amount,
-                requestDto.Currency,
-                accountInfo.Currency
-            );
+            amountToDeduct = _currencyConversionService.Convert(requestDto.Amount, requestDto.Currency, accountInfo.Currency);
         }
 
         decimal commission = amountToDeduct * 0.02m;
@@ -65,7 +61,7 @@ public class WithdrawMoneyService : IWithdrawMoneyService
             return new WithdrawResponse { IsSuccessful = false, Message = "Insufficient funds.", RemainingBalance = accountInfo.InitialAmount };
         }
 
-        var report24HoursRequest = new WithdrawalCheck() { BankAccountId = card.AccountId, WithdrawalDate = DateTime.Now.AddDays(-1) };
+        var report24HoursRequest = new WithdrawalCheck { BankAccountId = card.AccountId, WithdrawalDate = DateTime.Now.AddDays(-1) };
         var totalWithdrawnAmountInGel = await _withdrawMoneyRepository.GetWithdrawalsOf24hoursByCardId(report24HoursRequest);
 
         if (totalWithdrawnAmountInGel.Sum + totalDeduction > _dailyWithdrawalLimitInGel)
@@ -73,22 +69,48 @@ public class WithdrawMoneyService : IWithdrawMoneyService
             return new WithdrawResponse { IsSuccessful = false, Message = "Daily withdrawal limit exceeded.", RemainingBalance = accountInfo.InitialAmount };
         }
 
-        decimal atmDeductAmount = totalDeduction;
-
-        var withdrawalResult = await _withdrawMoneyRepository.WithdrawAsync(new WithdrawRequest
+        var withdrawRequest = new WithdrawRequest
         {
-            AccountId = card.AccountId,
-            Currency = requestDto.Currency,
-            Amount = atmDeductAmount,
-        });
-
-        return new WithdrawResponse
-        {
-            IsSuccessful = true,
-            Message = $"Withdrawal of {requestDto.Amount} {requestDto.Currency} was successful. Commission: {commission} {accountInfo.Currency}.",
-            RemainingBalance = accountInfo.InitialAmount - atmDeductAmount,
-            Commision = commission
+            AccountId = card.AccountId, // ID of the account being withdrawn from
+            Amount = amountToDeduct, // Final amount after conversion and commission
+            Currency = accountInfo.Currency, // Currency of the account
+            RequestedAmount = requestDto.Amount, // Originally requested amount
+            RequestedCurrency = requestDto.Currency, // Originally requested currency
+                                                     // ... any other necessary properties
         };
+
+        // Call the method to perform the withdrawal
+        bool withdrawalSuccess = await _withdrawMoneyRepository.WithdrawAsync(withdrawRequest);
+        // Prepare the transaction log
+        var logEntry = new TransactionLog
+        {
+            RequestedAmount = requestDto.Amount,
+            RequestedCurrency = requestDto.Currency,
+            DeductedAmount = withdrawalSuccess ? amountToDeduct : 0,
+            AccountCurrency = accountInfo.Currency,
+            BankAccountId = card.AccountId,
+            WithdrawalDate = DateTime.UtcNow
+        };
+
+        // It's assumed you have a method to save this log entry to the database.
+        // For example, _transactionLogRepository.SaveTransactionLogAsync(logEntry);
+
+        // Prepare the response based on the operation success
+        var withdrawalResult = new WithdrawResponse
+        {
+            IsSuccessful = withdrawalSuccess,
+            Message = withdrawalSuccess ? "Withdrawal successful." : "Withdrawal failed.",
+            RemainingBalance = withdrawalSuccess ? accountInfo.InitialAmount - totalDeduction : accountInfo.InitialAmount,
+            Commission = commission,
+            RequestedAmount = requestDto.Amount,
+            RequestedCurrency = requestDto.Currency,
+            DeductedAmount = withdrawalSuccess ? amountToDeduct : 0,
+            AccountCurrency = accountInfo.Currency,
+            WithdrawalDate = DateTime.UtcNow
+        };
+
+        return withdrawalResult;
     }
+
 
 }

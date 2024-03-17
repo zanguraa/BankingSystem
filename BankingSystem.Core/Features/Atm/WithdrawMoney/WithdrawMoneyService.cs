@@ -30,62 +30,65 @@ public class WithdrawMoneyService : IWithdrawMoneyService
 
     public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequestWithCardNumber requestDto)
     {
-
         var card = await _cardAuthorizationRepository.GetCardByNumberAsync(requestDto.CardNumber);
         if (card == null)
         {
-            return new WithdrawResponse { IsSuccessful = false, Message = "card not found." };
+            return new WithdrawResponse { IsSuccessful = false, Message = "Card not found." };
         }
 
         var accountInfo = await _viewBalanceRepository.GetBalanceInfoByCardNumberAsync(card.CardNumber);
+        if (accountInfo == null)
+        {
+            return new WithdrawResponse { IsSuccessful = false, Message = "Account information not found." };
+        }
 
+        if (requestDto.Amount % 5 != 0 || requestDto.Amount < 5 || requestDto.Amount > _dailyWithdrawalLimitInGel)
+        {
+            return new WithdrawResponse { IsSuccessful = false, Message = "Invalid withdrawal amount. Amount must be in multiples of 5 and within the daily limit." };
+        }
 
         decimal amountToDeduct = requestDto.Amount;
         if (requestDto.Currency != accountInfo.Currency)
         {
-            // Convert the withdrawal amount to the account's currency using the conversion service
             amountToDeduct = _currencyConversionService.Convert(
-            requestDto.Amount,
-            requestDto.Currency,
-            accountInfo.Currency
-        );
+                requestDto.Amount,
+                requestDto.Currency,
+                accountInfo.Currency
+            );
         }
 
-        var commission = amountToDeduct * 0.02m;
-        var totalDeduction = amountToDeduct + commission;
+        decimal commission = amountToDeduct * 0.02m;
+        decimal totalDeduction = amountToDeduct + commission;
 
-        // Check if the total amount to deduct (including commission) exceeds the account balance
         if (totalDeduction > accountInfo.InitialAmount)
         {
             return new WithdrawResponse { IsSuccessful = false, Message = "Insufficient funds.", RemainingBalance = accountInfo.InitialAmount };
         }
 
         var report24HoursRequest = new WithdrawalCheck() { BankAccountId = card.AccountId, WithdrawalDate = DateTime.Now.AddDays(-1) };
-
-        // Check the total withdrawal amount in the last 24 hours to ensure it's within the daily limit
         var totalWithdrawnAmountInGel = await _withdrawMoneyRepository.GetWithdrawalsOf24hoursByCardId(report24HoursRequest);
+
         if (totalWithdrawnAmountInGel.Sum + totalDeduction > _dailyWithdrawalLimitInGel)
         {
             return new WithdrawResponse { IsSuccessful = false, Message = "Daily withdrawal limit exceeded.", RemainingBalance = accountInfo.InitialAmount };
         }
 
+        decimal atmDeductAmount = totalDeduction;
 
-        WithdrawRequest withdrawRequest = new()
+        var withdrawalResult = await _withdrawMoneyRepository.WithdrawAsync(new WithdrawRequest
         {
             AccountId = card.AccountId,
             Currency = requestDto.Currency,
-            Amount = totalDeduction,
-        };
-
-
-        var result = await _withdrawMoneyRepository.WithdrawAsync(withdrawRequest);
+            Amount = atmDeductAmount,
+        });
 
         return new WithdrawResponse
         {
             IsSuccessful = true,
-            Message = $"Withdrawal of {requestDto.Amount} {requestDto.Currency} was successful.",
-            RemainingBalance = accountInfo.InitialAmount - totalDeduction,
+            Message = $"Withdrawal of {requestDto.Amount} {requestDto.Currency} was successful. Commission: {commission} {accountInfo.Currency}.",
+            RemainingBalance = accountInfo.InitialAmount - atmDeductAmount,
             Commision = commission
         };
     }
+
 }

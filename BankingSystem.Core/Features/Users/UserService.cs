@@ -48,11 +48,5 @@ namespace BankingSystem.Core.Features.Users
         {
             return await _userManager.FindByEmailAsync(email);
         }
-
-
-        public Task RegisterUser(CreateBankAccountRequest registerRequest)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

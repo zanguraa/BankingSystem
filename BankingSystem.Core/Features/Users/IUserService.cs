@@ -13,6 +13,5 @@ namespace BankingSystem.Core.Features.Users
     {
         Task<UserEntity> RegisterUser(RegisterUserRequest registerRequest);
         Task<UserEntity> GetUserByEmail(string email);
-        Task RegisterUser(CreateBankAccountRequest registerRequest);
     }
 }

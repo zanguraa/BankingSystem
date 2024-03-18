@@ -148,17 +148,17 @@ namespace BankingSystem.Core.Features.Reports
             var currentYearQuery = @"
         SELECT COUNT(*) 
         FROM Users 
-        WHERE YEAR(RegistrationDate) = YEAR(GETDATE());";
+        WHERE YEAR(RegisterDate) = YEAR(GETDATE());";
 
             var lastYearQuery = @"
         SELECT COUNT(*) 
         FROM Users 
-        WHERE YEAR(RegistrationDate) = YEAR(GETDATE()) - 1;";
+        WHERE YEAR(RegisterDate) = YEAR(GETDATE()) - 1;";
 
             var last30DaysQuery = @"
         SELECT COUNT(*) 
         FROM Users 
-        WHERE RegistrationDate >= DATEADD(DAY, -30, GETDATE());";
+        WHERE RegisterDate >= DATEADD(DAY, -30, GETDATE());";
 
             // Use Query method and manually extract the first or default value
             var currentYearCount = (await _dataManager.Query<int>(currentYearQuery)).FirstOrDefault();

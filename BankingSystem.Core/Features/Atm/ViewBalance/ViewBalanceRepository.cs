@@ -45,6 +45,4 @@ public class ViewBalanceRepository : IViewBalanceRepository
 
         return balanceInfo.FirstOrDefault();
     }
-
-
 }

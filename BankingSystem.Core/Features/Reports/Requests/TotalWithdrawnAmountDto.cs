@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankingSystem.Core.Features.Reports.Dto_s
+namespace BankingSystem.Core.Features.Reports.Requests
 {
     public class TotalWithdrawnAmountDto
     {

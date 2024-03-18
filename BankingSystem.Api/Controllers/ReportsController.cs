@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using BankingSystem.Core.Features.Reports;
-using BankingSystem.Core.Features.Reports.Dto_s;
+using BankingSystem.Core.Features.Reports.Requests;
 
 [ApiController]
 [Route("api/[controller]")]

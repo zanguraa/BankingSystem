@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BankingSystem.Core.Data;
-using BankingSystem.Core.Features.Reports.Dto_s;
+using BankingSystem.Core.Features.Reports.Requests;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
 
 namespace BankingSystem.Core.Features.Reports
@@ -17,7 +17,6 @@ namespace BankingSystem.Core.Features.Reports
             _dataManager = dataManager;
         }
 
-        // Gets statistical data for transactions within a given time frame
         public async Task<TransactionStatisticsDto> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate)
         {
             const string transactionQuery = @"
@@ -31,31 +30,28 @@ namespace BankingSystem.Core.Features.Reports
                 ";
 
 
-            // Use QueryAsync and then FirstOrDefault to get a single instance of TransactionStatisticsAggregate
             var statisticsList = await _dataManager.Query<TransactionStatisticsAggregate, dynamic>(
                 transactionQuery,
                 new { startDate, endDate });
-            var statistics = statisticsList.FirstOrDefault(); // This is where we mimic QueryFirstOrDefaultAsync
+            var statistics = statisticsList.FirstOrDefault();
 
             if (statistics == null) return new TransactionStatisticsDto();
 
-            // Map the aggregated result to the DTO
             return new TransactionStatisticsDto
             {
                 TransactionsLastMonth = statistics.NumberOfTransactions,
                 IncomeLastMonthGEL = statistics.IncomeLastMonthGEL,
                 IncomeLastMonthUSD = statistics.IncomeLastMonthUSD,
                 IncomeLastMonthEUR = statistics.IncomeLastMonthEUR,
-                // Initialize other properties as needed
             };
         }
-        // Gets daily transaction counts within a given time frame
+
         public async Task<IEnumerable<DailyTransactionCountDto>> GetDailyTransactionCountsAsync(DateTime startDate, DateTime endDate)
         {
             const string dailyCountQuery = @"
                 SELECT 
-                    CAST(TransactionDate AS DATE) AS Date, 
-                    COUNT(*) AS TransactionCount
+                CAST(TransactionDate AS DATE) AS Date, 
+                COUNT(*) AS TransactionCount
                 FROM Transactions
                 WHERE TransactionDate BETWEEN @startDate AND @endDate
                 GROUP BY CAST(TransactionDate AS DATE)
@@ -70,8 +66,8 @@ namespace BankingSystem.Core.Features.Reports
         {
             const string withdrawalQuery = @"
                 SELECT 
-                    RequestedCurrency AS Currency,
-                    SUM(RequestedAmount) AS TotalWithdrawn
+                RequestedCurrency AS Currency,
+                SUM(RequestedAmount) AS TotalWithdrawn
                 FROM [BankingSystem_db].[dbo].[DailyWithdrawals]
                 WHERE WithdrawalDate BETWEEN @startDate AND @endDate
                 GROUP BY RequestedCurrency;
@@ -119,7 +115,6 @@ namespace BankingSystem.Core.Features.Reports
 
             var result = new TransactionStatisticsDto
             {
-                // Initialize all properties to 0 or appropriate default values
                 AverageRevenuePerTransactionGEL = 0,
                 AverageRevenuePerTransactionUSD = 0,
                 AverageRevenuePerTransactionEUR = 0
@@ -146,21 +141,20 @@ namespace BankingSystem.Core.Features.Reports
         public async Task<UserStatisticsDto> GetUserStatisticsAsync()
         {
             var currentYearQuery = @"
-        SELECT COUNT(*) 
-        FROM Users 
-        WHERE YEAR(RegisterDate) = YEAR(GETDATE());";
+                SELECT COUNT(*) 
+                FROM Users 
+                WHERE YEAR(RegisterDate) = YEAR(GETDATE());";
 
             var lastYearQuery = @"
-        SELECT COUNT(*) 
-        FROM Users 
-        WHERE YEAR(RegisterDate) = YEAR(GETDATE()) - 1;";
+                SELECT COUNT(*) 
+                FROM Users 
+                WHERE YEAR(RegisterDate) = YEAR(GETDATE()) - 1;";
 
             var last30DaysQuery = @"
-        SELECT COUNT(*) 
-        FROM Users 
-        WHERE RegisterDate >= DATEADD(DAY, -30, GETDATE());";
+                SELECT COUNT(*) 
+                FROM Users 
+                WHERE RegisterDate >= DATEADD(DAY, -30, GETDATE());";
 
-            // Use Query method and manually extract the first or default value
             var currentYearCount = (await _dataManager.Query<int>(currentYearQuery)).FirstOrDefault();
             var lastYearCount = (await _dataManager.Query<int>(lastYearQuery)).FirstOrDefault();
             var last30DaysCount = (await _dataManager.Query<int>(last30DaysQuery)).FirstOrDefault();

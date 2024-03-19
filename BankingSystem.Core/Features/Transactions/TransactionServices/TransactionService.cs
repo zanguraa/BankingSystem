@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BankingSystem.Api.Middlewares.Exceptions;
 using BankingSystem.Core.Features.BankAccounts;
 using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Transactions.Currency;
 using BankingSystem.Core.Features.Transactions.TransactionsRepository;
+using BankingSystem.Core.Shared.Exceptions;
 
 namespace BankingSystem.Core.Features.Transactions.TransactionServices
 {

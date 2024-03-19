@@ -12,5 +12,6 @@
         public string PersonalId { get; set; }
 		public DateTime RegistrationDate { get; set; }
 
+
 	}
 }

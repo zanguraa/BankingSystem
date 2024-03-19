@@ -12,6 +12,5 @@ namespace BankingSystem.Core.Features.Users
     public interface IUserService
     {
         Task<UserEntity> RegisterUser(RegisterUserRequest registerRequest);
-        Task<UserEntity> GetUserByEmail(string email);
     }
 }

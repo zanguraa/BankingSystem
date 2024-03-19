@@ -1,5 +1,5 @@
 ﻿
-using BankingSystem.Api.Middlewares.Exceptions;
+using BankingSystem.Core.Shared.Exceptions;
 
 namespace BankingSystem.Api.Middlewares
 {

@@ -19,6 +19,7 @@
     <None Remove="Scripts\Script010 -  CreateViewBalanceTable.sql" />
     <None Remove="scripts\Script011 -  CreateDailyWithdrawalTable.sql" />
     <None Remove="Scripts\Script012 - AlterTableDailyWidhtrawal.sql" />
+    <None Remove="Scripts\Script013 - AlterTransactionsTable.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,6 +51,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Scripts\Script012 - AlterTableDailyWidhtrawal.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Scripts\Script013 - AlterTransactionsTable.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

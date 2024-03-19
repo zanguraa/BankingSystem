@@ -56,7 +56,13 @@ public class BankAccountService : IBankAccountService
 
     public async Task<bool> CheckAccountOwnershipAsync(int accountId, string userId)
     {
-        return await _transactionRepository.CheckAccountOwnershipAsync(accountId, userId);
+        var isCorrectAccount = await _transactionRepository.CheckAccountOwnershipAsync(accountId, userId);
+        if(!isCorrectAccount)
+        {
+            throw new Exception("You do not have permission to access this account.");
+        }
+
+        return isCorrectAccount;
     }
 
     public async Task<bool> ValidateAccountAsync(int accountId)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BankingSystem.Api.Middlewares.Exceptions;
 using BankingSystem.Core.Features.BankAccounts;
 using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Transactions.Currency;
@@ -31,9 +32,15 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
 
         public async Task<TransactionResponse> TransferTransactionAsync(CreateTransactionRequest request)
         {
+            if(string.IsNullOrEmpty(request.UserId))
+            {
+                throw new DomainException("User not found.");
+            }
 
-            // Validate and fetch accounts
-            var fromAccount = await _bankAccountRepository.GetAccountByIdAsync(request.FromAccountId);
+			await _bankAccountService.CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
+
+			// Validate and fetch accounts
+			var fromAccount = await _bankAccountRepository.GetAccountByIdAsync(request.FromAccountId);
             var toAccount = await _bankAccountRepository.GetAccountByIdAsync(request.ToAccountId);
             if (fromAccount == null || toAccount == null)
             {

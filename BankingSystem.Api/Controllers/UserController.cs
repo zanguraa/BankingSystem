@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Api.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
 	[ApiController]
 	public class UserController : ControllerBase
 	{
-        private readonly UserManager<UserEntity> _userManager;
-        private readonly IUserService _userService;
+		private readonly UserManager<UserEntity> _userManager;
+		private readonly IUserService _userService;
 		private readonly ILogger<UserController> _logger;
 
 		public UserController(UserManager<UserEntity> userManager, IUserService userService, ILogger<UserController> logger)
@@ -22,39 +22,30 @@ namespace BankingSystem.Api.Controllers
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
-        [HttpPost("get-user-by-email")]
-        public async Task<IActionResult> GetUserByEmail([FromBody]string email)
-        {
-            if (string.IsNullOrEmpty(email))
-            {
-                return BadRequest("Email parameter is required");
-            }
+		[HttpPost("get-user-by-email")]
+		public async Task<IActionResult> GetUserByEmail([FromBody] string email)
+		{
+			if (string.IsNullOrEmpty(email))
+			{
+				return BadRequest("Email parameter is required");
+			}
+			var user = await _userManager.FindByEmailAsync(email);
+			if (user == null)
+			{
+				return NotFound("User not found");
+			}
 
-            try
-            {
-                var user = await _userManager.FindByEmailAsync(email);
-                if (user == null)
-                {
-                    return NotFound("User not found");
-                }
+			var userDto = new UserDto
+			{
+				PersonalId = user.PersonalId,
+				BirthdayDate = user.BirthdayDate,
+				Email = user.Email,
+				FirstName = user.FirstName,
+				LastName = user.LastName,
+				PhoneNumber = user.PhoneNumber
+			};
+			return Ok(userDto);
+		}
 
-                var userDto = new UserDto
-                {
-                    PersonalId = user.PersonalId,
-                    BirthdayDate = user.BirthdayDate,
-                    Email = user.Email,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    PhoneNumber = user.PhoneNumber
-                };
-                return Ok(userDto);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error fetching user details: {ex.Message}");
-                return StatusCode(500, "Internal Server Error");
-            }
-        }
-
-    }
-    }
+	}
+}

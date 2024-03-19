@@ -20,8 +20,4 @@
     <ProjectReference Include="..\BankingSystem.Core\BankingSystem.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Middlewares\" />
-  </ItemGroup>
-
 </Project>

@@ -1,4 +1,5 @@
-﻿using BankingSystem.Core.Data;
+﻿using BankingSystem.Api.Middlewares;
+using BankingSystem.Core.Data;
 using BankingSystem.Core.Data.Entities;
 using BankingSystem.Core.Features.Atm.CardAuthorization;
 using BankingSystem.Core.Features.Atm.ChangePin;
@@ -121,8 +122,10 @@ namespace BankingSystem.Api
 
 
             var app = builder.Build();
+			
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-            if (app.Environment.IsDevelopment())
+			if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();

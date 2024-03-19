@@ -22,27 +22,22 @@ namespace BankingSystem.Api.Controllers
 		public async Task<IActionResult> CreateCard([FromBody] CreateCardRequest createCardRequest)
 		{
 			var result = await _cardService.CreateCardAsync(createCardRequest);
-			if (result == null) 
+			if (result == null)
 			{
 				return BadRequest("Card didnt create");
 			}
-			return Ok(result); 
+			return Ok(result);
 		}
 
-		
+
 
 		[HttpGet("user/{userId}")]
 		public async Task<IActionResult> GetCardsByUserId(int userId)
 		{
-			try
-			{
-				var cards = await _cardService.GetCardsByUserIdAsync(userId);
-				return Ok(cards);
-			}
-			catch (Exception ex)
-			{
-				return BadRequest(ex.Message);
-			}
+
+			var cards = await _cardService.GetCardsByUserIdAsync(userId);
+			return Ok(cards);
+
 		}
 	}
 }

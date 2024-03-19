@@ -55,49 +55,7 @@ namespace BankingSystem.Api.Controllers
 			return Ok(_JwtTokenGenerator.Generate(user.Id.ToString(), role.FirstOrDefault() ?? ""));
 		}
 
-		// პაროლის დარესეტების token-ის გენერაცია
-		[HttpPost("request-password-reset")]
-		public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetRequest request)
-		{
-			// 1. მომხმარებლის ბაზაში პოვნა 
-			var user = await _userManager.FindByEmailAsync(request.Email);
-			if (user == null)
-			{
-				return NotFound("მომხმარებელი ვერ მოიძებნა");
-			}
-
-			// 2. პაროლის დარესეტების token-ის გენერაცია
-			var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-			// // 3. მომხმარებლის ელ. ფოსტაზე token-ის გაგზავნა
-			// var url = $"https://myapp.com/reset-passowrd/{user.Id.ToString()}/{token}";
-			// var emailBody = $"<a href=\"{url}\">Reset password</a>";
-			// var emailTitle = $"გამარჯობა, პაროლის შესაცვლელად მიყევით ბმულს: {resetUrl}";
-			// _emailSender.Send(emailTitle, emailBody);
-
-			return Ok();
-		}
-
-		// პაროლის დარესეტება
-		[HttpPost("reset-password")]
-		public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
-		{
-			var user = await _userManager.FindByIdAsync(request.UserId.ToString());
-			if (user == null)
-			{
-				return NotFound("მომხმარებელი ვერ მოიძებნა");
-			}
-			var resetResult = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
-
-			if (!resetResult.Succeeded)
-			{
-				var firstError = resetResult.Errors.First();
-				return StatusCode(500, firstError.Description);
-			}
-
-			return Ok();
-		}
-
+		
 		[HttpGet]
 		[Route("test")]
 		[Authorize("MyApiUserPolicy", AuthenticationSchemes = "Bearer")]

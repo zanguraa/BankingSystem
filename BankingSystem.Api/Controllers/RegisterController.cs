@@ -2,7 +2,6 @@
 using BankingSystem.Core.Features.Users.CreateUser;
 using BankingSystem.Core.Shared;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

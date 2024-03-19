@@ -16,11 +16,6 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
             _dataManager = dataManager;
         }
 
-        public Task<bool> RecordTransactionAsync(Transaction transaction)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> WithdrawAsync(WithdrawRequest request)
         {
             var transactionCommands = new List<SqlCommandRequest>
@@ -64,11 +59,6 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
             var result = await _dataManager.Query<DecimalSum, dynamic>(query, options);
             return
                 result.FirstOrDefault();
-        }
-
-        public Task<bool> WithdrawAsync(string accountNumber, decimal amount)
-        {
-            throw new NotImplementedException();
         }
     }
 }

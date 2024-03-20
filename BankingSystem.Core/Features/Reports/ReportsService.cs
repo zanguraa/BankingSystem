@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using BankingSystem.Core.Features.Reports;
 using BankingSystem.Core.Features.Reports.Requests;
 
@@ -56,7 +54,6 @@ public class ReportsService : IReportsService
 
     public async Task<TotalWithdrawnAmountDto> GetTotalWithdrawnAmountAsync(DateTime startDate, DateTime endDate)
     {
-
         return await _reportsRepository.GetTotalWithdrawnAmountAsync(startDate, endDate);
     }
 

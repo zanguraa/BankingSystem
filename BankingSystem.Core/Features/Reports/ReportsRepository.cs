@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.Reports.Requests;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
+using System.Text.RegularExpressions;
 
 namespace BankingSystem.Core.Features.Reports
 {
@@ -19,7 +20,7 @@ namespace BankingSystem.Core.Features.Reports
 
         public async Task<TransactionStatisticsDto> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate)
         {
-            
+
             const string transactionQuery = @"
                 SELECT 
                     COUNT(TransactionId) AS NumberOfTransactions,
@@ -55,8 +56,8 @@ namespace BankingSystem.Core.Features.Reports
 
             const string dailyCountQuery = @"
                 SELECT 
-                CAST([TransactionDate] AS DATE) AS Date,
-                COUNT(*) AS TransactionCount 
+                    CAST([TransactionDate] AS DATE) AS Date,
+                    COUNT(*) AS TransactionCount 
                 FROM [BankingSystem_db].[dbo].[Transactions]
                 WHERE [TransactionDate] >= @startDate AND [TransactionDate] <= @endDate
                 GROUP BY CAST([TransactionDate] AS DATE) 
@@ -67,15 +68,18 @@ namespace BankingSystem.Core.Features.Reports
                 dailyCountQuery,
                 new { startDate, endDate });
         }
+
         public async Task<TotalWithdrawnAmountDto> GetTotalWithdrawnAmountAsync(DateTime startDate, DateTime endDate)
         {
+            endDate = endDate.AddDays(1).AddSeconds(-1);
+
             const string withdrawalQuery = @"
                 SELECT 
-                RequestedCurrency AS Currency,
-                SUM(RequestedAmount) AS TotalWithdrawn
+                  [FromAccountCurrency] AS Currency,
+                  SUM([FromAmount]) AS TotalWithdrawn
                 FROM [BankingSystem_db].[dbo].[Transactions]
-                WHERE WithdrawalDate BETWEEN @startDate AND @endDate
-                GROUP BY RequestedCurrency;
+                WHERE [TransactionDate] BETWEEN @startDate AND @endDate
+                GROUP BY [FromAccountCurrency];
             ";
 
             var withdrawalAmounts = await _dataManager.Query<WithdrawnAmountByCurrencyDto, dynamic>(withdrawalQuery, new { startDate, endDate });
@@ -99,7 +103,6 @@ namespace BankingSystem.Core.Features.Reports
 
             return result;
         }
-
 
 
         public async Task<TransactionStatisticsDto> GetAverageRevenuePerTransactionAsync(DateTime startDate, DateTime endDate)

@@ -48,7 +48,7 @@ namespace BankingSystem.Core.Features.Reports
 
         public async Task<IEnumerable<DailyTransactionCountDto>> GetDailyTransactionCountsAsync(DateTime startDate, DateTime endDate)
         {
-            endDate = endDate.AddHours(23).AddMinutes(59);
+            endDate = endDate.AddDays(1).AddSeconds(-1);
 
             const string dailyCountQuery = @"
                 SELECT 

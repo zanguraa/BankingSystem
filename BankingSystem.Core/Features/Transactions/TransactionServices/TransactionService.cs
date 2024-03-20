@@ -32,35 +32,30 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
 
         public async Task<TransactionResponse> TransferTransactionAsync(CreateTransactionRequest request)
         {
-            if(string.IsNullOrEmpty(request.UserId))
+            if (string.IsNullOrEmpty(request.UserId))
             {
                 throw new DomainException("User not found.");
             }
 
-			await _bankAccountService.CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
+            await _bankAccountService.CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
 
-			// Validate and fetch accounts
-			var fromAccount = await _bankAccountRepository.GetAccountByIdAsync(request.FromAccountId);
+            var fromAccount = await _bankAccountRepository.GetAccountByIdAsync(request.FromAccountId);
             var toAccount = await _bankAccountRepository.GetAccountByIdAsync(request.ToAccountId);
             if (fromAccount == null || toAccount == null)
             {
                 throw new ArgumentException("One or both account IDs are invalid.");
             }
 
-            // Determine transaction type
             var transactionType = fromAccount.UserId == toAccount.UserId ? TransactionType.Internal : TransactionType.External;
 
-            // Calculate fee and convert amount
             decimal transactionFee = CalculateTransactionFee(request.Amount, transactionType);
             decimal convertedAmount = _currencyConversionService.Convert(request.Amount, request.Currency, request.ToCurrency);
 
-            // Check if the fromAccount has enough balance
             if (fromAccount.InitialAmount < (request.Amount + transactionFee))
             {
                 throw new InvalidOperationException("Insufficient funds to complete this transaction.");
             }
 
-            // ტრანზაქციის შექმნა
             var transaction = new Transaction
             {
                 FromAccountId = request.FromAccountId,
@@ -94,8 +89,8 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
 
         private decimal CalculateTransactionFee(decimal amount, TransactionType transactionType)
         {
-            decimal feePercentage = 0; // Initial fee percentage
-            decimal fixedFee = 0; // Initial fixed fee
+            decimal feePercentage = 0;
+            decimal fixedFee = 0;
 
             if (transactionType == TransactionType.External)
             {

@@ -71,17 +71,15 @@ public class WithdrawMoneyService : IWithdrawMoneyService
 
         var withdrawRequest = new WithdrawRequest
         {
-            AccountId = card.AccountId, // ID of the account being withdrawn from
-            Amount = amountToDeduct, // Final amount after conversion and commission
-            Currency = accountInfo.Currency, // Currency of the account
-            RequestedAmount = requestDto.Amount, // Originally requested amount
-            RequestedCurrency = requestDto.Currency, // Originally requested currency
-                                                     // ... any other necessary properties
+            AccountId = card.AccountId, 
+            Amount = amountToDeduct, 
+            Currency = accountInfo.Currency, 
+            RequestedAmount = requestDto.Amount, 
+            RequestedCurrency = requestDto.Currency, 
         };
 
-        // Call the method to perform the withdrawal
         bool withdrawalSuccess = await _withdrawMoneyRepository.WithdrawAsync(withdrawRequest);
-        // Prepare the transaction log
+
         var logEntry = new TransactionLog
         {
             RequestedAmount = requestDto.Amount,
@@ -92,10 +90,7 @@ public class WithdrawMoneyService : IWithdrawMoneyService
             WithdrawalDate = DateTime.UtcNow
         };
 
-        // It's assumed you have a method to save this log entry to the database.
-        // For example, _transactionLogRepository.SaveTransactionLogAsync(logEntry);
-
-        // Prepare the response based on the operation success
+        
         var withdrawalResult = new WithdrawResponse
         {
             IsSuccessful = withdrawalSuccess,

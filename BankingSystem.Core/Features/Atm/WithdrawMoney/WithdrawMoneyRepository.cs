@@ -34,14 +34,14 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
                 INSERT INTO DailyWithdrawals 
                 (BankAccountId, WithdrawalDate, TotalAmount, Currency, RequestedAmount, RequestedCurrency)
                 VALUES (@BankAccountId, GETDATE(), @TotalAmount, @Currency, @RequestedAmount, @RequestedCurrency)",
-            // Ensure you pass the correct parameters for RequestedAmount and RequestedCurrency
-            // It might involve capturing these from the request or calculating them as necessary before this method is called.
+
+
                 Params = new
             {
                 BankAccountId = request.AccountId,
-                TotalAmount = request.Amount, // This might need adjustment if it refers to the converted amount
-                Currency = request.Currency, // This might need adjustment if it refers to the converted currency
-                RequestedAmount = request.RequestedAmount, // Assuming these are new properties or calculated values you have
+                TotalAmount = request.Amount,
+                Currency = request.Currency,
+                RequestedAmount = request.RequestedAmount,
                 RequestedCurrency = request.RequestedCurrency
             }
         }

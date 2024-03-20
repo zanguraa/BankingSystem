@@ -19,6 +19,7 @@ namespace BankingSystem.Core.Features.Reports
 
         public async Task<TransactionStatisticsDto> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate)
         {
+            
             const string transactionQuery = @"
                 SELECT 
                     COUNT(TransactionId) AS NumberOfTransactions,

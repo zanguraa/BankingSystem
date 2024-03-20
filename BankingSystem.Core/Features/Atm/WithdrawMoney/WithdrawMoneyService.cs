@@ -2,6 +2,10 @@
 using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Features.Transactions.Currency;
 using BankingSystem.Core.Features.Atm.CardAuthorization;
+using Azure.Core;
+using BankingSystem.Core.Features.Transactions.TransactionServices;
+using BankingSystem.Core.Features.Transactions;
+using BankingSystem.Core.Features.Transactions.TransactionsRepository;
 
 public class WithdrawMoneyService : IWithdrawMoneyService
 {
@@ -11,21 +15,23 @@ public class WithdrawMoneyService : IWithdrawMoneyService
     private readonly int _dailyWithdrawalLimitInGel = 10000;
     private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
     public readonly IViewBalanceRepository _viewBalanceRepository;
-
+    private readonly ITransactionRepository _transactionRepository;
 
     public WithdrawMoneyService(
         IWithdrawMoneyRepository withdrawMoneyRepository,
         IBankAccountRepository bankAccountRepository,
         ICurrencyConversionService currencyConversionService,
         ICardAuthorizationRepository cardAuthorizationRepository,
-        IViewBalanceRepository viewBalanceRepository)
+        IViewBalanceRepository viewBalanceRepository,
+        ITransactionRepository transactionRepository
+        )
     {
         _withdrawMoneyRepository = withdrawMoneyRepository;
         _bankAccountRepository = bankAccountRepository;
         _currencyConversionService = currencyConversionService;
         _cardAuthorizationRepository = cardAuthorizationRepository;
         _viewBalanceRepository = viewBalanceRepository;
-
+        _transactionRepository = transactionRepository;
     }
 
     public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequestWithCardNumber requestDto)
@@ -69,19 +75,25 @@ public class WithdrawMoneyService : IWithdrawMoneyService
             return new WithdrawResponse { IsSuccessful = false, Message = "Daily withdrawal limit exceeded.", RemainingBalance = accountInfo.InitialAmount };
         }
 
-        var withdrawRequest = new WithdrawRequest
+      
+
+        var transactionType = TransactionType.Atm;
+
+
+        var transaction = new Transaction
         {
-            AccountId = card.AccountId, // ID of the account being withdrawn from
-            Amount = amountToDeduct, // Final amount after conversion and commission
-            Currency = accountInfo.Currency, // Currency of the account
-            RequestedAmount = requestDto.Amount, // Originally requested amount
-            RequestedCurrency = requestDto.Currency, // Originally requested currency
-                                                     // ... any other necessary properties
+            FromAccountId = card.AccountId,
+            FromAccountCurrency = accountInfo.Currency,
+            ToAccountCurrency = requestDto.Currency,
+            ToAccountId = card.AccountId,
+            FromAmount = amountToDeduct,
+            Fee = commission,
+            TransactionType = (int)transactionType,
+            TransactionDate = DateTime.UtcNow
         };
 
-        // Call the method to perform the withdrawal
-        bool withdrawalSuccess = await _withdrawMoneyRepository.WithdrawAsync(withdrawRequest);
-        // Prepare the transaction log
+        bool withdrawalSuccess = await _transactionRepository.UpdateAccountBalancesAsync(transaction, true);
+
         var logEntry = new TransactionLog
         {
             RequestedAmount = requestDto.Amount,
@@ -92,8 +104,7 @@ public class WithdrawMoneyService : IWithdrawMoneyService
             WithdrawalDate = DateTime.UtcNow
         };
 
-        // It's assumed you have a method to save this log entry to the database.
-        // For example, _transactionLogRepository.SaveTransactionLogAsync(logEntry);
+        
 
         // Prepare the response based on the operation success
         var withdrawalResult = new WithdrawResponse

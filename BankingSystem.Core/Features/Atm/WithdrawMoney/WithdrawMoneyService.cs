@@ -77,6 +77,7 @@ public class WithdrawMoneyService : IWithdrawMoneyService
             ToAccountCurrency = requestDto.Currency,
             ToAccountId = card.AccountId,
             FromAmount = amountToDeduct,
+            ToAmount = requestDto.Amount,
             Fee = commission,
             TransactionType = (int)transactionType,
             TransactionDate = DateTime.UtcNow

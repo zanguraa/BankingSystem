@@ -33,16 +33,18 @@ namespace BankingSystem.Core.Features.Reports
             var statisticsList = await _dataManager.Query<TransactionStatisticsAggregate, dynamic>(
                 transactionQuery,
                 new { startDate, endDate });
+
             var statistics = statisticsList.FirstOrDefault();
 
-            if (statistics == null) return new TransactionStatisticsDto();
+            if (statistics == null)
+                return new TransactionStatisticsDto();
 
             return new TransactionStatisticsDto
             {
-                TransactionsLastMonth = statistics.NumberOfTransactions,
-                IncomeLastMonthGEL = statistics.IncomeLastMonthGEL,
-                IncomeLastMonthUSD = statistics.IncomeLastMonthUSD,
-                IncomeLastMonthEUR = statistics.IncomeLastMonthEUR,
+                TransactionsCount = statistics.NumberOfTransactions,
+                IncomeGEL = statistics.IncomeLastMonthGEL,
+                IncomeUSD = statistics.IncomeLastMonthUSD,
+                IncomeEUR = statistics.IncomeLastMonthEUR
             };
         }
 
@@ -115,9 +117,9 @@ namespace BankingSystem.Core.Features.Reports
 
             var result = new TransactionStatisticsDto
             {
-                AverageRevenuePerTransactionGEL = 0,
-                AverageRevenuePerTransactionUSD = 0,
-                AverageRevenuePerTransactionEUR = 0
+                IncomeGEL = 0,
+                IncomeUSD = 0,
+                IncomeEUR = 0
             };
 
             foreach (var avg in avgRevenueResults)
@@ -125,13 +127,13 @@ namespace BankingSystem.Core.Features.Reports
                 switch (avg.Currency)
                 {
                     case "GEL":
-                        result.AverageRevenuePerTransactionGEL = avg.AverageRevenue;
+                        result.IncomeGEL = avg.AverageRevenue;
                         break;
                     case "USD":
-                        result.AverageRevenuePerTransactionUSD = avg.AverageRevenue;
+                        result.IncomeUSD = avg.AverageRevenue;
                         break;
                     case "EUR":
-                        result.AverageRevenuePerTransactionEUR = avg.AverageRevenue;
+                        result.IncomeEUR = avg.AverageRevenue;
                         break;
                 }
             }

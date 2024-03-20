@@ -8,23 +8,11 @@ namespace BankingSystem.Core.Features.Reports.Requests
 {
 	public class TransactionStatisticsDto
 	{
-		public int TransactionsLastMonth { get; set; }
-		public int TransactionsLastSixMonths { get; set; }
-		public int TransactionsLastYear { get; set; }
+        public int TransactionsCount { get; set; } // ტრანზაქციების საერთო რაოდენობა
+        public decimal IncomeGEL { get; set; } // შემოსავალი ლარში
+        public decimal IncomeUSD { get; set; } // შემოსავალი აშშ დოლარში
+        public decimal IncomeEUR { get; set; } // შემოსავალი ევროში
 
-		public decimal IncomeLastMonthGEL { get; set; }
-		public decimal IncomeLastSixMonthsGEL { get; set; }
-		public decimal IncomeLastYearGEL { get; set; }
-		public decimal IncomeLastMonthUSD { get; set; }
-		public decimal IncomeLastSixMonthsUSD { get; set; }
-		public decimal IncomeLastYearUSD { get; set; }
-		public decimal IncomeLastMonthEUR { get; set; }
-		public decimal IncomeLastSixMonthsEUR { get; set; }
-		public decimal IncomeLastYearEUR { get; set; }
-		public decimal AverageRevenuePerTransactionGEL { get; set; }
-		public decimal AverageRevenuePerTransactionUSD { get; set; }
-		public decimal AverageRevenuePerTransactionEUR { get; set; }
-	
-	}
+    }
 }
 

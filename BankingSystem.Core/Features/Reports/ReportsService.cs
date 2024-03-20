@@ -13,12 +13,20 @@ public class ReportsService : IReportsService
 		_reportsRepository = reportsRepository;
 	}
 
-	public async Task<TransactionStatisticsDto> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate)
-	{
-		return await _reportsRepository.GetTransactionStatisticsAsync(startDate, endDate);
-	}
+    public async Task<TransactionStatisticsDto> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate)
+    {
+        var statisticsAggregate = await _reportsRepository.GetTransactionStatisticsAsync(startDate, endDate);
 
-	public async Task<IEnumerable<DailyTransactionCountDto>> GetDailyTransactionCountsAsync(DateTime startDate, DateTime endDate)
+        return new TransactionStatisticsDto
+        {
+            TransactionsCount = statisticsAggregate.TransactionsCount,
+            IncomeGEL = statisticsAggregate.IncomeGEL,
+            IncomeUSD = statisticsAggregate.IncomeUSD,
+            IncomeEUR = statisticsAggregate.IncomeEUR
+        };
+    }
+
+    public async Task<IEnumerable<DailyTransactionCountDto>> GetDailyTransactionCountsAsync(DateTime startDate, DateTime endDate)
 	{
 		return await _reportsRepository.GetDailyTransactionCountsAsync(startDate, endDate);
 	}

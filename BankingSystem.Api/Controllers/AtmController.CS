@@ -117,7 +117,6 @@ namespace BankingSystem.Api.Controllers
 			// Extract the card number from the JWT token's claims
 			var tokenCardNumber = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
 
-			// Check if the card number in the token matches the card number in the request
 			if (tokenCardNumber == null)
 			{
 				return Unauthorized("The card number does not match the authorized user.");

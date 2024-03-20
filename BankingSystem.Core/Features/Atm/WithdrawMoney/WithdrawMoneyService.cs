@@ -84,6 +84,7 @@ public class WithdrawMoneyService : IWithdrawMoneyService
 
         bool withdrawalSuccess = await _transactionRepository.UpdateAccountBalancesAsync(transaction, true);
 
+
         var logEntry = new TransactionLog
         {
             RequestedAmount = requestDto.Amount,

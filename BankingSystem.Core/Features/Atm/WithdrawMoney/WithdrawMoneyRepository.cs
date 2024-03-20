@@ -16,6 +16,43 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
             _dataManager = dataManager;
         }
 
+
+
+        public async Task<bool> WithdrawAsync(WithdrawRequest request)
+        {
+            var transactionCommands = new List<SqlCommandRequest>
+            {
+                 new SqlCommandRequest
+            {
+                Query = @"
+                    UPDATE BankAccounts
+                    SET InitialAmount = InitialAmount - @Amount
+                    WHERE Id = @AccountId",
+                Params = new { request.AccountId, request.Amount }
+            },
+                new SqlCommandRequest
+            {
+            Query = @"
+                INSERT INTO DailyWithdrawals 
+                (BankAccountId, WithdrawalDate, TotalAmount, Currency, RequestedAmount, RequestedCurrency)
+                VALUES (@BankAccountId, GETDATE(), @TotalAmount, @Currency, @RequestedAmount, @RequestedCurrency)",
+
+
+                Params = new
+            {
+                BankAccountId = request.AccountId,
+                TotalAmount = request.Amount,
+                Currency = request.Currency,
+                RequestedAmount = request.RequestedAmount,
+                RequestedCurrency = request.RequestedCurrency
+            }
+        }
+    };
+
+            return await _dataManager.ExecuteWithTransaction(transactionCommands);
+        }
+
+
         public async Task<DecimalSum?> GetWithdrawalsOf24hoursByCardId(WithdrawalCheck options)
         {
             var query = @"SELECT SUM(d.TotalAmount * c.Rate) AS Sum FROM DailyWithdrawals AS d

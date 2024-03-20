@@ -48,15 +48,17 @@ namespace BankingSystem.Core.Features.Reports
 
         public async Task<IEnumerable<DailyTransactionCountDto>> GetDailyTransactionCountsAsync(DateTime startDate, DateTime endDate)
         {
+            endDate = endDate.AddHours(23).AddMinutes(59);
+
             const string dailyCountQuery = @"
                 SELECT 
-                CAST(TransactionDate AS DATE) AS Date, 
-                COUNT(*) AS TransactionCount
-                FROM Transactions
-                WHERE TransactionDate BETWEEN @startDate AND @endDate
-                GROUP BY CAST(TransactionDate AS DATE)
+                CAST([TransactionDate] AS DATE) AS Date,
+                COUNT(*) AS TransactionCount 
+                FROM [BankingSystem_db].[dbo].[Transactions]
+                WHERE [TransactionDate] >= @startDate AND [TransactionDate] <= @endDate
+                GROUP BY CAST([TransactionDate] AS DATE) 
                 ORDER BY Date;
-            ";
+                ";
 
             return await _dataManager.Query<DailyTransactionCountDto, dynamic>(
                 dailyCountQuery,
@@ -68,7 +70,7 @@ namespace BankingSystem.Core.Features.Reports
                 SELECT 
                 RequestedCurrency AS Currency,
                 SUM(RequestedAmount) AS TotalWithdrawn
-                FROM [BankingSystem_db].[dbo].[DailyWithdrawals]
+                FROM [BankingSystem_db].[dbo].[Transactions]
                 WHERE WithdrawalDate BETWEEN @startDate AND @endDate
                 GROUP BY RequestedCurrency;
             ";

@@ -6,6 +6,7 @@ using Azure.Core;
 using BankingSystem.Core.Features.Transactions.TransactionServices;
 using BankingSystem.Core.Features.Transactions;
 using BankingSystem.Core.Features.Transactions.TransactionsRepository;
+using BankingSystem.Core.Shared.Exceptions;
 
 public class WithdrawMoneyService : IWithdrawMoneyService
 {
@@ -36,22 +37,17 @@ public class WithdrawMoneyService : IWithdrawMoneyService
 
     public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequestWithCardNumber requestDto)
     {
+        ValidateWithdrawRequest(requestDto);
+
         var card = await _cardAuthorizationRepository.GetCardByNumberAsync(requestDto.CardNumber);
         if (card == null)
-        {
-            return new WithdrawResponse { IsSuccessful = false, Message = "Card not found." };
-        }
+            return new() { IsSuccessful = false, Message = "Card not found." };
+
 
         var accountInfo = await _viewBalanceRepository.GetBalanceInfoByCardNumberAsync(card.CardNumber);
         if (accountInfo == null)
-        {
-            return new WithdrawResponse { IsSuccessful = false, Message = "Account information not found." };
-        }
+            return new() { IsSuccessful = false, Message = "Account information not found." };
 
-        if (requestDto.Amount % 5 != 0 || requestDto.Amount < 5 || requestDto.Amount > _dailyWithdrawalLimitInGel)
-        {
-            return new WithdrawResponse { IsSuccessful = false, Message = "Invalid withdrawal amount. Amount must be in multiples of 5 and within the daily limit." };
-        }
 
         decimal amountToDeduct = requestDto.Amount;
         if (requestDto.Currency != accountInfo.Currency)
@@ -63,22 +59,16 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         decimal totalDeduction = amountToDeduct + commission;
 
         if (totalDeduction > accountInfo.InitialAmount)
-        {
-            return new WithdrawResponse { IsSuccessful = false, Message = "Insufficient funds.", RemainingBalance = accountInfo.InitialAmount };
-        }
+            return new() { IsSuccessful = false, Message = "Insufficient funds.", RemainingBalance = accountInfo.InitialAmount };
+
 
         var report24HoursRequest = new WithdrawalCheck { BankAccountId = card.AccountId, WithdrawalDate = DateTime.Now.AddDays(-1) };
         var totalWithdrawnAmountInGel = await _withdrawMoneyRepository.GetWithdrawalsOf24hoursByCardId(report24HoursRequest);
 
         if (totalWithdrawnAmountInGel.Sum + totalDeduction > _dailyWithdrawalLimitInGel)
-        {
-            return new WithdrawResponse { IsSuccessful = false, Message = "Daily withdrawal limit exceeded.", RemainingBalance = accountInfo.InitialAmount };
-        }
-
-      
+            return new() { IsSuccessful = false, Message = "Daily withdrawal limit exceeded.", RemainingBalance = accountInfo.InitialAmount };
 
         var transactionType = TransactionType.Atm;
-
 
         var transaction = new Transaction
         {
@@ -104,9 +94,6 @@ public class WithdrawMoneyService : IWithdrawMoneyService
             WithdrawalDate = DateTime.UtcNow
         };
 
-        
-
-        // Prepare the response based on the operation success
         var withdrawalResult = new WithdrawResponse
         {
             IsSuccessful = withdrawalSuccess,
@@ -123,5 +110,16 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         return withdrawalResult;
     }
 
+    private void ValidateWithdrawRequest(WithdrawRequestWithCardNumber requestDto)
+    {
+        if (requestDto.Amount < 5 || requestDto.Amount % 5 != 0)
+        {
+            throw new InvalidAtmAmountException("Invalid withdrawal amount. Amount must be in multiples of 5");
+        }
+        if (requestDto.Amount > _dailyWithdrawalLimitInGel)
+        {
+            throw new InvalidAtmAmountException("Amount exceeds withdrawal limit");
+        }
 
+    }
 }

@@ -4,7 +4,6 @@
     {
         Task<IEnumerable<Transaction>> GetTransactionsByAccountIdAsync(int accountId);
         Task<bool> CheckAccountOwnershipAsync(int accountId, string userId);
-        Task UpdateAccountBalancesAsync(Transaction transaction);
-
+        Task<bool> UpdateAccountBalancesAsync(Transaction transaction, bool isAtmWithdrawal = false);
     }
 }

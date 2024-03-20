@@ -35,41 +35,41 @@ public class TransactionRepository : ITransactionRepository
         return count.FirstOrDefault() > 0;
     }
 
-    public async Task UpdateAccountBalancesAsync(Transaction transaction)
+    public async Task<bool> UpdateAccountBalancesAsync(Transaction transaction, bool isAtmWithdrawal = false)
     {
-
-        SqlCommandRequest decreasAmountFromAccountIdCommand = new()
-        {
-            Query = @"
-                UPDATE BankAccounts
-                SET InitialAmount = InitialAmount - @FromAmount 
-                WHERE Id = @FromAccountId",
-            Params = new { transaction.FromAccountId, transaction.FromAmount }
-        };
-
-        SqlCommandRequest increaseAmountToAccountIdCommand = new()
-        {
-            Query = @"
-                UPDATE BankAccounts
-                SET InitialAmount = InitialAmount + @ToAmount
-                WHERE Id = @ToAccountId",
-            Params = new { transaction.ToAccountId, transaction.ToAmount }
-        };
-
-        SqlCommandRequest insertTransactionLogCommand = new()
-        {
-            Query = @"
-            INSERT INTO Transactions (FromAccountId, ToAccountId, FromAccountCurrency, ToAccountCurrency, FromAmount, ToAmount, TransactionDate, TransactionType, Fee)
-            VALUES (@FromAccountId, @ToAccountId, @FromAccountCurrency, @ToAccountCurrency, @FromAmount, @ToAmount, @TransactionDate, @TransactionType, @Fee);",
-            Params = transaction
-        };
-
         var sqlCommandRequests = new List<SqlCommandRequest>
+    {
+        // ეს განახლებს FromAccountId-ის ბალანსს.
+        new SqlCommandRequest
         {
-            decreasAmountFromAccountIdCommand,
-            increaseAmountToAccountIdCommand,
-            insertTransactionLogCommand
-        };
+            Query = @"
+                UPDATE BankAccounts
+                SET InitialAmount = InitialAmount - @Amount 
+                WHERE Id = @AccountId",
+            Params = new { AccountId = transaction.FromAccountId, Amount = transaction.FromAmount }
+        },
+
+        // ეს შეინახავს ტრანზაქციას ყველა შემთხვევაში.
+        new SqlCommandRequest
+        {
+            Query = @"
+                INSERT INTO Transactions (FromAccountId, ToAccountId, FromAccountCurrency, ToAccountCurrency, FromAmount, ToAmount, TransactionDate, TransactionType, Fee)
+                VALUES (@FromAccountId, @ToAccountId, @FromAccountCurrency, @ToAccountCurrency, @FromAmount, @ToAmount, @TransactionDate, @TransactionType, @Fee);",
+            Params = transaction
+        }
+    };
+
+        if (!isAtmWithdrawal && transaction.ToAccountId == null)
+        {
+            sqlCommandRequests.Add(new SqlCommandRequest
+            {
+                Query = @"
+                UPDATE BankAccounts
+                SET InitialAmount = InitialAmount + @Amount
+                WHERE Id = @AccountId",
+                Params = new { AccountId = transaction.ToAccountId, Amount = transaction.ToAmount }
+            });
+        }
 
         bool success = await _dataManager.ExecuteWithTransaction(sqlCommandRequests);
 
@@ -77,5 +77,8 @@ public class TransactionRepository : ITransactionRepository
         {
             throw new Exception("An error occurred while processing your request.");
         }
+        return success;
     }
+
+
 }

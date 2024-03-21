@@ -17,6 +17,7 @@ public class WithdrawMoneyService : IWithdrawMoneyService
     private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
     public readonly IViewBalanceRepository _viewBalanceRepository;
     private readonly ITransactionRepository _transactionRepository;
+    private readonly IWithdrawMoneyServiceValidator _withdrawMoneyServiceValidator;
 
     public WithdrawMoneyService(
         IWithdrawMoneyRepository withdrawMoneyRepository,
@@ -24,7 +25,8 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         ICurrencyConversionService currencyConversionService,
         ICardAuthorizationRepository cardAuthorizationRepository,
         IViewBalanceRepository viewBalanceRepository,
-        ITransactionRepository transactionRepository
+        ITransactionRepository transactionRepository,
+        IWithdrawMoneyServiceValidator withdrawMoneyServiceValidator
         )
     {
         _withdrawMoneyRepository = withdrawMoneyRepository;
@@ -33,11 +35,12 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         _cardAuthorizationRepository = cardAuthorizationRepository;
         _viewBalanceRepository = viewBalanceRepository;
         _transactionRepository = transactionRepository;
+        _withdrawMoneyServiceValidator = withdrawMoneyServiceValidator;
     }
 
     public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequestWithCardNumber requestDto)
     {
-        ValidateWithdrawRequest(requestDto);
+        _withdrawMoneyServiceValidator.ValidateWithdrawRequest(requestDto);
 
         var card = await _cardAuthorizationRepository.GetCardByNumberAsync(requestDto.CardNumber);
         if (card == null)
@@ -110,18 +113,5 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         };
 
         return withdrawalResult;
-    }
-
-    private void ValidateWithdrawRequest(WithdrawRequestWithCardNumber requestDto)
-    {
-        if (requestDto.Amount < 5 || requestDto.Amount % 5 != 0)
-        {
-            throw new InvalidAtmAmountException("Invalid withdrawal amount. Amount must be in multiples of 5");
-        }
-        if (requestDto.Amount > _dailyWithdrawalLimitInGel)
-        {
-            throw new InvalidAtmAmountException("Amount exceeds withdrawal limit");
-        }
-
     }
 }

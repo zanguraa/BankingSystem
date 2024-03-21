@@ -5,6 +5,7 @@ using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.BankAccounts;
 using BankingSystem.Core.Features.BankAccounts.Requests;
 using BankingSystem.Core.Features.Transactions.TransactionsRepository;
+using BankingSystem.Core.Shared.Exceptions;
 
 public class BankAccountService : IBankAccountService
 {
@@ -46,6 +47,8 @@ public class BankAccountService : IBankAccountService
 
     public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
     {
+        ValidateAddFundsRequest(addFundsRequest);
+
         if (addFundsRequest == null || addFundsRequest.Amount == default || addFundsRequest.BankAccountId <= 0)
         {
             throw new Exception("Invalid request");
@@ -69,5 +72,25 @@ public class BankAccountService : IBankAccountService
 	{
 		return await _bankAccountRepository.ContainsAccountAsync(accountId);
 	}
+
+    private void ValidateAddFundsRequest(AddFundsRequest request)
+    {
+        if (request == null)
+        {
+            throw new ArgumentNullException(nameof(request), "The request cannot be null.");
+        }
+
+        if (request.Amount <= 0)
+        {
+            throw new InvalidAddFundsValidatinException("The amount must be greater than zero.");
+        }
+
+        if (request.BankAccountId <= 0)
+        {
+            throw new InvalidAddFundsValidatinException("The Bank Account ID must be a positive number.");
+        }
+
+    }
+
 }
-	
+

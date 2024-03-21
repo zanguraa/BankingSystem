@@ -80,5 +80,16 @@ public class TransactionRepository : ITransactionRepository
         return success;
     }
 
+    public async Task<bool> IsCurrencyValid(string currencyCode)
+    {
+        var query = "SELECT TOP 1 1 FROM [Currencies] WHERE [Code] = @CurrencyCode";
 
+        
+        var result = await _dataManager.Query<int, dynamic>(
+            query,
+            new { CurrencyCode = currencyCode }
+        );
+
+        return result.FirstOrDefault() > 0;
+    }
 }

@@ -31,13 +31,13 @@ namespace BankingSystem.Core.Features.Users
             var existingUserByEmail = await _userManager.FindByEmailAsync(registerRequest.Email);
             if (existingUserByEmail != null)
             {
-                throw new ApplicationException("Email is already registered.");
+                throw new UserValidationException("Email is already registered.");
             }
 
             var existingUserByPersonalId = await _userRepository.UserByPersonalIdExist(registerRequest.PersonalId);
             if (existingUserByPersonalId)
             {
-                throw new ApplicationException("Personal ID is already registered.");
+                throw new UserValidationException("Personal ID is already registered.");
             }
 
             var newUser = new UserEntity
@@ -70,32 +70,32 @@ namespace BankingSystem.Core.Features.Users
 
             if (string.IsNullOrWhiteSpace(registerRequest.Email) || !Regex.IsMatch(registerRequest.Email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
             {
-                throw new DomainException("Invalid email address.");
+                throw new UserValidationException("Invalid email address.");
             }
 
             if (string.IsNullOrWhiteSpace(registerRequest.FirstName))
             {
-                throw new DomainException("First name cannot be empty.");
+                throw new UserValidationException("First name cannot be empty.");
             }
 
             if (string.IsNullOrWhiteSpace(registerRequest.LastName))
             {
-                throw new DomainException("Last name cannot be empty.");
+                throw new UserValidationException("Last name cannot be empty.");
             }
 
             if (string.IsNullOrWhiteSpace(registerRequest.PersonalId) || registerRequest.PersonalId.Length != 11)
             {
-                throw new DomainException("Personal ID must be exactly 11 characters long.");
+                throw new UserValidationException("Personal ID must be exactly 11 characters long.");
             }
 
             if (string.IsNullOrWhiteSpace(registerRequest.PhoneNumber) || registerRequest.PhoneNumber.Length != 9)
             {
-                throw new DomainException("Phone number must be exactly 9 characters long.");
+                throw new UserValidationException("Phone number must be exactly 9 characters long.");
             }
 
             if (registerRequest.BirthdayDate == null)
             {
-                throw new DomainException("Birthday date cannot be null.");
+                throw new UserValidationException("Birthday date cannot be null.");
             }
         }
 

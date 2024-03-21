@@ -53,11 +53,12 @@ namespace BankingSystem.Api
             var connectionStringName = userName; 
             var connectionString = builder.Configuration.GetConnectionString(connectionStringName)!;
 
+            builder.Services.AddSingleton<IDataManager, DataManager>();
 
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
             builder.Services.AddScoped<IBankAccountService, BankAccountService>();
-            builder.Services.AddScoped<IDataManager, DataManager>();
             builder.Services.AddScoped<ICardRepository, CardRepository>();
             builder.Services.AddScoped<ICardService, CardService>();
             builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();

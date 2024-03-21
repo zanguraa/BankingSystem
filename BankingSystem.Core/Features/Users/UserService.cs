@@ -25,7 +25,6 @@ namespace BankingSystem.Core.Features.Users
 
         public async Task<UserEntity> RegisterUser(RegisterUserRequest registerRequest)
         {
-            // Validate the registration request before proceeding
             ValidateRegisterRequest(registerRequest);
 
             var existingUserByEmail = await _userManager.FindByEmailAsync(registerRequest.Email);
@@ -93,7 +92,8 @@ namespace BankingSystem.Core.Features.Users
                 throw new UserValidationException("Phone number must be exactly 9 characters long.");
             }
 
-            if (registerRequest.BirthdayDate == null)
+            ;
+            if (!DateTime.TryParse(registerRequest.PhoneNumber, out _))
             {
                 throw new UserValidationException("Birthday date cannot be null.");
             }

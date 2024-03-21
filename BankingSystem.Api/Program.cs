@@ -75,6 +75,7 @@ namespace BankingSystem.Api
             builder.Services.AddScoped<IWithdrawMoneyService, WithdrawMoneyService>();
             builder.Services.AddScoped<IReportsService, ReportsService>();
             builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
+            builder.Services.AddScoped<ITransactionServiceValidator, TransactionServiceValidator>();
 
 
             builder.Services

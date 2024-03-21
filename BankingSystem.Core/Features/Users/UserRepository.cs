@@ -12,9 +12,9 @@ namespace BankingSystem.Core.Features.Users
 {
     public class UserRepository : IUserRepository
     {
-        
+
         private readonly IDataManager _dataManager;
-        public UserRepository( IDataManager dataManager)
+        public UserRepository(IDataManager dataManager)
         {
             _dataManager = dataManager;
         }

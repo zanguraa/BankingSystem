@@ -10,7 +10,7 @@ namespace BankingSystem.Core.Shared.Exceptions
     {
         public UserValidationException(string message) : base(message)
         {
-            
+
         }
     }
 }

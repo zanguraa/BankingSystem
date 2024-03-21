@@ -84,7 +84,7 @@ public class TransactionRepository : ITransactionRepository
     {
         var query = "SELECT TOP 1 1 FROM [Currencies] WHERE [Code] = @CurrencyCode";
 
-        
+
         var result = await _dataManager.Query<int, dynamic>(
             query,
             new { CurrencyCode = currencyCode }

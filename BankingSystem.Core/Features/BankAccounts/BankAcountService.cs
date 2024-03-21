@@ -22,7 +22,7 @@ public class BankAccountService : IBankAccountService
     public async Task<List<int>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
     {
 
-        
+
         var iban = IbanGenerator.GenerateIban();
 
         var currencies = Enum.GetValues<CurrencyType>();
@@ -60,7 +60,7 @@ public class BankAccountService : IBankAccountService
     public async Task<bool> CheckAccountOwnershipAsync(int accountId, string userId)
     {
         var isCorrectAccount = await _transactionRepository.CheckAccountOwnershipAsync(accountId, userId);
-        if(!isCorrectAccount)
+        if (!isCorrectAccount)
         {
             throw new Exception("You do not have permission to access this account.");
         }
@@ -69,9 +69,9 @@ public class BankAccountService : IBankAccountService
     }
 
     public async Task<bool> ValidateAccountAsync(int accountId)
-	{
-		return await _bankAccountRepository.ContainsAccountAsync(accountId);
-	}
+    {
+        return await _bankAccountRepository.ContainsAccountAsync(accountId);
+    }
 
     private void ValidateAddFundsRequest(AddFundsRequest request)
     {

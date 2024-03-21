@@ -10,7 +10,7 @@ namespace BankingSystem.Core.Shared.Exceptions
     {
         public InvalidAddFundsValidatinException(string message) : base(message)
         {
-            
+
         }
     }
 }

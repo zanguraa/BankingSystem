@@ -10,7 +10,7 @@ namespace BankingSystem.Core.Shared.Exceptions
     {
         public InvalidAtmAmountException(string message) : base(message)
         {
-            
+
         }
     }
 }

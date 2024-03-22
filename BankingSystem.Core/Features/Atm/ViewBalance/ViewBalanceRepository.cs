@@ -1,10 +1,5 @@
 ﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.Atm.ViewBalance;
-using BankingSystem.Core.Features.Atm.ViewBalance.Requests;
-using Dapper;
-using Microsoft.EntityFrameworkCore;
-using System.Data;
-using System.Threading.Tasks;
 
 public class ViewBalanceRepository : IViewBalanceRepository
 {

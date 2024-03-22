@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BankingSystem.Core.Data;
-using BankingSystem.Core.Data.Entities;
-using BankingSystem.Core.Features.Cards.CreateCard;
 
 namespace BankingSystem.Core.Features.Cards
 {

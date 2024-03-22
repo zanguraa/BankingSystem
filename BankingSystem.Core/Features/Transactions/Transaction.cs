@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BankingSystem.Core.Features.Transactions
+﻿namespace BankingSystem.Core.Features.Transactions
 {
-	public class Transaction
+    public class Transaction
 	{
 		public int TransactionId { get; set; }
 		public int FromAccountId { get; set; }

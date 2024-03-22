@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Transactions;
-using BankingSystem.Core.Data;
+﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
 
 namespace BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyRepository

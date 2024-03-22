@@ -1,8 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
-using BankingSystem.Core.Features.Reports;
-using BankingSystem.Core.Features.Reports.Requests;
 
 [ApiController]
 [Route("api/[controller]")]

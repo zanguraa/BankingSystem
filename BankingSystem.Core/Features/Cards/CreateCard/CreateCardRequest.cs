@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BankingSystem.Core.Features.Cards.CreateCard
+﻿namespace BankingSystem.Core.Features.Cards.CreateCard
 {
-	public class CreateCardRequest
+    public class CreateCardRequest
 	{
 		public string FullName { get; set; }
 		public DateTime ExpirationDate { get; set; }

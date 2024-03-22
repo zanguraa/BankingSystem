@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using BankingSystem.Core.Features.Atm.CardAuthorization;
-using BankingSystem.Core.Data;
+﻿using BankingSystem.Core.Features.Atm.CardAuthorization;
 using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
 using BankingSystem.Core.Features.Cards;
 

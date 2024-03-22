@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BankingSystem.Core.Data.Entities;
-using BankingSystem.Core.Features.Cards.CreateCard;
+﻿using BankingSystem.Core.Features.Cards.CreateCard;
 
 namespace BankingSystem.Core.Features.Cards
 {
-	public class CardService : ICardService
+    public class CardService : ICardService
 	{
 		private readonly ICardRepository _cardRepository;
 		private static readonly Random random = new Random();

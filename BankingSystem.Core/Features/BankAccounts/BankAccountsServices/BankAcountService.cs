@@ -1,7 +1,6 @@
 ﻿using BankingSystem.Core.Features.BankAccounts.BankAccountRepositories;
 using BankingSystem.Core.Features.BankAccounts.Requests;
 using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
-using BankingSystem.Core.Shared.Exceptions;
 
 namespace BankingSystem.Core.Features.BankAccounts.BankAccountsServices;
 public class BankAccountService : IBankAccountService

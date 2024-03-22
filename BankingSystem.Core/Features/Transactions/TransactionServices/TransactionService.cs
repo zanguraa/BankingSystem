@@ -3,7 +3,6 @@ using BankingSystem.Core.Features.BankAccounts.BankAccountsServices;
 using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Transactions.Currency;
 using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
-using BankingSystem.Core.Shared.Exceptions;
 
 namespace BankingSystem.Core.Features.Transactions.TransactionServices
 {

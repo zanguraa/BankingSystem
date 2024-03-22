@@ -8,7 +8,6 @@ using BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyServices;
 using BankingSystem.Core.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace BankingSystem.Api.Controllers
 {

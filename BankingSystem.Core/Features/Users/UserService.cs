@@ -1,15 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BankingSystem.Core.Data.Entities;
 using BankingSystem.Core.Features.Users.CreateUser;
-using BankingSystem.Core.Features.BankAccounts.Requests;
-using Azure.Core;
 using BankingSystem.Core.Shared.Exceptions;
 using System.Text.RegularExpressions;
-using System.Globalization;
 
 namespace BankingSystem.Core.Features.Users
 {

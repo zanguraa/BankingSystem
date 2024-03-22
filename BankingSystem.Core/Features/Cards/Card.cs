@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BankingSystem.Core.Data.Entities;
-
-namespace BankingSystem.Core.Features.Cards
+﻿namespace BankingSystem.Core.Features.Cards
 {
-	public class Card
+    public class Card
 	{
 		public int Id { get; set; }
 		public string Pin { get; set; }

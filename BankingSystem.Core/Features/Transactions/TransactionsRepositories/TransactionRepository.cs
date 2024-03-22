@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using BankingSystem.Core.Data;
-using BankingSystem.Core.Features.Transactions;
-using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
-using Dapper;
-using Microsoft.EntityFrameworkCore;
+﻿using BankingSystem.Core.Data;
 
 namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
 {

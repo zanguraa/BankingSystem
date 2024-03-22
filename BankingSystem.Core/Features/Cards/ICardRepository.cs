@@ -1,9 +1,6 @@
-﻿using BankingSystem.Core.Data.Entities;
-using BankingSystem.Core.Features.Cards.CreateCard;
-
-namespace BankingSystem.Core.Features.Cards
+﻿namespace BankingSystem.Core.Features.Cards
 {
-	public interface ICardRepository
+    public interface ICardRepository
 	{
 		Task<Card?> GetCardByCardNumber(string CardNumber);
 		Task<Card> GetCardByIdAsync(int cardId);

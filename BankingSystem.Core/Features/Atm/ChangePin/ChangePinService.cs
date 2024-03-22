@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using BankingSystem.Core.Features.Atm.ChangePin;
+﻿using BankingSystem.Core.Features.Atm.ChangePin;
 
 public class ChangePinService : IChangePinService
 {

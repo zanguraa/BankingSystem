@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using BankingSystem.Core.Features.BankAccounts.BankAccountRepositories;
 using BankingSystem.Core.Features.BankAccounts.BankAccountsServices;
 using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Transactions.Currency;
@@ -35,13 +33,8 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
 
         public async Task<TransactionResponse> TransferTransactionAsync(CreateTransactionRequest request)
         {
+
             await _transactionServiceValidator.ValidateCreateTransactionRequest(request);
-
-            if (string.IsNullOrEmpty(request.UserId))
-            {
-                throw new UserValidationException("User not found.");
-            }
-
             await _bankAccountService.CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
 
             var fromAccount = await _bankAccountRepository.GetAccountByIdAsync(request.FromAccountId);

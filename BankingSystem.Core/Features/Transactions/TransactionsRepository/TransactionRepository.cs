@@ -49,7 +49,6 @@ public class TransactionRepository : ITransactionRepository
             Params = new { AccountId = transaction.FromAccountId, Amount = transaction.FromAmount }
         },
 
-        // ეს შეინახავს ტრანზაქციას ყველა შემთხვევაში.
         new SqlCommandRequest
         {
             Query = @"
@@ -59,7 +58,7 @@ public class TransactionRepository : ITransactionRepository
         }
     };
 
-        if (!isAtmWithdrawal && transaction.ToAccountId == null)
+        if (!isAtmWithdrawal && transaction.ToAccountId != null)
         {
             sqlCommandRequests.Add(new SqlCommandRequest
             {

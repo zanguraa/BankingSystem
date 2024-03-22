@@ -9,6 +9,7 @@ using BankingSystem.Core.Features.BankAccounts.Requests;
 using Azure.Core;
 using BankingSystem.Core.Shared.Exceptions;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace BankingSystem.Core.Features.Users
 {
@@ -92,10 +93,9 @@ namespace BankingSystem.Core.Features.Users
                 throw new UserValidationException("Phone number must be exactly 9 characters long.");
             }
 
-            ;
-            if (!DateTime.TryParse(registerRequest.PhoneNumber, out _))
+            if (registerRequest.BirthdayDate <= DateTime.MinValue || registerRequest.BirthdayDate >= DateTime.MaxValue)
             {
-                throw new UserValidationException("Birthday date cannot be null.");
+                throw new UserValidationException("Invalid birthday date.");
             }
         }
 

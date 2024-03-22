@@ -14,7 +14,6 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
         private readonly IBankAccountService _bankAccountService;
         private readonly IBankAccountRepository _bankAccountRepository;
         private readonly ITransactionServiceValidator _transactionServiceValidator;
-        private static object _lock = new object();
 
         public TransactionService(
             IBankAccountService bankAccountService,
@@ -34,6 +33,11 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
 
         public async Task<TransactionResponse> TransferTransactionAsync(CreateTransactionRequest request)
         {
+            using var semaphore = new SemaphoreSlim(1, 1);
+
+            await semaphore.WaitAsync();
+
+            await Task.Delay(10000);
 
             await _transactionServiceValidator.ValidateCreateTransactionRequest(request);
             await _bankAccountService.CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
@@ -69,6 +73,8 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
             };
 
             await _transactionRepository.UpdateAccountBalancesAsync(transaction);
+
+            semaphore.Release();
 
             return new TransactionResponse
             {

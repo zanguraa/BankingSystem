@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BankingSystem.Core.Features.BankAccounts;
+using BankingSystem.Core.Features.BankAccounts.BankAccountsServices;
 using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Transactions.Currency;
 using BankingSystem.Core.Features.Transactions.TransactionsRepository;

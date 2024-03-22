@@ -5,7 +5,7 @@ using BankingSystem.Core.Features.Atm.CardAuthorization;
 using BankingSystem.Core.Features.Atm.ChangePin;
 using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Features.Atm.WithdrawMoney;
-using BankingSystem.Core.Features.BankAccounts;
+using BankingSystem.Core.Features.BankAccounts.BankAccountsServices;
 using BankingSystem.Core.Features.Cards;
 using BankingSystem.Core.Features.Reports;
 using BankingSystem.Core.Features.Transactions.Currency;

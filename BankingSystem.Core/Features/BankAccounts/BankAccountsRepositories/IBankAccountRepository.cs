@@ -1,7 +1,8 @@
-﻿using BankingSystem.Core.Features.BankAccounts.Requests;
+﻿using BankingSystem.Core.Features.BankAccounts.AddFunds;
+using BankingSystem.Core.Features.BankAccounts.Requests;
 
 namespace BankingSystem.Core.Features.BankAccounts.BankAccountRepositories;
-    public interface IBankAccountRepository
+public interface IBankAccountRepository
     {
         Task<BankAccount?> GetAccountByIbanAsync(string iban);
         Task<int> CreateBankAccountAsync(BankAccount bankAccount);

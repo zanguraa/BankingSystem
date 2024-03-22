@@ -42,18 +42,6 @@ public class BankAccountService : IBankAccountService
         return accountIds;
     }
 
-    public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
-    {
-        ValidateAddFundsRequest(addFundsRequest);
-
-        if (addFundsRequest == null || addFundsRequest.Amount == default || addFundsRequest.BankAccountId <= 0)
-        {
-            throw new Exception("Invalid request");
-        }
-        return await _bankAccountRepository.AddFunds(addFundsRequest);
-
-    }
-
     public async Task<bool> CheckAccountOwnershipAsync(int accountId, string userId)
     {
         var isCorrectAccount = await _transactionRepository.CheckAccountOwnershipAsync(accountId, userId);
@@ -70,23 +58,5 @@ public class BankAccountService : IBankAccountService
         return await _bankAccountRepository.ContainsAccountAsync(accountId);
     }
 
-    private void ValidateAddFundsRequest(AddFundsRequest request)
-    {
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request), "The request cannot be null.");
-        }
-
-        if (request.Amount <= 0)
-        {
-            throw new InvalidAddFundsValidatinException("The amount must be greater than zero.");
-        }
-
-        if (request.BankAccountId <= 0)
-        {
-            throw new InvalidAddFundsValidatinException("The Bank Account ID must be a positive number.");
-        }
-
-    }
-
+   
 }

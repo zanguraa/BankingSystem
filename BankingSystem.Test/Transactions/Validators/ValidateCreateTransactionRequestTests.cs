@@ -1,6 +1,6 @@
 ﻿using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Transactions.TransactionServices;
-using BankingSystem.Core.Features.Transactions.TransactionsRepository;
+using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 using BankingSystem.Core.Shared.Exceptions;
 using FakeItEasy;
 using System;

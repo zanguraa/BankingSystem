@@ -1,5 +1,6 @@
 ﻿using BankingSystem.Core.Features.BankAccounts;
 
+namespace BankingSystem.Core.Features.BankAccounts.Requests;
 public class BankAccount
 {
     public int Id { get; set; }

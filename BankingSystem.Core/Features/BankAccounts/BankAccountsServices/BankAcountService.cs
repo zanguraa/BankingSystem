@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using BankingSystem.Core.Data;
-using BankingSystem.Core.Features.BankAccounts;
-using BankingSystem.Core.Features.BankAccounts.BankAccountsServices;
+﻿using BankingSystem.Core.Features.BankAccounts.BankAccountRepositories;
 using BankingSystem.Core.Features.BankAccounts.Requests;
-using BankingSystem.Core.Features.Transactions.TransactionsRepository;
+using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 using BankingSystem.Core.Shared.Exceptions;
 
+namespace BankingSystem.Core.Features.BankAccounts.BankAccountsServices;
 public class BankAccountService : IBankAccountService
 {
     private readonly IBankAccountRepository _bankAccountRepository;
@@ -94,4 +90,3 @@ public class BankAccountService : IBankAccountService
     }
 
 }
-

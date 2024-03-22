@@ -11,14 +11,13 @@ using BankingSystem.Core.Features.Cards;
 using BankingSystem.Core.Features.Reports;
 using BankingSystem.Core.Features.Transactions.Currency;
 using BankingSystem.Core.Features.Transactions.TransactionServices;
-using BankingSystem.Core.Features.Transactions.TransactionsRepository;
+using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 using BankingSystem.Core.Features.Users;
 using BankingSystem.Core.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.Security.Claims;
 using System.Text;
 

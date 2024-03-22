@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using BankingSystem.Core.Data;
+﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.BankAccounts.Requests;
-using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+
+
+namespace BankingSystem.Core.Features.BankAccounts.BankAccountRepositories;
 
 public class BankAccountRepository : IBankAccountRepository
 {

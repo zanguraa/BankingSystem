@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankingSystem.Core.Features.BankAccounts.Requests
-{
+namespace BankingSystem.Core.Features.BankAccounts.Requests;
 
-    public class CreateBankAccountRequest
-    {
-        public int UserId { get; set; }
-        public string Iban { get; set; }
-    }
+public class CreateBankAccountRequest
+{
+    public int UserId { get; set; }
+    public string Iban { get; set; }
 }

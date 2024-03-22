@@ -5,7 +5,7 @@ using System.Transactions;
 using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
 
-namespace BankingSystem.Core.Features.Atm.WithdrawMoney
+namespace BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyRepository
 {
     public class WithdrawMoneyRepository : IWithdrawMoneyRepository
     {
@@ -42,9 +42,9 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
             {
                 BankAccountId = request.AccountId,
                 TotalAmount = request.Amount,
-                Currency = request.Currency,
-                RequestedAmount = request.RequestedAmount,
-                RequestedCurrency = request.RequestedCurrency
+                request.Currency,
+                request.RequestedAmount,
+                request.RequestedCurrency
             }
         }
     };

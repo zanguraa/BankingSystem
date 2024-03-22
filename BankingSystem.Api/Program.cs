@@ -6,6 +6,7 @@ using BankingSystem.Core.Features.Atm.ChangePin;
 using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyRepository;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyServices;
+using BankingSystem.Core.Features.BankAccounts.BankAccountRepositories;
 using BankingSystem.Core.Features.BankAccounts.BankAccountsServices;
 using BankingSystem.Core.Features.Cards;
 using BankingSystem.Core.Features.Reports;

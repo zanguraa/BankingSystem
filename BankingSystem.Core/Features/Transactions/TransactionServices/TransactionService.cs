@@ -36,12 +36,6 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
         public async Task<TransactionResponse> TransferTransactionAsync(CreateTransactionRequest request)
         {
             await _transactionServiceValidator.ValidateCreateTransactionRequest(request);
-
-            if (string.IsNullOrEmpty(request.UserId))
-            {
-                throw new UserValidationException("User not found.");
-            }
-
             await _bankAccountService.CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
 
             var fromAccount = await _bankAccountRepository.GetAccountByIdAsync(request.FromAccountId);

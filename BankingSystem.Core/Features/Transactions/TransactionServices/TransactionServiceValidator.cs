@@ -22,6 +22,11 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
 
             if (string.IsNullOrEmpty(request.UserId))
             {
+                throw new UserValidationException("User not found.");
+            }
+
+            if (string.IsNullOrEmpty(request.UserId))
+            {
                 throw new InvalidTransactionValidation("User ID cannot be empty.");
             }
 

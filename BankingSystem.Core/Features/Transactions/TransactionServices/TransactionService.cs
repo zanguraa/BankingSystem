@@ -14,6 +14,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
         private readonly IBankAccountService _bankAccountService;
         private readonly IBankAccountRepository _bankAccountRepository;
         private readonly ITransactionServiceValidator _transactionServiceValidator;
+        private static object _lock = new object();
 
         public TransactionService(
             IBankAccountService bankAccountService,

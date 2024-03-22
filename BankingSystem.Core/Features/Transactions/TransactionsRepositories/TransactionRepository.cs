@@ -37,7 +37,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
             return count.FirstOrDefault() > 0;
         }
 
-        public async Task<bool> CreateInternalTransaction(Transaction transaction, bool isAtmWithdrawal = false)
+        public async Task<bool> UpdateAccountBalancesAsync(Transaction transaction, bool isAtmWithdrawal = false)
         {
             var sqlCommandRequests = new List<SqlCommandRequest>
     {

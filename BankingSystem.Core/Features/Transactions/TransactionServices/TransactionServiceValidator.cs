@@ -4,6 +4,11 @@ using BankingSystem.Core.Shared.Exceptions;
 
 namespace BankingSystem.Core.Features.Transactions.TransactionServices
 {
+    public interface ITransactionServiceValidator
+    {
+        Task ValidateCreateTransactionRequest(CreateTransactionRequest request);
+    }
+
     public class TransactionServiceValidator : ITransactionServiceValidator
     {
         private readonly ITransactionRepository _transactionRepository;

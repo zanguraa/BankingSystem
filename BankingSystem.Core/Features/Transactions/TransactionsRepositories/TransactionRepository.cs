@@ -8,6 +8,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
         Task<IEnumerable<Transaction>> GetTransactionsByAccountIdAsync(int accountId);
         Task<bool> IsCurrencyValid(string currencyCode);
         Task<bool> ProcessAtmTransaction(Transaction transaction);
+        Task<bool> ProcessInternalTransaction(Transaction transaction);
         Task<bool> UpdateAccountBalancesAsync(Transaction transaction, bool isAtmWithdrawal = false);
     }
 
@@ -57,6 +58,40 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
                     Params = transaction
                 }
             };
+            bool success = await _dataManager.ExecuteWithTransaction(SqlCommandList);
+
+            if (!success) throw new Exception("An error occurred while processing your request.");
+
+            return success;
+        }
+
+        public async Task<bool> ProcessInternalTransaction(Transaction transaction)
+        {
+            var SqlCommandList = new List<SqlCommand>
+             {
+                new() {
+                    Query = @"
+                        UPDATE BankAccounts
+                        SET InitialAmount = InitialAmount - @Amount 
+                        WHERE Id = @FromAccountId",
+                    Params = transaction
+                },
+                new()
+                {
+                    Query = @"
+                        UPDATE BankAccounts
+                        SET InitialAmount = InitialAmount + @Amount
+                        WHERE Id = @ToAccountId",
+                    Params = transaction
+                },
+                new() {
+                    Query = @"
+                        INSERT INTO Transactions (FromAccountId, ToAccountId, FromAccountCurrency, ToAccountCurrency, FromAmount, ToAmount, TransactionDate, TransactionType, Fee)
+                        VALUES (@FromAccountId, @ToAccountId, @FromAccountCurrency, @ToAccountCurrency, @FromAmount, @ToAmount, @TransactionDate, @TransactionType, @Fee);",
+                    Params = transaction
+                }
+            };
+
             bool success = await _dataManager.ExecuteWithTransaction(SqlCommandList);
 
             if (!success) throw new Exception("An error occurred while processing your request.");

@@ -3,6 +3,14 @@ using BankingSystem.Core.Features.BankAccounts.Requests;
 using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 
 namespace BankingSystem.Core.Features.BankAccounts.BankAccountsServices;
+
+public interface IBankAccountService
+{
+    Task<bool> CheckAccountOwnershipAsync(int accountId, string userId);
+    Task<List<int>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest);
+    Task<bool> ValidateAccountAsync(int accountId);
+}
+
 public class BankAccountService : IBankAccountService
 {
     private readonly IBankAccountRepository _bankAccountRepository;
@@ -57,5 +65,5 @@ public class BankAccountService : IBankAccountService
         return await _bankAccountRepository.ContainsAccountAsync(accountId);
     }
 
-   
+
 }

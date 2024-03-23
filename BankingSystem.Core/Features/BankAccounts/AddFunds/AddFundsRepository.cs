@@ -1,6 +1,7 @@
 ﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.BankAccounts.Requests;
 using BankingSystem.Core.Features.Transactions.CreateTransactions;
+using BankingSystem.Core.Features.Transactions.TransactionServices;
 
 namespace BankingSystem.Core.Features.BankAccounts.AddFunds
 {
@@ -12,10 +13,12 @@ namespace BankingSystem.Core.Features.BankAccounts.AddFunds
     public class AddFundsRepository : IAddFundsRepository
     {
         private readonly IDataManager _dataManager;
+        private readonly ITransactionService _transactionService;
 
-        public AddFundsRepository(IDataManager dataManager)
+        public AddFundsRepository(IDataManager dataManager, ITransactionService transactionService)
         {
             _dataManager = dataManager;
+            _transactionService = transactionService;
         }
 
         public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
@@ -29,7 +32,7 @@ namespace BankingSystem.Core.Features.BankAccounts.AddFunds
                     ToAccountId = addFundsRequest.BankAccountId,
                     Amount = addFundsRequest.Amount
                 };
-                return await LogDeposit(logDepositRequest);
+                return true;
             }
             return false;
         }

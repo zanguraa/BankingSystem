@@ -16,9 +16,9 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyRepository
 
         public async Task<bool> WithdrawAsync(WithdrawRequest request)
         {
-            var transactionCommands = new List<SqlCommandRequest>
+            var transactionCommands = new List<SqlCommand>
             {
-                 new SqlCommandRequest
+                 new SqlCommand
             {
                 Query = @"
                     UPDATE BankAccounts
@@ -26,7 +26,7 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyRepository
                     WHERE Id = @AccountId",
                 Params = new { request.AccountId, request.Amount }
             },
-                new SqlCommandRequest
+                new SqlCommand
             {
             Query = @"
                 INSERT INTO DailyWithdrawals 

@@ -4,8 +4,14 @@ using BankingSystem.Core.Features.BankAccounts.Requests;
 
 namespace BankingSystem.Core.Features.BankAccounts.BankAccountRepositories;
 
-
-
+public interface IBankAccountRepository
+{
+    Task<bool> ContainsAccountAsync(int accountId);
+    Task<int> CreateBankAccountAsync(BankAccount bankAccount);
+    Task<bool> ExistsWithCurrencyAsync(int userId, string currency);
+    Task<BankAccount?> GetAccountByIbanAsync(string iban);
+    Task<BankAccount?> GetAccountByIdAsync(int AccountId);
+}
 
 public class BankAccountRepository : IBankAccountRepository
 {
@@ -59,7 +65,7 @@ public class BankAccountRepository : IBankAccountRepository
 
 
 
-  
+
     public async Task<bool> ContainsAccountAsync(int accountId)
     {
         var account = await _dataManager.Query<int, dynamic>(

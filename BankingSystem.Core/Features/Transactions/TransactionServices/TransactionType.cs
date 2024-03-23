@@ -4,6 +4,7 @@
     {
         Internal,
         External,
-        Atm
+        Atm,
+        AddFunds
     }
 }

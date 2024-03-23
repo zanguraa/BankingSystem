@@ -1,4 +1,11 @@
-﻿using BankingSystem.Core.Shared.Exceptions;
+﻿using Azure.Core;
+using BankingSystem.Core.Features.Transactions;
+using BankingSystem.Core.Features.Transactions.CreateTransactions;
+using BankingSystem.Core.Features.Transactions.TransactionServices;
+using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
+using BankingSystem.Core.Shared.Exceptions;
+using System;
+using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Features.BankAccounts.AddFunds
 {
@@ -10,22 +17,27 @@ namespace BankingSystem.Core.Features.BankAccounts.AddFunds
     public class AddFundsService : IAddFundsService
     {
         private readonly IAddFundsRepository _addFundsRepository;
+        private readonly ITransactionRepository _transactionRepository; // Make sure to include this dependency.
 
-        public AddFundsService(IAddFundsRepository addFundsRepository)
+        public AddFundsService(IAddFundsRepository addFundsRepository, ITransactionRepository transactionRepository)
         {
             _addFundsRepository = addFundsRepository;
+            _transactionRepository = transactionRepository; // Initialize in constructor.
         }
 
         public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
         {
             ValidateAddFundsRequest(addFundsRequest);
+            
+                var transaction = new Transaction
+                {
+                    ToAccountId = addFundsRequest.BankAccountId,
+                    ToAmount = addFundsRequest.Amount,
+                    TransactionType = (int)TransactionType.AddFunds,
+                    TransactionDate = DateTime.UtcNow 
+                };
 
-            if (addFundsRequest == null || addFundsRequest.Amount == default || addFundsRequest.BankAccountId <= 0)
-            {
-                throw new Exception("Invalid request");
-            }
-            return await _addFundsRepository.AddFunds(addFundsRequest);
-
+                return await _transactionRepository.UpdateAccountBalancesAsync(transaction);
         }
 
         private void ValidateAddFundsRequest(AddFundsRequest request)
@@ -37,16 +49,13 @@ namespace BankingSystem.Core.Features.BankAccounts.AddFunds
 
             if (request.Amount <= 0)
             {
-                throw new InvalidAddFundsValidatinException("The amount must be greater than zero.");
+                throw new InvalidAddFundsValidationException("The amount must be greater than zero.");
             }
 
             if (request.BankAccountId <= 0)
             {
-                throw new InvalidAddFundsValidatinException("The Bank Account ID must be a positive number.");
+                throw  new InvalidAddFundsValidationException("The Bank Account ID must be a positive number.");
             }
-
         }
-
-
     }
 }

@@ -6,6 +6,7 @@ using BankingSystem.Core.Features.Atm.ChangePin;
 using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyRepository;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyServices;
+using BankingSystem.Core.Features.BankAccounts.AddFunds;
 using BankingSystem.Core.Features.BankAccounts.BankAccountRepositories;
 using BankingSystem.Core.Features.BankAccounts.BankAccountsServices;
 using BankingSystem.Core.Features.Cards;
@@ -56,6 +57,8 @@ namespace BankingSystem.Api
 
             builder.Services.AddSingleton<IDataManager, DataManager>();
 
+            builder.Services.AddScoped<IAddFundsService, AddFundsService>();
+            builder.Services.AddScoped<IAddFundsRepository, AddFundsRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();

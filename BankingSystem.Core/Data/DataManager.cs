@@ -31,7 +31,7 @@ namespace BankingSystem.Core.Data
             return await connection.QueryAsync<T>(sql);
         }
 
-        public async Task<bool> ExecuteWithTransaction(List<SqlCommandRequest> dataRequest)
+        public async Task<bool> ExecuteWithTransaction(List<SqlCommand> dataRequest)
         {
             await using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();

@@ -88,7 +88,7 @@ public class WithdrawMoneyService : IWithdrawMoneyService
             TransactionDate = DateTime.UtcNow
         };
 
-        bool withdrawalSuccess = await _transactionRepository.UpdateAccountBalancesAsync(transaction, true);
+        bool withdrawalSuccess = await _transactionRepository.ProcessAtmTransaction(transaction);
 
 
         var logEntry = new TransactionLog

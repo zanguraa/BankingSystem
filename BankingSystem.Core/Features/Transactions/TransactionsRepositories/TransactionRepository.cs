@@ -48,7 +48,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
                         UPDATE BankAccounts
                         SET InitialAmount = InitialAmount - @Amount 
                         WHERE Id = @AccountId",
-                    Params = new { AccountId = transaction.FromAccountId, Amount = transaction.FromAmount }
+                    Params = new { AccountId = transaction.FromAccountId, Amount = transaction.FromAmount + transaction.Fee}
                 },
                 new() {
                     Query = @"

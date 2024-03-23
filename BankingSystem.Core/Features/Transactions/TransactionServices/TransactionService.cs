@@ -6,6 +6,13 @@ using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 
 namespace BankingSystem.Core.Features.Transactions.TransactionServices
 {
+    public interface ITransactionService
+    {
+        Task<IEnumerable<Transaction>> GetTransactionsByAccountIdAsync(int accountId);
+        Task<TransactionResponse> ProcessInternalTransactionAsync(CreateTransactionRequest request);
+        Task<TransactionResponse> TransferTransactionAsync(CreateTransactionRequest request);
+    }
+
     public class TransactionService : ITransactionService
     {
         private readonly ITransactionRepository _transactionRepository;
@@ -85,6 +92,57 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
                 TransactionDate = transaction.TransactionDate
             };
         }
+
+        public async Task<TransactionResponse> ProcessInternalTransactionAsync(CreateTransactionRequest request)
+        {
+            using var semaphore = new SemaphoreSlim(1, 1);
+
+            await _transactionServiceValidator.ValidateCreateTransactionRequest(request);
+            await _bankAccountService.CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
+
+            await semaphore.WaitAsync();
+
+            var fromAccount = await _bankAccountRepository.GetAccountByIdAsync(request.FromAccountId);
+            var toAccount = await _bankAccountRepository.GetAccountByIdAsync(request.ToAccountId);
+
+            if (fromAccount == null || toAccount == null || fromAccount.UserId != toAccount.UserId)
+            {
+                throw new ArgumentException("Invalid accounts for internal transaction.");
+            }
+
+            if (fromAccount.InitialAmount < request.Amount)
+            {
+                throw new InvalidOperationException("Insufficient funds.");
+            }
+
+            var transaction = new Transaction
+            {
+                FromAccountId = request.FromAccountId,
+                ToAccountId = request.ToAccountId,
+                FromAccountCurrency = request.Currency,
+                ToAccountCurrency = request.ToCurrency,
+                FromAmount = request.Amount,
+                ToAmount = request.Amount, // Assuming no conversion for internal transactions
+                Fee = 0,
+                TransactionType = (int)TransactionType.Internal,
+                TransactionDate = DateTime.UtcNow
+            };
+
+            await _transactionRepository.UpdateAccountBalancesAsync(transaction);
+
+            semaphore.Release();
+
+            return new TransactionResponse
+            {
+                FromAccountId = transaction.FromAccountId,
+                ToAccountId = transaction.ToAccountId,
+                Amount = transaction.FromAmount,
+                Currency = transaction.FromAccountCurrency,
+                Fee = transaction.Fee,
+                TransactionDate = transaction.TransactionDate
+            };
+        }
+
 
         public async Task<IEnumerable<Transaction>> GetTransactionsByAccountIdAsync(int accountId)
         {

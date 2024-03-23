@@ -4,11 +4,17 @@ namespace BankingSystem.Core.Features.BankAccounts.AddFunds
 {
     public interface IAddFundsService
     {
-
+        Task<bool> AddFunds(AddFundsRequest addFundsRequest);
     }
 
     public class AddFundsService : IAddFundsService
     {
+        private readonly IAddFundsRepository _addFundsRepository;
+
+        public AddFundsService(IAddFundsRepository addFundsRepository)
+        {
+            _addFundsRepository = addFundsRepository;
+        }
 
         public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
         {
@@ -18,7 +24,7 @@ namespace BankingSystem.Core.Features.BankAccounts.AddFunds
             {
                 throw new Exception("Invalid request");
             }
-            return await _bankAccountRepository.AddFunds(addFundsRequest);
+            return await _addFundsRepository.AddFunds(addFundsRequest);
 
         }
 

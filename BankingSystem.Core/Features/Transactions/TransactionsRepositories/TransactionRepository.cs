@@ -1,4 +1,5 @@
 ﻿using BankingSystem.Core.Data;
+using BankingSystem.Core.Features.Transactions.TransactionServices;
 
 namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
 {
@@ -8,7 +9,8 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
         Task<IEnumerable<Transaction>> GetTransactionsByAccountIdAsync(int accountId);
         Task<bool> IsCurrencyValid(string currencyCode);
         Task<bool> ProcessAtmTransaction(Transaction transaction);
-        Task<bool> ProcessInternalTransaction(Transaction transaction);
+        Task<bool> ProcessBankTransaction(Transaction transaction);
+        Task<bool> ProcessDepositTransactionAsync(Transaction transactionRequest);
         Task<bool> UpdateAccountBalancesAsync(Transaction transaction, bool isAtmWithdrawal = false);
     }
 
@@ -40,7 +42,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
             return count.FirstOrDefault() > 0;
         }
 
-        public async Task<bool> ProcessAtmTransaction(Transaction transaction)
+        public async Task<bool> ProcessAtmTransaction(Transaction transactionRequest)
         {
             var SqlCommandList = new List<SqlCommand>
              {
@@ -49,13 +51,13 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
                         UPDATE BankAccounts
                         SET InitialAmount = InitialAmount - @Amount 
                         WHERE Id = @AccountId",
-                    Params = new { AccountId = transaction.FromAccountId, Amount = transaction.FromAmount + transaction.Fee}
+                    Params = new { AccountId = transactionRequest.FromAccountId, Amount = transactionRequest.FromAmount + transactionRequest.Fee}
                 },
                 new() {
                     Query = @"
                         INSERT INTO Transactions (FromAccountId, ToAccountId, FromAccountCurrency, ToAccountCurrency, FromAmount, ToAmount, TransactionDate, TransactionType, Fee)
                         VALUES (@FromAccountId, @ToAccountId, @FromAccountCurrency, @ToAccountCurrency, @FromAmount, @ToAmount, @TransactionDate, @TransactionType, @Fee);",
-                    Params = transaction
+                    Params = transactionRequest
                 }
             };
             bool success = await _dataManager.ExecuteWithTransaction(SqlCommandList);
@@ -65,8 +67,13 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
             return success;
         }
 
-        public async Task<bool> ProcessInternalTransaction(Transaction transaction)
+        public async Task<bool> ProcessBankTransaction(Transaction transactionRequest)
         {
+            if (transactionRequest.TransactionType == (int)TransactionType.External)
+            {
+                transactionRequest.FromAmount += transactionRequest.Fee;
+            }
+
             var SqlCommandList = new List<SqlCommand>
              {
                 new() {
@@ -74,7 +81,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
                         UPDATE BankAccounts
                         SET InitialAmount = InitialAmount - @Amount 
                         WHERE Id = @FromAccountId",
-                    Params = transaction
+                    Params = transactionRequest
                 },
                 new()
                 {
@@ -82,13 +89,13 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
                         UPDATE BankAccounts
                         SET InitialAmount = InitialAmount + @Amount
                         WHERE Id = @ToAccountId",
-                    Params = transaction
+                    Params = transactionRequest
                 },
                 new() {
                     Query = @"
                         INSERT INTO Transactions (FromAccountId, ToAccountId, FromAccountCurrency, ToAccountCurrency, FromAmount, ToAmount, TransactionDate, TransactionType, Fee)
                         VALUES (@FromAccountId, @ToAccountId, @FromAccountCurrency, @ToAccountCurrency, @FromAmount, @ToAmount, @TransactionDate, @TransactionType, @Fee);",
-                    Params = transaction
+                    Params = transactionRequest
                 }
             };
 
@@ -98,6 +105,32 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
 
             return success;
         }
+
+        public async Task<bool> ProcessDepositTransactionAsync(Transaction transactionRequest)
+        {
+            var SqlCommandList = new List<SqlCommand>
+             {
+                new() {
+                    Query = @"
+                        UPDATE BankAccounts
+                        SET InitialAmount = InitialAmount + @ToAmount 
+                        WHERE Id = @ToAccountId",
+                    Params = transactionRequest
+                },
+                new() {
+                    Query = @"
+                        INSERT INTO Transactions (FromAccountId, ToAccountId, FromAccountCurrency, ToAccountCurrency, FromAmount, ToAmount, TransactionDate, TransactionType, Fee)
+                        VALUES (@FromAccountId, @ToAccountId, @FromAccountCurrency, @ToAccountCurrency, @FromAmount, @ToAmount, @TransactionDate, @TransactionType, @Fee);",
+                    Params = transactionRequest
+                }
+            };
+            bool success = await _dataManager.ExecuteWithTransaction(SqlCommandList);
+
+            if (!success) throw new Exception("An error occurred while processing your request.");
+
+            return success;
+        }
+
 
         public async Task<bool> UpdateAccountBalancesAsync(Transaction transaction, bool isAtmWithdrawal = false)
         {

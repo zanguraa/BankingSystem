@@ -31,13 +31,14 @@ namespace BankingSystem.Core.Features.BankAccounts.AddFunds
             
                 var transaction = new Transaction
                 {
+                    FromAccountId = addFundsRequest.BankAccountId,
                     ToAccountId = addFundsRequest.BankAccountId,
                     ToAmount = addFundsRequest.Amount,
                     TransactionType = (int)TransactionType.AddFunds,
                     TransactionDate = DateTime.UtcNow 
                 };
 
-                return await _transactionRepository.UpdateAccountBalancesAsync(transaction);
+                return await _transactionRepository.ProcessDepositTransactionAsync(transaction);
         }
 
         private void ValidateAddFundsRequest(AddFundsRequest request)

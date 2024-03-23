@@ -75,7 +75,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
                 TransactionDate = DateTime.UtcNow
             };
 
-            await _transactionRepository.ProcessInternalTransaction(transaction);
+            await _transactionRepository.ProcessBankTransaction(transaction);
 
             semaphore.Release();
 
@@ -124,7 +124,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
                 TransactionDate = DateTime.Now,
             };
 
-            await _transactionRepository.UpdateAccountBalancesAsync(transaction);
+            await _transactionRepository.ProcessBankTransaction(transaction);
 
             semaphore.Release();
 

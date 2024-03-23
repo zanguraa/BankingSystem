@@ -79,7 +79,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
                 new() {
                     Query = @"
                         UPDATE BankAccounts
-                        SET InitialAmount = InitialAmount - @Amount 
+                        SET InitialAmount = InitialAmount - @FromAmount 
                         WHERE Id = @FromAccountId",
                     Params = transactionRequest
                 },
@@ -87,7 +87,7 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
                 {
                     Query = @"
                         UPDATE BankAccounts
-                        SET InitialAmount = InitialAmount + @Amount
+                        SET InitialAmount = InitialAmount + @ToAmount
                         WHERE Id = @ToAccountId",
                     Params = transactionRequest
                 },

@@ -6,8 +6,8 @@ using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Shared.Exceptions;
-using BankingSystem.Core.Features.BankAccounts;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount;
+using BankingSystem.Core.Features.BankAccounts.Requests;
 
 public interface IWithdrawMoneyService
 {

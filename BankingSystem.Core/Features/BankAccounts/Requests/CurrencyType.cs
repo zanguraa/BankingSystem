@@ -1,4 +1,4 @@
-﻿namespace BankingSystem.Core.Features.BankAccounts
+﻿namespace BankingSystem.Core.Features.BankAccounts.Requests
 {
     public enum CurrencyType
     {

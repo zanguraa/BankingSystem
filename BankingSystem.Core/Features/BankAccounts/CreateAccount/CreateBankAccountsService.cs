@@ -24,8 +24,6 @@ public class CreateBankAccountsService : IBankAccountService
 
     public async Task<List<int>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
     {
-
-
         var iban = IbanGenerator.GenerateIban();
 
         var currencies = Enum.GetValues<CurrencyType>();
@@ -39,12 +37,11 @@ public class CreateBankAccountsService : IBankAccountService
                 Currency = currency
             };
 
-            // Save the bank account using the repository
             var accountId = await _bankAccountRepository.CreateBankAccountAsync(bankAccount);
             accountIds.Add(accountId);
 
         }
-        // Return the ID of the newly created bank account
+
         return accountIds;
     }
 

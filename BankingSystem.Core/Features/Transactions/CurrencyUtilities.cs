@@ -1,4 +1,4 @@
-﻿using BankingSystem.Core.Features.BankAccounts;
+﻿using BankingSystem.Core.Features.BankAccounts.Requests;
 
 public static class CurrencyUtilities
 {

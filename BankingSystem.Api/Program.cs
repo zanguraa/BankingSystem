@@ -3,8 +3,7 @@ using BankingSystem.Core.Data;
 using BankingSystem.Core.Data.Entities;
 using BankingSystem.Core.Features.Atm.ChangePin;
 using BankingSystem.Core.Features.Atm.ViewBalance;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyRepository;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyServices;
+using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Features.BankAccounts.AddFunds;
 using BankingSystem.Core.Features.BankAccounts.BankAccountRepositories;
 using BankingSystem.Core.Features.BankAccounts.BankAccountsServices;
@@ -79,7 +78,6 @@ namespace BankingSystem.Api
             builder.Services.AddScoped<IReportsService, ReportsService>();
             builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
             builder.Services.AddScoped<ITransactionServiceValidator, TransactionServiceValidator>();
-            builder.Services.AddScoped<IWithdrawMoneyServiceValidator, WithdrawMoneyServiceValidator>();
 
 
             builder.Services

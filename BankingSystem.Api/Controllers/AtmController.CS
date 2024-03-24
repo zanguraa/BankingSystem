@@ -2,8 +2,8 @@
 using BankingSystem.Core.Features.Atm.ChangePin;
 using BankingSystem.Core.Features.Atm.ChangePin.Requests;
 using BankingSystem.Core.Features.Atm.ViewBalance;
+using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyServices;
 using BankingSystem.Core.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Shared.Exceptions
 {
-    public class BankAccountsAlreadyExistsException : DomainException
+    public class BankAccountsAlreadyExistException : DomainException
     {
-        public BankAccountsAlreadyExistsException(string message) : base(message)
+        public BankAccountsAlreadyExistException(string message) : base(message)
         {
 
         }

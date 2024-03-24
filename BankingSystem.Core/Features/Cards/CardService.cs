@@ -1,5 +1,7 @@
 ﻿using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.Cards.CreateCard;
+using BankingSystem.Core.Features.Users;
+using BankingSystem.Core.Shared.Exceptions;
 
 namespace BankingSystem.Core.Features.Cards
 {
@@ -13,12 +15,14 @@ namespace BankingSystem.Core.Features.Cards
     {
         private readonly ICardRepository _cardRepository;
         private readonly ICreateBankAccountsRepository _createBankAccountsRepository;
+        private readonly IUserRepository _userRepository;
         private static readonly Random random = new Random();
 
-        public CardService(ICardRepository cardRepository, ICreateBankAccountsRepository createBankAccountsRepository)
+        public CardService(ICardRepository cardRepository, ICreateBankAccountsRepository createBankAccountsRepository, IUserRepository userRepository)
         {
             _cardRepository = cardRepository;
             _createBankAccountsRepository = createBankAccountsRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<Card> CreateCardAsync(CreateCardRequest createCardRequest)
@@ -64,19 +68,18 @@ namespace BankingSystem.Core.Features.Cards
 
         private async Task CreateCardValidation(CreateCardRequest createCardRequest)
         {
-            // Validate User ID - Assuming a method exists in _cardRepository to check for user existence
-            if (createCardRequest.UserId <= 0 || !await _cardRepository.UserExistsAsync(createCardRequest.UserId))
+            if (createCardRequest.UserId <= 0 || !await _userRepository.UserExistsAsync(createCardRequest.UserId))
             {
-                throw new ArgumentException("Invalid User ID or User does not exist.");
+                throw new UserNotFoundException("Invalid User ID or User does not exist.");
             }
 
             if (createCardRequest.AccountId <= 0)
             {
-                throw new ArgumentException("Invalid Account ID or Account does not exist.");
+                throw new BankAccountNotFoundException("Invalid Account ID or Account does not exist.");
             }
             if(await _createBankAccountsRepository.GetAccountByIdAsync(createCardRequest.AccountId) == null)
             {
-                throw new ArgumentException("Invalid Account ID or Account does not exist.");
+                throw new BankAccountNotFoundException("Invalid Account ID or Account does not exist.");
 
             }
 

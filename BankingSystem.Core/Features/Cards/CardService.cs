@@ -30,17 +30,14 @@ namespace BankingSystem.Core.Features.Cards
             await CreateCardValidation(createCardRequest);
 
             var UserInfo = await _cardRepository.GetUserFullNameById(createCardRequest.UserId);
-            if (UserInfo == null)
-            {
-                throw new Exception("user not found");
-            }
+            
             var card = new Card
             {
                 CardNumber = GenerateCardNumber(16),
                 FullName = UserInfo.FirstName + " " + UserInfo.LastName,
                 ExpirationDate = createCardRequest.ExpirationDate,
                 Cvv = createCardRequest.Cvv,
-                Pin = createCardRequest.Pin.ToString(),
+                Pin = createCardRequest.Pin,
                 MaxTried = createCardRequest.MaxTried,
                 IsActive = true,
                 IsLocked = false,
@@ -82,7 +79,6 @@ namespace BankingSystem.Core.Features.Cards
             if (await _createBankAccountsRepository.GetAccountByIdAsync(createCardRequest.AccountId) == null)
             {
                 throw new BankAccountNotFoundException("Invalid Account ID or Account does not exist.");
-
             }
 
             if (createCardRequest.ExpirationDate <= DateTime.UtcNow)

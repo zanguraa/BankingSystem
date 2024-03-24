@@ -2,7 +2,7 @@
 using BankingSystem.Core.Features.BankAccounts.Requests;
 
 
-namespace BankingSystem.Core.Features.BankAccounts.BankAccountRepositories;
+namespace BankingSystem.Core.Features.BankAccounts.CreateAccount;
 
 public interface IBankAccountRepository
 {
@@ -13,11 +13,11 @@ public interface IBankAccountRepository
     Task<BankAccount?> GetAccountByIdAsync(int AccountId);
 }
 
-public class BankAccountRepository : IBankAccountRepository
+public class CreateBankAccountsRepository : IBankAccountRepository
 {
     private readonly IDataManager _dataManager;
 
-    public BankAccountRepository(IDataManager dataManager)
+    public CreateBankAccountsRepository(IDataManager dataManager)
     {
         _dataManager = dataManager;
     }

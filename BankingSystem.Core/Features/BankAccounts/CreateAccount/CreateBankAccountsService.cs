@@ -1,8 +1,7 @@
-﻿using BankingSystem.Core.Features.BankAccounts.BankAccountRepositories;
-using BankingSystem.Core.Features.BankAccounts.Requests;
+﻿using BankingSystem.Core.Features.BankAccounts.Requests;
 using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 
-namespace BankingSystem.Core.Features.BankAccounts.BankAccountsServices;
+namespace BankingSystem.Core.Features.BankAccounts.CreateAccount;
 
 public interface IBankAccountService
 {
@@ -11,13 +10,13 @@ public interface IBankAccountService
     Task<bool> ValidateAccountAsync(int accountId);
 }
 
-public class BankAccountService : IBankAccountService
+public class CreateBankAccountsService : IBankAccountService
 {
     private readonly IBankAccountRepository _bankAccountRepository;
     private readonly ITransactionRepository _transactionRepository;
 
 
-    public BankAccountService(IBankAccountRepository bankAccountRepository, ITransactionRepository transactionRepository)
+    public CreateBankAccountsService(IBankAccountRepository bankAccountRepository, ITransactionRepository transactionRepository)
     {
         _bankAccountRepository = bankAccountRepository ?? throw new ArgumentNullException(nameof(bankAccountRepository));
         _transactionRepository = transactionRepository;

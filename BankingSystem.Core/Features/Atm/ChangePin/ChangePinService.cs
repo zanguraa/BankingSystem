@@ -1,24 +1,28 @@
-﻿using BankingSystem.Core.Features.Atm.ChangePin;
+﻿
+namespace BankingSystem.Core.Features.Atm.ChangePin;
+
+public interface IChangePinService
+{
+    Task<bool> ChangePinAsync(string cardNumber, string currentPin, string newPin);
+}
 
 public class ChangePinService : IChangePinService
 {
-	private readonly IChangePinRepository _changePinRepository;
+    private readonly IChangePinRepository _changePinRepository;
 
-	public ChangePinService(IChangePinRepository changePinRepository)
-	{
-		_changePinRepository = changePinRepository;
-	}
+    public ChangePinService(IChangePinRepository changePinRepository)
+    {
+        _changePinRepository = changePinRepository;
+    }
 
-	public async Task<bool> ChangePinAsync(string cardNumber, string currentPin, string newPin)
-	{
-		// Validate the card's current PIN before proceeding with the update
-		var card = await _changePinRepository.GetCardByNumberAsync(cardNumber);
-		if (card == null || card.Pin != currentPin)
-		{
-			return false; // Card not found or current PIN is incorrect
-		}
+    public async Task<bool> ChangePinAsync(string cardNumber, string currentPin, string newPin)
+    {
+        var card = await _changePinRepository.GetCardByNumberAsync(cardNumber);
+        if (card == null || card.Pin != currentPin)
+        {
+            return false;
+        }
 
-		// Update the PIN
-		return await _changePinRepository.UpdatePinAsync(cardNumber, currentPin, newPin);
-	}
+        return await _changePinRepository.UpdatePinAsync(cardNumber, currentPin, newPin);
+    }
 }

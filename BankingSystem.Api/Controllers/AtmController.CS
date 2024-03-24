@@ -1,5 +1,4 @@
-﻿using BankingSystem.Core.Features.Atm.CardAuthorization;
-using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
+﻿using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
 using BankingSystem.Core.Features.Atm.ChangePin;
 using BankingSystem.Core.Features.Atm.ChangePin.Requests;
 using BankingSystem.Core.Features.Atm.ViewBalance;
@@ -17,7 +16,7 @@ namespace BankingSystem.Api.Controllers
 	{
 		private readonly ICardAuthorizationService _cardAuthorizationService;
 		private readonly IChangePinService _changePinService;
-		private readonly IViewBalanceService _viewBalanceService;
+        private readonly IViewBalanceService _viewBalanceService;
 		private readonly IWithdrawMoneyService _withdrawMoneyService;
 		private readonly JwtTokenGenerator _jwtTokenGenerator;
 

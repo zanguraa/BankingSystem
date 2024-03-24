@@ -1,12 +1,12 @@
 ﻿using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
 using BankingSystem.Core.Features.Transactions.Currency;
-using BankingSystem.Core.Features.Atm.CardAuthorization;
 using BankingSystem.Core.Features.Transactions.TransactionServices;
 using BankingSystem.Core.Features.Transactions;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyServices;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyRepository;
 using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 using BankingSystem.Core.Features.BankAccounts.BankAccountRepositories;
+using BankingSystem.Core.Features.Atm.ViewBalance;
 
 
 

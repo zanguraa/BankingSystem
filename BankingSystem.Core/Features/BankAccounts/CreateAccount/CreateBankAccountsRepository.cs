@@ -56,16 +56,6 @@ public class CreateBankAccountsRepository : ICreateBankAccountsRepository
         return newBankAccount.Id;
     }
 
-    public async Task<bool> ExistsWithCurrencyAsync(int userId, string currency)
-    {
-        string query = "SELECT COUNT(*) FROM BankAccounts WHERE UserId = @UserId AND Currency = @Currency";
-        var count = await _dataManager.Query<int, dynamic>(query, new { UserId = userId, Currency = currency });
-        return count.FirstOrDefault() > 0;
-    }
-
-
-
-
     public async Task<bool> ContainsAccountForUserAsync(int userId)
     {
         var accounts = await _dataManager.Query<int, dynamic>(

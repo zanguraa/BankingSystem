@@ -6,7 +6,7 @@ namespace BankingSystem.Core.Features.BankAccounts.CreateAccount;
 
 public interface ICreateBankAccountsRepository
 {
-    Task<bool> ContainsAccountAsync(int accountId);
+    Task<bool> ContainsAccountForUserAsync(int userId);
     Task<int> CreateBankAccountAsync(BankAccount bankAccount);
     Task<bool> ExistsWithCurrencyAsync(int userId, string currency);
     Task<BankAccount?> GetAccountByIbanAsync(string iban);
@@ -66,11 +66,11 @@ public class CreateBankAccountsRepository : ICreateBankAccountsRepository
 
 
 
-    public async Task<bool> ContainsAccountAsync(int accountId)
+    public async Task<bool> ContainsAccountForUserAsync(int userId)
     {
-        var account = await _dataManager.Query<int, dynamic>(
-            "SELECT * FROM BankAccounts WHERE Id = @AccountId", new { AccountId = accountId });
-        return account.Count() > 0;
+        var accounts = await _dataManager.Query<int, dynamic>(
+            "SELECT Id FROM BankAccounts WHERE UserId = @UserId", new { UserId = userId });
+        return accounts.Any();
     }
 
     public async Task<BankAccount?> GetAccountByIdAsync(int AccountId)

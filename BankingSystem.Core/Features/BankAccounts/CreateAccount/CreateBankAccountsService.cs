@@ -1,32 +1,35 @@
 ﻿using BankingSystem.Core.Features.BankAccounts.Requests;
 using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
+using BankingSystem.Core.Shared.Exceptions;
 
 namespace BankingSystem.Core.Features.BankAccounts.CreateAccount;
 
 public interface ICreateBankAccountsService
 {
-    Task<bool> CheckAccountOwnershipAsync(int accountId, string userId);
     Task<List<int>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest);
-    Task<bool> ValidateAccountAsync(int accountId);
 }
 
 public class CreateBankAccountsService : ICreateBankAccountsService
 {
 
     private readonly ICreateBankAccountsRepository _createBankAccountsRepository;
-    private readonly ITransactionRepository _transactionRepository;
 
-    public CreateBankAccountsService(ICreateBankAccountsRepository createBankAccountsRepository, ITransactionRepository transactionRepository)
+    public CreateBankAccountsService(ICreateBankAccountsRepository createBankAccountsRepository)
     {
         _createBankAccountsRepository = createBankAccountsRepository;
-        _transactionRepository = transactionRepository;
-
     }
 
     public async Task<List<int>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
     {
-        var iban = IbanGenerator.GenerateIban();
+        await ValidateUserDoesNotHaveAccount(createBankAccountRequest.UserId);
 
+        bool accountExists = await _createBankAccountsRepository.ContainsAccountForUserAsync(createBankAccountRequest.UserId);
+        if (accountExists)
+        {
+            throw new InvalidOperationException("An account for this user already exists.");
+        }
+
+        var iban = IbanGenerator.GenerateIban();
         var currencies = Enum.GetValues<CurrencyType>();
         var accountIds = new List<int>();
         foreach (var currency in currencies)
@@ -46,21 +49,13 @@ public class CreateBankAccountsService : ICreateBankAccountsService
         return accountIds;
     }
 
-    public async Task<bool> CheckAccountOwnershipAsync(int accountId, string userId)
+    private async Task ValidateUserDoesNotHaveAccount(int userId)
     {
-        var isCorrectAccount = await _transactionRepository.CheckAccountOwnershipAsync(accountId, userId);
-        if (!isCorrectAccount)
+        bool accountExists = await _createBankAccountsRepository.ContainsAccountForUserAsync(userId);
+        if (accountExists)
         {
-            throw new Exception("You do not have permission to access this account.");
+            throw new BankAccountsAlreadyExistsException($"An account for user ID {userId} already exists.");
         }
-
-        return isCorrectAccount;
     }
-
-    public async Task<bool> ValidateAccountAsync(int accountId)
-    {
-        return await _createBankAccountsRepository.ContainsAccountAsync(accountId);
-    }
-
 
 }

@@ -1,5 +1,4 @@
-﻿using BankingSystem.Core.Features.BankAccounts.CreateAccount;
-using BankingSystem.Core.Features.Transactions.CreateTransactions;
+﻿using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Transactions.TransactionServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,13 +11,12 @@ namespace BankingSystem.Api.Controllers
 	public class TransactionController : ControllerBase
 	{
 		private readonly ITransactionService _transactionService;
-		private readonly IBankAccountService _bankAccountService;
 
-		public TransactionController(ITransactionService transactionService, IBankAccountService bankAccountService)
+		public TransactionController(ITransactionService transactionService)
 		{
 			_transactionService = transactionService;
-			_bankAccountService = bankAccountService;
-		}
+
+        }
 
         [HttpPost("internal")]
         [Authorize("MyApiUserPolicy", AuthenticationSchemes = "Bearer")]

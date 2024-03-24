@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 [Route("api/[controller]")]
 public class BankAccountController : ControllerBase
 {
-    private readonly IBankAccountService _bankAccountService;
     private readonly IAddFundsService _addFundsService;
+    private readonly ICreateBankAccountsService _createBankAccountsService;
 
-    public BankAccountController(IBankAccountService bankAccountService, IAddFundsService addFundsService)
+    public BankAccountController(IAddFundsService addFundsService, ICreateBankAccountsService createBankAccountsService)
     {
-        _bankAccountService = bankAccountService;
         _addFundsService = addFundsService;
+        _createBankAccountsService = createBankAccountsService;
     }
 
     [HttpPost("create")]
@@ -32,7 +32,7 @@ public class BankAccountController : ControllerBase
                 Iban = createBankAccountRequest.Iban,
             };
 
-            await _bankAccountService.CreateBankAccount(createBankAccountRequest);
+            await _createBankAccountsService.CreateBankAccount(createBankAccountRequest);
 
             return Ok(); // No need to return any data
         }

@@ -11,29 +11,26 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
         Task<TransactionResponse> ProcessInternalTransactionAsync(CreateTransactionRequest request);
         Task<TransactionResponse> ProcessExternalTransactionAsync(CreateTransactionRequest request);
         Task<TransactionResponse> ProcessWithdrawalTransactionAsync(CreateTransactionRequest request);
+        Task<bool> CheckAccountOwnershipAsync(int accountId, string userId);
     }
 
     public class TransactionService : ITransactionService
     {
         private readonly ITransactionRepository _transactionRepository;
         private readonly ICurrencyConversionService _currencyConversionService;
-        private readonly IBankAccountService _bankAccountService;
-        private readonly IBankAccountRepository _bankAccountRepository;
+        private readonly ICreateBankAccountsRepository _createBankAccountsRepository;
         private readonly ITransactionServiceValidator _transactionServiceValidator;
 
         public TransactionService(
-            IBankAccountService bankAccountService,
             ITransactionRepository transactionRepository,
             ICurrencyConversionService currencyConversionService,
-            IBankAccountRepository bankAccountRepository,
-            ITransactionServiceValidator transactionServiceValidator)
-
+            ITransactionServiceValidator transactionServiceValidator,
+            ICreateBankAccountsRepository createBankAccountsRepository)
         {
             _transactionRepository = transactionRepository;
             _currencyConversionService = currencyConversionService;
-            _bankAccountService = bankAccountService;
-            _bankAccountRepository = bankAccountRepository;
             _transactionServiceValidator = transactionServiceValidator;
+            _createBankAccountsRepository = createBankAccountsRepository;
         }
 
         public async Task<TransactionResponse> ProcessInternalTransactionAsync(CreateTransactionRequest request)
@@ -41,12 +38,12 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
             using var semaphore = new SemaphoreSlim(1, 1);
 
             await _transactionServiceValidator.ValidateCreateTransactionRequest(request);
-            await _bankAccountService.CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
+            await CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
 
             await semaphore.WaitAsync();
 
-            var fromAccount = await _bankAccountRepository.GetAccountByIdAsync(request.FromAccountId);
-            var toAccount = await _bankAccountRepository.GetAccountByIdAsync(request.ToAccountId);
+            var fromAccount = await _createBankAccountsRepository.GetAccountByIdAsync(request.FromAccountId);
+            var toAccount = await _createBankAccountsRepository.GetAccountByIdAsync(request.ToAccountId);
 
             decimal convertedAmount = _currencyConversionService.Convert(request.Amount, request.Currency, request.ToCurrency);
 
@@ -96,15 +93,15 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
             using var semaphore = new SemaphoreSlim(1, 1);
 
             await _transactionServiceValidator.ValidateCreateTransactionRequest(request);
-            await _bankAccountService.CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
+            await CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
 
             await semaphore.WaitAsync();
 
             var transactionFee = CalculateTransactionFee(request.Amount, TransactionType.External);
             var convertedAmount = _currencyConversionService.Convert(request.Amount, request.Currency, request.ToCurrency);
 
-            var fromAccount = await _bankAccountRepository.GetAccountByIdAsync(request.FromAccountId);
-            var toAccount = await _bankAccountRepository.GetAccountByIdAsync(request.ToAccountId);
+            var fromAccount = await _createBankAccountsRepository.GetAccountByIdAsync(request.FromAccountId);
+            var toAccount = await _createBankAccountsRepository.GetAccountByIdAsync(request.ToAccountId);
             if (fromAccount.InitialAmount < (request.Amount + transactionFee))
             {
                 throw new InvalidOperationException("Insufficient funds for external transaction.");
@@ -143,12 +140,12 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
             using var semaphore = new SemaphoreSlim(1, 1);
 
             await _transactionServiceValidator.ValidateCreateTransactionRequest(request);
-            await _bankAccountService.CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
+            await CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
 
             await semaphore.WaitAsync();
 
-            var fromAccount = await _bankAccountRepository.GetAccountByIdAsync(request.FromAccountId);
-            var toAccount = await _bankAccountRepository.GetAccountByIdAsync(request.ToAccountId);
+            var fromAccount = await _createBankAccountsRepository.GetAccountByIdAsync(request.FromAccountId);
+            var toAccount = await _createBankAccountsRepository.GetAccountByIdAsync(request.ToAccountId);
 
             var transactionFee = CalculateTransactionFee(request.Amount, TransactionType.Atm);
             decimal convertedAmount = _currencyConversionService.Convert(request.Amount, request.Currency, request.ToCurrency);
@@ -189,6 +186,17 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
         public async Task<IEnumerable<Transaction>> GetTransactionsByAccountIdAsync(int accountId)
         {
             return await _transactionRepository.GetTransactionsByAccountIdAsync(accountId);
+        }
+
+        public async Task<bool> CheckAccountOwnershipAsync(int accountId, string userId)
+        {
+            var isCorrectAccount = await _transactionRepository.CheckAccountOwnershipAsync(accountId, userId);
+            if (!isCorrectAccount)
+            {
+                throw new Exception("You do not have permission to access this account.");
+            }
+
+            return isCorrectAccount;
         }
 
         private decimal CalculateTransactionFee(decimal amount, TransactionType transactionType)

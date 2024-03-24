@@ -17,7 +17,6 @@ public interface IWithdrawMoneyService
 public class WithdrawMoneyService : IWithdrawMoneyService
 {
     private readonly IWithdrawMoneyRepository _withdrawMoneyRepository;
-    private readonly IBankAccountRepository _bankAccountRepository;
     private readonly ICurrencyConversionService _currencyConversionService;
     private readonly int _dailyWithdrawalLimitInGel = 10000;
     private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
@@ -26,7 +25,6 @@ public class WithdrawMoneyService : IWithdrawMoneyService
 
     public WithdrawMoneyService(
         IWithdrawMoneyRepository withdrawMoneyRepository,
-        IBankAccountRepository bankAccountRepository,
         ICurrencyConversionService currencyConversionService,
         ICardAuthorizationRepository cardAuthorizationRepository,
         IViewBalanceRepository viewBalanceRepository,
@@ -34,7 +32,6 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         )
     {
         _withdrawMoneyRepository = withdrawMoneyRepository;
-        _bankAccountRepository = bankAccountRepository;
         _currencyConversionService = currencyConversionService;
         _cardAuthorizationRepository = cardAuthorizationRepository;
         _viewBalanceRepository = viewBalanceRepository;

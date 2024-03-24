@@ -58,8 +58,8 @@ namespace BankingSystem.Api
             builder.Services.AddScoped<IAddFundsRepository, AddFundsRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddScoped<IBankAccountRepository, CreateBankAccountsRepository>();
-            builder.Services.AddScoped<IBankAccountService, CreateBankAccountsService>();
+            builder.Services.AddScoped<ICreateBankAccountsRepository, CreateBankAccountsRepository>();
+            builder.Services.AddScoped<ICreateBankAccountsService, CreateBankAccountsService>();
             builder.Services.AddScoped<ICardRepository, CardRepository>();
             builder.Services.AddScoped<ICardService, CardService>();
             builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();

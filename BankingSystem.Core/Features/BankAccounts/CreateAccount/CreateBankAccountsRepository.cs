@@ -8,7 +8,6 @@ public interface ICreateBankAccountsRepository
 {
     Task<bool> ContainsAccountForUserAsync(int userId);
     Task<int> CreateBankAccountAsync(BankAccount bankAccount);
-    Task<bool> ExistsWithCurrencyAsync(int userId, string currency);
     Task<BankAccount?> GetAccountByIbanAsync(string iban);
     Task<BankAccount?> GetAccountByIdAsync(int AccountId);
 }

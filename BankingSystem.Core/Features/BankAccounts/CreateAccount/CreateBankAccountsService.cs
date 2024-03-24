@@ -1,5 +1,4 @@
 ﻿using BankingSystem.Core.Features.BankAccounts.Requests;
-using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 using BankingSystem.Core.Features.Users;
 using BankingSystem.Core.Shared.Exceptions;
 
@@ -58,7 +57,7 @@ public class CreateBankAccountsService : ICreateBankAccountsService
         bool accountExists = await _createBankAccountsRepository.ContainsAccountForUserAsync(userId);
         if (accountExists)
         {
-            throw new BankAccountsAlreadyExistsException($"An account for user ID {userId} already exists.");
+            throw new BankAccountsAlreadyExistException($"An account for user ID {userId} already exists.");
         }
         bool userExists = await _userRepository.UserExistsAsync(userId);
         if(!userExists)

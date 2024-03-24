@@ -2,7 +2,6 @@
 {
     public class CreateCardRequest
 	{
-		public string FullName { get; set; }
 		public DateTime ExpirationDate { get; set; }
 		public int Cvv { get; set; }
 		public int Pin { get; set; }

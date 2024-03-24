@@ -27,6 +27,8 @@ namespace BankingSystem.Core.Features.Cards
 
         public async Task<Card> CreateCardAsync(CreateCardRequest createCardRequest)
         {
+            await CreateCardValidation(createCardRequest);
+
             var UserInfo = await _cardRepository.GetUserFullNameById(createCardRequest.UserId);
             if (UserInfo == null)
             {
@@ -77,37 +79,32 @@ namespace BankingSystem.Core.Features.Cards
             {
                 throw new BankAccountNotFoundException("Invalid Account ID or Account does not exist.");
             }
-            if(await _createBankAccountsRepository.GetAccountByIdAsync(createCardRequest.AccountId) == null)
+            if (await _createBankAccountsRepository.GetAccountByIdAsync(createCardRequest.AccountId) == null)
             {
                 throw new BankAccountNotFoundException("Invalid Account ID or Account does not exist.");
 
             }
 
-            // Validate Expiration Date
             if (createCardRequest.ExpirationDate <= DateTime.UtcNow)
             {
-                throw new ArgumentException("Expiration date must be in the future.");
+                throw new InvalidExpirationDateException("Expiration date must be in the future.");
             }
 
-            // Validate CVV - Assuming CVV should be 3 digits
             if (createCardRequest.Cvv < 100 || createCardRequest.Cvv > 999)
             {
-                throw new ArgumentException("CVV must be a 3-digit number.");
+                throw new InvalidCvvFormatException("CVV must be a 3-digit number.");
             }
 
-            // Validate PIN - Assuming PIN should be 4 digits
             if (createCardRequest.Pin < 1000 || createCardRequest.Pin > 9999)
             {
-                throw new ArgumentException("PIN must be a 4-digit number.");
+                throw new InvalidPinFormatException("PIN must be a 4-digit number.");
             }
 
-            // Validate Max Tried - Assuming Max Tried should be a positive number
             if (createCardRequest.MaxTried <= 0)
             {
-                throw new ArgumentException("Max Tried must be a positive number.");
+                throw new InvalidMaxTriedValueException("Max Tried must be a positive number.");
             }
 
-            // Add any other validations as necessary
         }
     }
 }

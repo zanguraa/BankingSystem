@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BankingSystem.Core.Data
 {
-    // ავტორიზაციისთვის საჭირო მონაცემთა ბაზის კონფიგურაცია Entity framework-ის გამოყენებით
     public class AppDbContext : IdentityDbContext<UserEntity, RoleEntity, int>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
@@ -16,7 +15,6 @@ namespace BankingSystem.Core.Data
         {
             base.OnModelCreating(builder);
 
-            // asp.net identity ცხრილების სახელების შეცვლა
             builder.Entity<UserEntity>().ToTable("Users");
             builder.Entity<RoleEntity>().ToTable("Roles");
             builder.Entity<IdentityUserRole<int>>().ToTable("UserRoles");
@@ -25,7 +23,6 @@ namespace BankingSystem.Core.Data
             builder.Entity<IdentityUserLogin<int>>().ToTable("UserLogins");
             builder.Entity<IdentityUserToken<int>>().ToTable("UserTokens");
 
-            // Seed მონაცემების ჩაწერა
             InsertSeedData(builder);
         }
         private void InsertSeedData(ModelBuilder builder)
@@ -46,8 +43,8 @@ namespace BankingSystem.Core.Data
                 FirstName = "Hackera",
                 LastName = "Hackerashvili",
                 NormalizedEmail = userName.ToUpper(),
-                BirthdayDate = new DateTime(1990, 1, 1), // Set a non-null value for BirthdayDate
-                PersonalId = "12345678910", // Set a non-null value for PersonalId
+                BirthdayDate = new DateTime(1990, 1, 1),
+                PersonalId = "12345678910",
                 PhoneNumber = "555123456",
             };
 

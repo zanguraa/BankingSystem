@@ -4,7 +4,7 @@ using BankingSystem.Core.Features.BankAccounts.Requests;
 
 namespace BankingSystem.Core.Features.BankAccounts.CreateAccount;
 
-public interface IBankAccountRepository
+public interface ICreateBankAccountsRepository
 {
     Task<bool> ContainsAccountAsync(int accountId);
     Task<int> CreateBankAccountAsync(BankAccount bankAccount);
@@ -13,7 +13,7 @@ public interface IBankAccountRepository
     Task<BankAccount?> GetAccountByIdAsync(int AccountId);
 }
 
-public class CreateBankAccountsRepository : IBankAccountRepository
+public class CreateBankAccountsRepository : ICreateBankAccountsRepository
 {
     private readonly IDataManager _dataManager;
 

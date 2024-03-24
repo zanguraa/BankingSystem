@@ -3,23 +3,24 @@ using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 
 namespace BankingSystem.Core.Features.BankAccounts.CreateAccount;
 
-public interface IBankAccountService
+public interface ICreateBankAccountsService
 {
     Task<bool> CheckAccountOwnershipAsync(int accountId, string userId);
     Task<List<int>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest);
     Task<bool> ValidateAccountAsync(int accountId);
 }
 
-public class CreateBankAccountsService : IBankAccountService
+public class CreateBankAccountsService : ICreateBankAccountsService
 {
-    private readonly IBankAccountRepository _bankAccountRepository;
+
+    private readonly ICreateBankAccountsRepository _createBankAccountsRepository;
     private readonly ITransactionRepository _transactionRepository;
 
-
-    public CreateBankAccountsService(IBankAccountRepository bankAccountRepository, ITransactionRepository transactionRepository)
+    public CreateBankAccountsService(ICreateBankAccountsRepository createBankAccountsRepository, ITransactionRepository transactionRepository)
     {
-        _bankAccountRepository = bankAccountRepository ?? throw new ArgumentNullException(nameof(bankAccountRepository));
+        _createBankAccountsRepository = createBankAccountsRepository;
         _transactionRepository = transactionRepository;
+
     }
 
     public async Task<List<int>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
@@ -37,7 +38,7 @@ public class CreateBankAccountsService : IBankAccountService
                 Currency = currency
             };
 
-            var accountId = await _bankAccountRepository.CreateBankAccountAsync(bankAccount);
+            var accountId = await _createBankAccountsRepository.CreateBankAccountAsync(bankAccount);
             accountIds.Add(accountId);
 
         }
@@ -58,7 +59,7 @@ public class CreateBankAccountsService : IBankAccountService
 
     public async Task<bool> ValidateAccountAsync(int accountId)
     {
-        return await _bankAccountRepository.ContainsAccountAsync(accountId);
+        return await _createBankAccountsRepository.ContainsAccountAsync(accountId);
     }
 
 

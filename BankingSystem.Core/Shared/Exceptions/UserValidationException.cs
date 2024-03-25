@@ -2,7 +2,7 @@
 {
     public class UserValidationException : DomainException
     {
-        public UserValidationException(string message) : base(message)
+        public UserValidationException(string message, params object?[]? parameters) : base(message)
         {
 
         }

@@ -2,7 +2,7 @@
 {
     public class InvalidTransactionValidation : DomainException
     {
-        public InvalidTransactionValidation(string message) : base(message)
+        public InvalidTransactionValidation(string message, params object?[]? parameters) : base(message)
         {
 
         }

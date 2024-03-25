@@ -1,7 +1,10 @@
 ﻿using BankingSystem.Core.Features.BankAccounts.CreateAccount;
+using BankingSystem.Core.Features.BankAccounts.Requests;
 using BankingSystem.Core.Features.Cards.CreateCard;
 using BankingSystem.Core.Features.Users;
 using BankingSystem.Core.Shared.Exceptions;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using System.Text;
 
 namespace BankingSystem.Core.Features.Cards
 {
@@ -27,21 +30,17 @@ namespace BankingSystem.Core.Features.Cards
 
         public async Task<Card> CreateCardAsync(CreateCardRequest createCardRequest)
         {
-            await CreateCardValidation(createCardRequest);
+            var validationResult = await CreateCardValidation(createCardRequest);
 
-            var UserInfo = await _cardRepository.GetUserFullNameById(createCardRequest.UserId);
-            
+            var currentTime = DateTime.UtcNow;
+
             var card = new Card
             {
                 CardNumber = GenerateCardNumber(16),
-                FullName = UserInfo.FirstName + " " + UserInfo.LastName,
-                ExpirationDate = createCardRequest.ExpirationDate,
-                Cvv = createCardRequest.Cvv,
-                Pin = createCardRequest.Pin,
-                MaxTried = createCardRequest.MaxTried,
-                IsActive = true,
-                IsLocked = false,
-                CreatedAt = DateTime.UtcNow,
+                FullName = validationResult.User.FirstName.ToUpper() + " " + validationResult.User.LastName.ToUpper(),
+                ExpirationDate = new DateTime(currentTime.Year, currentTime.Month, 1).AddYears(2).AddMonths(1).AddDays(-1),
+                Cvv = GenerateIntNumbers(3),
+                Pin = GenerateIntNumbers(4),
                 UserId = createCardRequest.UserId,
                 AccountId = createCardRequest.AccountId
             };
@@ -65,42 +64,44 @@ namespace BankingSystem.Core.Features.Cards
             return new string(digits);
         }
 
-        private async Task CreateCardValidation(CreateCardRequest createCardRequest)
+        private int GenerateIntNumbers(int length)
         {
-            if (createCardRequest.UserId <= 0 || !await _userRepository.UserExistsAsync(createCardRequest.UserId))
+            if (length == 0 || length >= int.MaxValue)
             {
-                throw new UserNotFoundException("Invalid User ID or User does not exist.");
+                throw new ArgumentException("length parameter is out of range");
+            }
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < length; i++)
+            {
+                sb.Append(new Random().Next(0,9));
+            }
+            return int.Parse(sb.ToString());
+        }
+
+        private async Task<ValidatedCardData> CreateCardValidation(CreateCardRequest createCardRequest)
+        {
+
+            if (createCardRequest.UserId <= 0)
+            {
+                throw new UserNotFoundException("Invalid User ID.");
             }
 
             if (createCardRequest.AccountId <= 0)
             {
-                throw new BankAccountNotFoundException("Invalid Account ID or Account does not exist.");
-            }
-            if (await _createBankAccountsRepository.GetAccountByIdAsync(createCardRequest.AccountId) == null)
-            {
-                throw new BankAccountNotFoundException("Invalid Account ID or Account does not exist.");
+                throw new BankAccountNotFoundException("Invalid Account ID.");
             }
 
-            if (createCardRequest.ExpirationDate <= DateTime.UtcNow)
-            {
-                throw new InvalidExpirationDateException("Expiration date must be in the future.");
-            }
+            var UserInfo = await _cardRepository.GetUserFullNameById(createCardRequest.UserId)
+                ?? throw new UserNotFoundException("User not found");
+            var bankAccount = await _createBankAccountsRepository.GetAccountByIdAsync(createCardRequest.AccountId)
+                ?? throw new BankAccountNotFoundException("BankAcount not found.");
+            return new() { User = UserInfo, BankAccount = bankAccount };
+        }
 
-            if (createCardRequest.Cvv < 100 || createCardRequest.Cvv > 999)
-            {
-                throw new InvalidCvvFormatException("CVV must be a 3-digit number.");
-            }
-
-            if (createCardRequest.Pin < 1000 || createCardRequest.Pin > 9999)
-            {
-                throw new InvalidPinFormatException("PIN must be a 4-digit number.");
-            }
-
-            if (createCardRequest.MaxTried <= 0)
-            {
-                throw new InvalidMaxTriedValueException("Max Tried must be a positive number.");
-            }
-
+        public class ValidatedCardData
+        {
+            public UserResponse User { get; set; }
+            public BankAccount BankAccount { get; set; }
         }
     }
 }

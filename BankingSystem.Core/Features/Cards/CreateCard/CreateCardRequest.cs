@@ -2,10 +2,6 @@
 {
     public class CreateCardRequest
 	{
-		public DateTime ExpirationDate { get; set; }
-		public int Cvv { get; set; }
-		public int Pin { get; set; }
-		public int MaxTried { get; set; }
 		public int UserId { get; set; }  
 		public int AccountId { get; set; }
 	}

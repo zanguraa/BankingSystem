@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -26,12 +27,12 @@ namespace BankingSystem.Core.Shared
             return GenerateToken(claims);
         }
 
-        public string GenerateTokenForAtmOperations(string cardNumber, string pinCode)
+        public string GenerateTokenForAtmOperations(CardAuthorizationRequest request)
         {
             var claims = new List<Claim>
          {
-               new Claim("CardNumber", cardNumber),
-               new Claim("PinCode", pinCode),
+               new Claim("CardNumber", request.CardNumber),
+               new Claim("PinCode", request.Pin.ToString()),
                new Claim("CardHolderStatus", "Active")
          };
 

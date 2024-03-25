@@ -48,11 +48,12 @@ namespace BankingSystem.Api
 
             builder.Services.AddTransient<JwtTokenGenerator>();
 
-            var userName = Environment.UserName; 
-            var connectionStringName = userName; 
+            var userName = Environment.UserName;
+            var connectionStringName = userName;
             var connectionString = builder.Configuration.GetConnectionString(connectionStringName)!;
 
             builder.Services.AddSingleton<IDataManager, DataManager>();
+            builder.Services.AddSingleton<ISeqLogger, SeqLogger>();
 
             builder.Services.AddScoped<IAddFundsService, AddFundsService>();
             builder.Services.AddScoped<IAddFundsRepository, AddFundsRepository>();
@@ -125,10 +126,10 @@ namespace BankingSystem.Api
 
 
             var app = builder.Build();
-			
+
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-			if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();

@@ -2,6 +2,7 @@
 using BankingSystem.Core.Features.BankAccounts.Requests;
 using BankingSystem.Core.Features.Cards.CreateCard;
 using BankingSystem.Core.Features.Users;
+using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using System.Text;
@@ -18,14 +19,13 @@ namespace BankingSystem.Core.Features.Cards
     {
         private readonly ICardRepository _cardRepository;
         private readonly ICreateBankAccountsRepository _createBankAccountsRepository;
-        private readonly IUserRepository _userRepository;
-        private static readonly Random random = new Random();
+        private readonly ISeqLogger _seqLogger;
 
-        public CardService(ICardRepository cardRepository, ICreateBankAccountsRepository createBankAccountsRepository, IUserRepository userRepository)
+        public CardService(ICardRepository cardRepository, ICreateBankAccountsRepository createBankAccountsRepository, ISeqLogger seqLogger)
         {
             _cardRepository = cardRepository;
             _createBankAccountsRepository = createBankAccountsRepository;
-            _userRepository = userRepository;
+            _seqLogger = seqLogger;
         }
 
         public async Task<Card> CreateCardAsync(CreateCardRequest createCardRequest)

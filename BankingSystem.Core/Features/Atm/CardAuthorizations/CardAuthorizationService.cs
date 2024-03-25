@@ -21,34 +21,30 @@ public class CardAuthorizationService : ICardAuthorizationService
 
     public async Task<CardAuthorizationResponse> AuthorizeCardAsync(CardAuthorizationRequest request)
     {
-        await ValidateCardAuthorization(request);
+        ValidateCardAuthorization(request);
 
         var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request);
 
         return new CardAuthorizationResponse { IsAuthorized = true, IsActive = card.IsActive, Message = "Message = \"Authorization successful.\"" };
     }
 
-    private async Task<bool> ValidateCardAuthorization(CardAuthorizationRequest request)
+    private bool ValidateCardAuthorization(CardAuthorizationRequest request)
     {
-        var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request);
-        var isCardValid = await _cardAuthorizationRepository.GetCardByNumberAsync(request.CardNumber);
-
-        if (isCardValid.CardNumber != request.CardNumber)
+        if (request == null)
         {
-            throw new NotFoundException("Card not found!");
+            throw new ArgumentNullException(nameof(request));
         }
-
-        if (isCardValid.ExpirationDate < DateTime.UtcNow)
+        if (string.IsNullOrEmpty(request.CardNumber))
         {
-            throw new ExpirationDateException("Card has expired.");
+            throw new InvalidCardException("CardNumber can not be empty");
         }
-        if (!isCardValid.IsActive)
+        if (request.Pin <= 0)
         {
-            throw new CardInactiveException("Card is not active!");
+            throw new InvalidCardException("invalid PinCode");
         }
-        if (isCardValid.Pin != request.Pin)
+        if (request.CardNumber.Length != 16 && !request.CardNumber.All(char.IsDigit))
         {
-            throw new InvalidCardPinException("The provided PIN code is incorrect.");
+            throw new InvalidCardException("CardNumber length is invalid!");
         }
 
         return true;

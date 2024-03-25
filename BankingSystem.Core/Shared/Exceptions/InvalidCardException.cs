@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Shared.Exceptions
 {
-    public class InvalidCardPinException : DomainException
+    public class InvalidCardException : DomainException
     {
-        public InvalidCardPinException(string message) : base(message)
+        public InvalidCardException(string message) : base(message)
         {
 
         }

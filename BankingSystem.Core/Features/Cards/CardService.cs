@@ -1,10 +1,8 @@
 ﻿using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.BankAccounts.Requests;
 using BankingSystem.Core.Features.Cards.CreateCard;
-using BankingSystem.Core.Features.Users;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using System.Text;
 
 namespace BankingSystem.Core.Features.Cards

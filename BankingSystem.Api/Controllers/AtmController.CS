@@ -48,21 +48,16 @@ namespace BankingSystem.Api.Controllers
 
         public async Task<IActionResult> ChangePin([FromBody] ChangePinRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+
 
             var result = await _changePinService.ChangePinAsync(request.CardNumber, request.CurrentPin, request.NewPin);
 
-            if (result)
+            if (!result)
             {
-                return Ok(new ChangePinResponse { Success = true, Message = "PIN changed successfully." });
+                return BadRequest();
             }
-            else
-            {
-                return BadRequest(new ChangePinResponse { Success = false, Message = "Failed to change PIN. Please check the current PIN and try again." });
-            }
+            return Ok(new ChangePinResponse { Success = true, Message = "PIN changed successfully." });
+
 
 
         }
@@ -93,11 +88,6 @@ namespace BankingSystem.Api.Controllers
         [Authorize("CardHolder", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Withdraw([FromBody] WithdrawAmountCurrency requestDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var tokenCardNumber = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
 
             if (tokenCardNumber == null)

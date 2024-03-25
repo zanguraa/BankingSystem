@@ -35,9 +35,13 @@ namespace BankingSystem.Api.Controllers
         public async Task<IActionResult> Authorize([FromBody] CardAuthorizationRequest request)
         {
 
-            await _cardAuthorizationService.AuthorizeCardAsync(request);
-            var token = _jwtTokenGenerator.GenerateTokenForAtmOperations(request);
+            var result = await _cardAuthorizationService.AuthorizeCardAsync(request);
 
+            if (!result)
+            {
+                return BadRequest();
+            }
+            var token = _jwtTokenGenerator.GenerateTokenForAtmOperations(request);
 
             return Ok(token);
         }

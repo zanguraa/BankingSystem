@@ -4,7 +4,7 @@ using BankingSystem.Core.Shared.Exceptions;
 
 public interface ICardAuthorizationService
 {
-    Task<CardAuthorizationResponse> AuthorizeCardAsync(CardAuthorizationRequest request);
+    Task<bool> AuthorizeCardAsync(CardAuthorizationRequest request);
 }
 
 public class CardAuthorizationService : ICardAuthorizationService
@@ -18,13 +18,19 @@ public class CardAuthorizationService : ICardAuthorizationService
         _cardAuthorizationRepository = cardAuthorizationRepository;
     }
 
-    public async Task<CardAuthorizationResponse> AuthorizeCardAsync(CardAuthorizationRequest request)
+    public async Task<bool> AuthorizeCardAsync(CardAuthorizationRequest request)
     {
         ValidateCardAuthorization(request);
 
         var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request);
+        if (card == null)
+        {
+            // If no card is found, throw a specific exception for this case.
+            throw new InvalidCardException($"CardNumber {request.CardNumber} not found.");
+        }
 
-        return new CardAuthorizationResponse { IsAuthorized = true, IsActive = card.IsActive, Message = "Message = Authorization successful." };
+
+        return true;
     }
 
     private bool ValidateCardAuthorization(CardAuthorizationRequest request)

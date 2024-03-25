@@ -50,8 +50,17 @@ namespace BankingSystem.Test.Transactions.Validators
 		public void ShouldThrowInvalidTransactionValidationIfRequestToAccountIdIsLessOrEqualZero() 
 		{
 			var request = ModelFactory.GetCreateTransactionRequest(
-				r => r.ToAccountId = -12); Assert.ThrowsAsync<InvalidTransactionValidation>(
+				r => r.ToAccountId = -12);
+			Assert.ThrowsAsync<InvalidTransactionValidation>(
 				async () => await _validator.ValidateCreateTransactionRequest(request));
+		}
+		[Test]
+		public void ShouldThrowInvalidTransactionValidationIfRequestAmountIsLessOrEqualZero() 
+		{
+			var request = ModelFactory.GetCreateTransactionRequest(
+				r => r.Amount = -1243);
+			Assert.ThrowsAsync<InvalidTransactionValidation>(
+			   async () => await _validator.ValidateCreateTransactionRequest(request));
 		}
 	}
 }

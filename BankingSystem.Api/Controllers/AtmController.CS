@@ -41,7 +41,7 @@ namespace BankingSystem.Api.Controllers
 
 			if (isAuthorized)
 			{
-				var token = _jwtTokenGenerator.GenerateTokenForAtmOperations(request.CardNumber, "CustomRoleOrClaimHere");
+				var token = _jwtTokenGenerator.GenerateTokenForAtmOperations(request.CardNumber, "CardHolderStatus");
 
 				return Ok(new
 				{
@@ -112,7 +112,6 @@ namespace BankingSystem.Api.Controllers
 				return BadRequest(ModelState);
 			}
 
-			// Extract the card number from the JWT token's claims
 			var tokenCardNumber = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
 
 			if (tokenCardNumber == null)

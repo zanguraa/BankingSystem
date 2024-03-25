@@ -36,11 +36,11 @@ namespace BankingSystem.Core.Features.Cards
 
             var card = new Card
             {
-                CardNumber = GenerateCardNumber(16),
+                CardNumber = GenerateNumbers(16).ToString(),
                 FullName = validationResult.User.FirstName.ToUpper() + " " + validationResult.User.LastName.ToUpper(),
                 ExpirationDate = new DateTime(currentTime.Year, currentTime.Month, 1).AddYears(2).AddMonths(1).AddDays(-1),
-                Cvv = GenerateIntNumbers(3),
-                Pin = GenerateIntNumbers(4),
+                Cvv = int.Parse(GenerateNumbers(3)),
+                Pin = int.Parse(GenerateNumbers(4)),
                 UserId = createCardRequest.UserId,
                 AccountId = createCardRequest.AccountId
             };
@@ -53,29 +53,18 @@ namespace BankingSystem.Core.Features.Cards
             return await _cardRepository.GetCardsByUserIdAsync(userId);
         }
 
-        private string GenerateCardNumber(int length)
+        private string GenerateNumbers(int length)
         {
-            char[] digits = new char[length];
-            for (int i = 0; i < length; i++)
-            {
-                digits[i] = (char)(random.Next(10) + '0');
-            }
-
-            return new string(digits);
-        }
-
-        private int GenerateIntNumbers(int length)
-        {
-            if (length == 0 || length >= int.MaxValue)
+            if (length == 0)
             {
                 throw new ArgumentException("length parameter is out of range");
             }
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < length; i++)
             {
-                sb.Append(new Random().Next(0,9));
+                sb.Append(new Random().Next(0, 9));
             }
-            return int.Parse(sb.ToString());
+            return sb.ToString();
         }
 
         private async Task<ValidatedCardData> CreateCardValidation(CreateCardRequest createCardRequest)

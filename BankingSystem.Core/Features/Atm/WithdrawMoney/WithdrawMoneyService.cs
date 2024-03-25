@@ -1,49 +1,46 @@
 ﻿using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
 using BankingSystem.Core.Features.Transactions.Currency;
-using BankingSystem.Core.Features.Atm.CardAuthorization;
 using BankingSystem.Core.Features.Transactions.TransactionServices;
 using BankingSystem.Core.Features.Transactions;
-using BankingSystem.Core.Shared.Exceptions;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyServices;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyRepository;
 using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
-using BankingSystem.Core.Features.BankAccounts.BankAccountRepositories;
+using BankingSystem.Core.Features.Atm.ViewBalance;
+using BankingSystem.Core.Features.Atm.WithdrawMoney;
+using BankingSystem.Core.Shared.Exceptions;
+using BankingSystem.Core.Features.BankAccounts.CreateAccount;
+using BankingSystem.Core.Features.BankAccounts.Requests;
 
-
+public interface IWithdrawMoneyService
+{
+    Task<WithdrawResponse> WithdrawAsync(WithdrawRequestWithCardNumber requestDto);
+}
 
 public class WithdrawMoneyService : IWithdrawMoneyService
 {
     private readonly IWithdrawMoneyRepository _withdrawMoneyRepository;
-    private readonly IBankAccountRepository _bankAccountRepository;
     private readonly ICurrencyConversionService _currencyConversionService;
     private readonly int _dailyWithdrawalLimitInGel = 10000;
     private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
     public readonly IViewBalanceRepository _viewBalanceRepository;
     private readonly ITransactionRepository _transactionRepository;
-    private readonly IWithdrawMoneyServiceValidator _withdrawMoneyServiceValidator;
 
     public WithdrawMoneyService(
         IWithdrawMoneyRepository withdrawMoneyRepository,
-        IBankAccountRepository bankAccountRepository,
         ICurrencyConversionService currencyConversionService,
         ICardAuthorizationRepository cardAuthorizationRepository,
         IViewBalanceRepository viewBalanceRepository,
-        ITransactionRepository transactionRepository,
-        IWithdrawMoneyServiceValidator withdrawMoneyServiceValidator
+        ITransactionRepository transactionRepository
         )
     {
         _withdrawMoneyRepository = withdrawMoneyRepository;
-        _bankAccountRepository = bankAccountRepository;
         _currencyConversionService = currencyConversionService;
         _cardAuthorizationRepository = cardAuthorizationRepository;
         _viewBalanceRepository = viewBalanceRepository;
         _transactionRepository = transactionRepository;
-        _withdrawMoneyServiceValidator = withdrawMoneyServiceValidator;
     }
 
     public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequestWithCardNumber requestDto)
     {
-        _withdrawMoneyServiceValidator.ValidateWithdrawRequest(requestDto);
+        ValidateWithdrawRequest(requestDto);
 
         var card = await _cardAuthorizationRepository.GetCardByNumberAsync(requestDto.CardNumber);
         if (card == null)
@@ -89,7 +86,7 @@ public class WithdrawMoneyService : IWithdrawMoneyService
             TransactionDate = DateTime.UtcNow
         };
 
-        bool withdrawalSuccess = await _transactionRepository.UpdateAccountBalancesAsync(transaction, true);
+        bool withdrawalSuccess = await _transactionRepository.ProcessAtmTransaction(transaction);
 
 
         var logEntry = new TransactionLog
@@ -116,5 +113,22 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         };
 
         return withdrawalResult;
+    }
+
+    private void ValidateWithdrawRequest(WithdrawRequestWithCardNumber requestDto)
+    {
+        if (requestDto.Amount < 5 || requestDto.Amount % 5 != 0)
+        {
+            throw new InvalidAtmAmountException("Invalid withdrawal amount. Amount must be in multiples of 5");
+        }
+        if (requestDto.Amount > _dailyWithdrawalLimitInGel)
+        {
+            throw new InvalidAtmAmountException("Amount exceeds withdrawal limit");
+        }
+        if (!Enum.TryParse<CurrencyType>(requestDto.Currency, out var currency) || !Enum.IsDefined(typeof(CurrencyType), currency))
+        {
+            throw new UnsupportedCurrencyException("Unsupported currency");
+        }
+
     }
 }

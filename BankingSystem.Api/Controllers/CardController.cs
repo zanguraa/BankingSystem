@@ -1,13 +1,10 @@
 ﻿using BankingSystem.Core.Features.Cards;
 using BankingSystem.Core.Features.Cards.CreateCard;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace BankingSystem.Api.Controllers
 {
-	[ApiController]
+    [ApiController]
 	[Route("api/cards")]
 	public class CardController : ControllerBase
 	{

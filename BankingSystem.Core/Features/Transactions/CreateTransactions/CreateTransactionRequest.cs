@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BankingSystem.Core.Features.Transactions.CreateTransactions
+﻿namespace BankingSystem.Core.Features.Transactions.CreateTransactions
 {
     public class CreateTransactionRequest
     {
@@ -13,7 +7,6 @@ namespace BankingSystem.Core.Features.Transactions.CreateTransactions
         public decimal Amount { get; set; }
         public string Currency { get; set; }
         public string ToCurrency { get; set; }
-        public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
 		public string? UserId { get; set; }
 	}
 }

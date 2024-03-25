@@ -1,32 +1,38 @@
 ﻿using BankingSystem.Core.Features.Atm.ViewBalance.Requests;
-using BankingSystem.Core.Features.Atm.ViewBalance;
 
+namespace BankingSystem.Core.Features.Atm.ViewBalance;
+
+public interface IViewBalanceService
+{
+    Task<BalanceResponse> GetBalanceByCardNumberAsync(string cardNumber);
+    Task<BalanceResponse> GetBalanceByUserIdAsync(string userId);
+}
 
 public class ViewBalanceService : IViewBalanceService
 {
-	private readonly IViewBalanceRepository _viewBalanceRepository;
+    private readonly IViewBalanceRepository _viewBalanceRepository;
 
-	public ViewBalanceService(IViewBalanceRepository viewBalanceRepository)
-	{
-		_viewBalanceRepository = viewBalanceRepository;
-	}
+    public ViewBalanceService(IViewBalanceRepository viewBalanceRepository)
+    {
+        _viewBalanceRepository = viewBalanceRepository;
+    }
 
-	public async Task<BalanceResponse> GetBalanceByUserIdAsync(string userId)
-	{
-		var balanceInfo = await _viewBalanceRepository.GetBalanceInfoByUserIdAsync(userId);
+    public async Task<BalanceResponse> GetBalanceByUserIdAsync(string userId)
+    {
+        var balanceInfo = await _viewBalanceRepository.GetBalanceInfoByUserIdAsync(userId);
 
-		if (balanceInfo == null)
-		{
-			throw new KeyNotFoundException($"No balance information found for user ID: {userId}.");
-		}
+        if (balanceInfo == null)
+        {
+            throw new KeyNotFoundException($"No balance information found for user ID: {userId}.");
+        }
 
-		return new BalanceResponse
-		{
-			UserId = balanceInfo.UserId,
-			InitialAmount = balanceInfo.InitialAmount,
-			Currency = balanceInfo.Currency
-		};
-	}
+        return new BalanceResponse
+        {
+            UserId = balanceInfo.UserId,
+            InitialAmount = balanceInfo.InitialAmount,
+            Currency = balanceInfo.Currency
+        };
+    }
 
     public async Task<BalanceResponse> GetBalanceByCardNumberAsync(string cardNumber)
     {
@@ -39,7 +45,7 @@ public class ViewBalanceService : IViewBalanceService
 
         return new BalanceResponse
         {
-            UserId = balanceInfo.UserId, // Assuming you still want to return the UserId here
+            UserId = balanceInfo.UserId,
             InitialAmount = balanceInfo.InitialAmount,
             Currency = balanceInfo.Currency
         };

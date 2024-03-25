@@ -1,5 +1,4 @@
 ﻿using BankingSystem.Core.Features.Reports.Requests;
-using Microsoft.AspNetCore.Mvc;
 
 public interface IReportsService
 {

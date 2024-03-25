@@ -1,53 +1,52 @@
-﻿using BankingSystem.Core.Features.BankAccounts.BankAccountsServices;
+﻿using BankingSystem.Core.Features.BankAccounts.AddFunds;
+using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.BankAccounts.Requests;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 [ApiController]
 [Route("api/[controller]")]
 public class BankAccountController : ControllerBase
 {
-	private readonly IBankAccountService _bankAccountService;
+    private readonly IAddFundsService _addFundsService;
+    private readonly ICreateBankAccountsService _createBankAccountsService;
 
-	public BankAccountController(IBankAccountService bankAccountService)
-	{
-		_bankAccountService = bankAccountService;
-	}
+    public BankAccountController(IAddFundsService addFundsService, ICreateBankAccountsService createBankAccountsService)
+    {
+        _addFundsService = addFundsService;
+        _createBankAccountsService = createBankAccountsService;
+    }
 
-	[HttpPost("create")]
-	public async Task<IActionResult> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
-	{
-		try
-		{
-			if (createBankAccountRequest == null || createBankAccountRequest.UserId == default(int))
-			{
-				return BadRequest("UserId is required.");
-			}
-			// Create BankAccount object
-			var bankAccount = new BankAccount
-			{
-				UserId = createBankAccountRequest.UserId,
-				Iban = createBankAccountRequest.Iban,
-			};
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
+    {
+        try
+        {
+            if (createBankAccountRequest == null || createBankAccountRequest.UserId == default(int))
+            {
+                return BadRequest("UserId is required.");
+            }
+            // Create BankAccount object
+            var bankAccount = new BankAccount
+            {
+                UserId = createBankAccountRequest.UserId,
+                Iban = createBankAccountRequest.Iban,
+            };
 
-			await _bankAccountService.CreateBankAccount(createBankAccountRequest);
+            await _createBankAccountsService.CreateBankAccount(createBankAccountRequest);
 
-			return Ok(); // No need to return any data
-		}
-		catch (Exception ex)
-		{
-			return StatusCode(500, $"Internal server error: {ex.Message}");
-		}
-	}
+            return Ok(); // No need to return any data
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 
-	[HttpPost("addfunds")]
-	public async Task<IActionResult> AddFunds(AddFundsRequest addFundsRequest)
-	{
-		await _bankAccountService.AddFunds(addFundsRequest);
-		return Ok();
-	}
+    [HttpPost("addfunds")]
+    public async Task<IActionResult> AddFunds(AddFundsRequest addFundsRequest)
+    {
+        await _addFundsService.AddFunds(addFundsRequest);
+        return Ok();
+    }
 }
 

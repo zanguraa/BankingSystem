@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using BankingSystem.Core.Features.Reports;
+﻿using BankingSystem.Core.Features.Reports;
 using BankingSystem.Core.Features.Reports.Requests;
 
 public class ReportsService : IReportsService

@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BankingSystem.Core.Data;
-using BankingSystem.Core.Features.Users.CreateUser;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using BankingSystem.Core.Data;
 
 namespace BankingSystem.Core.Features.Users
 {
@@ -28,6 +20,14 @@ namespace BankingSystem.Core.Features.Users
                 new { PersonalId = personalId }
             );
 
+            return result.Any();
+        }
+
+        public async Task<bool> UserExistsAsync(int userId)
+        {
+            string sql = "SELECT TOP 1 1 FROM [BankingSystem_db].[dbo].[Users] WHERE id = @userId";
+
+            var result = await _dataManager.Query<int, dynamic>(sql, new { userId });
             return result.Any();
         }
 

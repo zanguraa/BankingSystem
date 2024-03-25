@@ -1,13 +1,11 @@
 ﻿using BankingSystem.Api.Middlewares;
 using BankingSystem.Core.Data;
 using BankingSystem.Core.Data.Entities;
-using BankingSystem.Core.Features.Atm.CardAuthorization;
 using BankingSystem.Core.Features.Atm.ChangePin;
 using BankingSystem.Core.Features.Atm.ViewBalance;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyRepository;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyServices;
-using BankingSystem.Core.Features.BankAccounts.BankAccountRepositories;
-using BankingSystem.Core.Features.BankAccounts.BankAccountsServices;
+using BankingSystem.Core.Features.Atm.WithdrawMoney;
+using BankingSystem.Core.Features.BankAccounts.AddFunds;
+using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.Cards;
 using BankingSystem.Core.Features.Reports;
 using BankingSystem.Core.Features.Transactions.Currency;
@@ -56,10 +54,12 @@ namespace BankingSystem.Api
 
             builder.Services.AddSingleton<IDataManager, DataManager>();
 
+            builder.Services.AddScoped<IAddFundsService, AddFundsService>();
+            builder.Services.AddScoped<IAddFundsRepository, AddFundsRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddScoped<IBankAccountRepository, BankAccountRepository>();
-            builder.Services.AddScoped<IBankAccountService, BankAccountService>();
+            builder.Services.AddScoped<ICreateBankAccountsRepository, CreateBankAccountsRepository>();
+            builder.Services.AddScoped<ICreateBankAccountsService, CreateBankAccountsService>();
             builder.Services.AddScoped<ICardRepository, CardRepository>();
             builder.Services.AddScoped<ICardService, CardService>();
             builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
@@ -77,7 +77,6 @@ namespace BankingSystem.Api
             builder.Services.AddScoped<IReportsService, ReportsService>();
             builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
             builder.Services.AddScoped<ITransactionServiceValidator, TransactionServiceValidator>();
-            builder.Services.AddScoped<IWithdrawMoneyServiceValidator, WithdrawMoneyServiceValidator>();
 
 
             builder.Services

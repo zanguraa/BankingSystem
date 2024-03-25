@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using BankingSystem.Core.Features.Reports.Requests;
+﻿using BankingSystem.Core.Features.Reports.Requests;
 
 namespace BankingSystem.Core.Features.Reports
 {
-	public interface IReportsRepository
+    public interface IReportsRepository
 	{
 		Task<UserStatisticsDto> GetUserStatisticsAsync();
 		Task<TransactionStatisticsDto> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate);

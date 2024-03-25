@@ -1,14 +1,12 @@
-﻿using BankingSystem.Core.Features.Atm.CardAuthorization;
-using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
+﻿using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
 using BankingSystem.Core.Features.Atm.ChangePin;
 using BankingSystem.Core.Features.Atm.ChangePin.Requests;
 using BankingSystem.Core.Features.Atm.ViewBalance;
+using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyServices;
 using BankingSystem.Core.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace BankingSystem.Api.Controllers
 {
@@ -18,7 +16,7 @@ namespace BankingSystem.Api.Controllers
 	{
 		private readonly ICardAuthorizationService _cardAuthorizationService;
 		private readonly IChangePinService _changePinService;
-		private readonly IViewBalanceService _viewBalanceService;
+        private readonly IViewBalanceService _viewBalanceService;
 		private readonly IWithdrawMoneyService _withdrawMoneyService;
 		private readonly JwtTokenGenerator _jwtTokenGenerator;
 
@@ -43,7 +41,7 @@ namespace BankingSystem.Api.Controllers
 
 			if (isAuthorized)
 			{
-				var token = _jwtTokenGenerator.GenerateTokenForAtmOperations(request.CardNumber, "CustomRoleOrClaimHere");
+				var token = _jwtTokenGenerator.GenerateTokenForAtmOperations(request.CardNumber, "CardHolderStatus");
 
 				return Ok(new
 				{
@@ -114,7 +112,6 @@ namespace BankingSystem.Api.Controllers
 				return BadRequest(ModelState);
 			}
 
-			// Extract the card number from the JWT token's claims
 			var tokenCardNumber = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
 
 			if (tokenCardNumber == null)

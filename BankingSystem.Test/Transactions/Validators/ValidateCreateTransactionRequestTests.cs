@@ -1,19 +1,13 @@
-﻿using Azure.Core;
-using BankingSystem.Core.Features.Transactions.CreateTransactions;
+﻿using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Transactions.TransactionServices;
 using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BankingSystem.Test.Transactions.Validators
 {
-	public class ValidateCreateTransactionRequestTests
+    public class ValidateCreateTransactionRequestTests
 	{
 		private ITransactionServiceValidator _validator;
 		private ITransactionRepository _fakeTransactionRepository;

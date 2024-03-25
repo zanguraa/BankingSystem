@@ -1,34 +1,37 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Data
 {
-    public class DataManager : IDataManager
-	{
-		private readonly string _connectionString;
-		public DataManager(IConfiguration configuration)
-		{
-			string username = Environment.UserName;
+    public interface IDataManager
+    {
+        Task<int> Execute<T>(string sql, T item);
+        Task<bool> ExecuteWithTransaction(List<SqlCommand> dataRequest);
+        Task<IEnumerable<T>> Query<T, P>(string sql, P parameters);
+        Task<IEnumerable<T>> Query<T>(string sql);
+    }
 
-			_connectionString = configuration.GetConnectionString(username);
-		}
-		public async Task<int> Execute<T>(string sql, T item)
-		{
-			using IDbConnection connection = new SqlConnection(_connectionString);
-			return await connection.ExecuteAsync(sql, item);
-		}
-		public async Task<IEnumerable<T>> Query<T, P>(string sql, P parameters)
-		{
-			using IDbConnection connection = new SqlConnection(_connectionString);
-			return await connection.QueryAsync<T>(sql, parameters);
-		}
+    public class DataManager : IDataManager
+    {
+        private readonly string _connectionString;
+        public DataManager(IConfiguration configuration)
+        {
+            string username = Environment.UserName;
+
+            _connectionString = configuration.GetConnectionString(username);
+        }
+        public async Task<int> Execute<T>(string sql, T item)
+        {
+            using IDbConnection connection = new SqlConnection(_connectionString);
+            return await connection.ExecuteAsync(sql, item);
+        }
+        public async Task<IEnumerable<T>> Query<T, P>(string sql, P parameters)
+        {
+            using IDbConnection connection = new SqlConnection(_connectionString);
+            return await connection.QueryAsync<T>(sql, parameters);
+        }
 
         public async Task<IEnumerable<T>> Query<T>(string sql)
         {
@@ -36,7 +39,7 @@ namespace BankingSystem.Core.Data
             return await connection.QueryAsync<T>(sql);
         }
 
-        public async Task<bool> ExecuteWithTransaction(List<SqlCommandRequest> dataRequest)
+        public async Task<bool> ExecuteWithTransaction(List<SqlCommand> dataRequest)
         {
             await using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();

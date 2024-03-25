@@ -1,14 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BankingSystem.Core.Data;
-using BankingSystem.Core.Data.Entities;
-using BankingSystem.Core.Features.Cards.CreateCard;
 
 namespace BankingSystem.Core.Features.Cards
 {
+    public interface ICardRepository
+    {
+        Task<Card> CreateCardAsync(Card card);
+        Task<Card?> GetCardByCardNumber(string CardNumber);
+        Task<Card> GetCardByIdAsync(int cardId);
+        Task<List<Card>> GetCards();
+        Task<List<Card>> GetCardsByUserIdAsync(int userId);
+        Task<UserResponse?> GetUserFullNameById(int userId);
+    }
+
     public class CardRepository : ICardRepository
     {
         private readonly IDataManager _dataManager;
@@ -30,26 +33,26 @@ namespace BankingSystem.Core.Features.Cards
             return result.FirstOrDefault();
         }
 
-		public async Task<Card> CreateCardAsync(Card card)
-		{
-			string query = @"
+        public async Task<Card> CreateCardAsync(Card card)
+        {
+            string query = @"
                 INSERT INTO Cards (CardNumber, FullName, ExpirationDate, Cvv, Pin, MaxTried, isLocked, IsActive, CreatedAt, UserId, AccountId)
                 VALUES (@CardNumber, @FullName, @ExpirationDate, @Cvv, @Pin, @MaxTried, @IsLocked, @IsActive, @CreatedAt, @UserId, @AccountId);";
 
-			var result = await _dataManager.Execute(query, new
-			{
-				card.CardNumber,
-				card.FullName,
-				card.ExpirationDate,
-				card.Cvv,
-				card.Pin,
-				card.MaxTried,
-				card.IsLocked,
-				card.IsActive,
-				card.CreatedAt,
-				card.UserId,
-				card.AccountId
-			});
+            var result = await _dataManager.Execute(query, new
+            {
+                card.CardNumber,
+                card.FullName,
+                card.ExpirationDate,
+                card.Cvv,
+                card.Pin,
+                card.MaxTried,
+                card.IsLocked,
+                card.IsActive,
+                card.CreatedAt,
+                card.UserId,
+                card.AccountId
+            });
 
             if (result == 0)
             {

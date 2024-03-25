@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.Core.Shared.Exceptions
 {
-    public class InvalidAddFundsValidatinException : DomainException
+    public class UserNotFoundException : DomainException
     {
-        public InvalidAddFundsValidatinException(string message) : base(message)
+        public UserNotFoundException(string message) : base(message)
         {
 
         }

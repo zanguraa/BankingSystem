@@ -1,11 +1,6 @@
-﻿using Dapper;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using BankingSystem.Core.Data;
+﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.Reports.Requests;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
-using System.Text.RegularExpressions;
 
 namespace BankingSystem.Core.Features.Reports
 {

@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Transactions;
-using BankingSystem.Core.Data;
+﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
 
-namespace BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyRepository
+namespace BankingSystem.Core.Features.Atm.WithdrawMoney
 {
+    public interface IWithdrawMoneyRepository
+    {
+        Task<DecimalSum?> GetWithdrawalsOf24hoursByCardId(WithdrawalCheck options);
+        Task<bool> WithdrawAsync(WithdrawRequest request);
+    }
+
     public class WithdrawMoneyRepository : IWithdrawMoneyRepository
     {
         private readonly IDataManager _dataManager;
@@ -16,13 +18,11 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyRepository
             _dataManager = dataManager;
         }
 
-
-
         public async Task<bool> WithdrawAsync(WithdrawRequest request)
         {
-            var transactionCommands = new List<SqlCommandRequest>
+            var transactionCommands = new List<SqlCommand>
             {
-                 new SqlCommandRequest
+                 new SqlCommand
             {
                 Query = @"
                     UPDATE BankAccounts
@@ -30,7 +30,7 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyRepository
                     WHERE Id = @AccountId",
                 Params = new { request.AccountId, request.Amount }
             },
-                new SqlCommandRequest
+                new SqlCommand
             {
             Query = @"
                 INSERT INTO DailyWithdrawals 
@@ -62,11 +62,6 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney.WithdrawMoneyRepository
             var result = await _dataManager.Query<DecimalSum, dynamic>(query, options);
             return
                 result.FirstOrDefault();
-        }
-
-        public Task<bool> WithdrawAsync(string accountNumber, decimal amount)
-        {
-            throw new NotImplementedException();
         }
     }
 }

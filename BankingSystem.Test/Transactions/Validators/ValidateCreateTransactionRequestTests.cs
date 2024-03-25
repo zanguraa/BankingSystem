@@ -2,6 +2,7 @@
 using BankingSystem.Core.Features.Transactions.TransactionServices;
 using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 using BankingSystem.Core.Shared.Exceptions;
+using BankingSystem.Test.Factory;
 using FakeItEasy;
 
 namespace BankingSystem.Test.Transactions.Validators
@@ -30,23 +31,36 @@ namespace BankingSystem.Test.Transactions.Validators
 		[TestCase(null)]
 		public void ShouldThrowInvalidTransactionValidationIfRequestUsedIdIsNullOrEmpty(string userId)
 		{
-			CreateTransactionRequest request = new CreateTransactionRequest() { UserId = userId };
-			Assert.ThrowsAsync<InvalidTransactionValidation>(
+			var request = ModelFactory.GetCreateTransactionRequest(
+				r=>r.UserId=userId);
+
+			Assert.ThrowsAsync<UserValidationException>(
 			   async () => await _validator.ValidateCreateTransactionRequest(request));
 		}
 		[Test]
 		public void ShouldThrowInvalidTransactionValidationIfRequestFromAccountIdIsLessOrEqualZero()
 		{
-			CreateTransactionRequest request = new CreateTransactionRequest() { FromAccountId = -23 };
+			var request = ModelFactory.GetCreateTransactionRequest(
+				r => r.FromAccountId = -23);
+
 			Assert.ThrowsAsync<InvalidTransactionValidation>(
 			   async () => await _validator.ValidateCreateTransactionRequest(request));
 		}
 		[Test]
 		public void ShouldThrowInvalidTransactionValidationIfRequestToAccountIdIsLessOrEqualZero() 
 		{
-			CreateTransactionRequest request = new CreateTransactionRequest() { ToAccountId = -4 };
+			var request = ModelFactory.GetCreateTransactionRequest(
+				r => r.ToAccountId = -12);
 			Assert.ThrowsAsync<InvalidTransactionValidation>(
 				async () => await _validator.ValidateCreateTransactionRequest(request));
+		}
+		[Test]
+		public void ShouldThrowInvalidTransactionValidationIfRequestAmountIsLessOrEqualZero() 
+		{
+			var request = ModelFactory.GetCreateTransactionRequest(
+				r => r.Amount = -1243);
+			Assert.ThrowsAsync<InvalidTransactionValidation>(
+			   async () => await _validator.ValidateCreateTransactionRequest(request));
 		}
 	}
 }

@@ -25,7 +25,7 @@ public class CardAuthorizationService : ICardAuthorizationService
 
         var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request);
 
-        return new CardAuthorizationResponse { IsAuthorized = true, IsActive = card.IsActive, Message = "Message = \"Authorization successful.\"" };
+        return new CardAuthorizationResponse { IsAuthorized = true, IsActive = card.IsActive, Message = "Message = Authorization successful." };
     }
 
     private bool ValidateCardAuthorization(CardAuthorizationRequest request)

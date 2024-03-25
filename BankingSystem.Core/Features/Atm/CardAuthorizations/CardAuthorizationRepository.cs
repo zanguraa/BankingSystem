@@ -1,6 +1,7 @@
 ﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
 using BankingSystem.Core.Features.Cards;
+using BankingSystem.Core.Shared.Exceptions;
 
 public interface ICardAuthorizationRepository
 {
@@ -20,7 +21,9 @@ public class CardAuthorizationRepository : ICardAuthorizationRepository
     public async Task<Card> GetCardByNumberAsync(string CardNumber)
     {
         var query = "SELECT * FROM Cards WHERE CardNumber = @CardNumber";
-        var result = await _dataManager.Query<Card, dynamic>(query, new { CardNumber });
+        var result = await _dataManager.Query<Card, dynamic>(query, new { CardNumber })
+            ?? throw new InvalidCardException("card not found {CardNumber}", CardNumber);
+
         return result.FirstOrDefault();
     }
     public async Task<Card> GetCardFromRequestAsync(CardAuthorizationRequest request)

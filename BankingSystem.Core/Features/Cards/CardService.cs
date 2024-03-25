@@ -72,18 +72,18 @@ namespace BankingSystem.Core.Features.Cards
 
             if (createCardRequest.UserId <= 0)
             {
-                throw new UserNotFoundException("Invalid User ID.");
+                throw new UserNotFoundException("Invalid User ID.{userId}", createCardRequest.UserId);
             }
 
             if (createCardRequest.AccountId <= 0)
             {
-                throw new BankAccountNotFoundException("Invalid Account ID.");
+                throw new BankAccountNotFoundException("Invalid Account ID.{BankAccountId}", createCardRequest.AccountId);
             }
 
             var UserInfo = await _cardRepository.GetUserFullNameById(createCardRequest.UserId)
-                ?? throw new UserNotFoundException("User not found");
+                ?? throw new UserNotFoundException("User not found {userId}", createCardRequest.UserId);
             var bankAccount = await _createBankAccountsRepository.GetAccountByIdAsync(createCardRequest.AccountId)
-                ?? throw new BankAccountNotFoundException("BankAcount not found.");
+                ?? throw new BankAccountNotFoundException("BankAcount not found. {BankAccountId}", createCardRequest.AccountId);
             return new() { User = UserInfo, BankAccount = bankAccount };
         }
 

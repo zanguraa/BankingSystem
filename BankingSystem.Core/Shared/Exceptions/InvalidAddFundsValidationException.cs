@@ -2,7 +2,7 @@
 {
     public class InvalidAddFundsValidationException : DomainException
     {
-        public InvalidAddFundsValidationException(string message, params object?[]? parameters) : base(message)
+        public InvalidAddFundsValidationException(string message, params object?[]? parameters) : base(message, parameters)
         {
 
         }

@@ -17,12 +17,12 @@ namespace BankingSystem.Core.Features.BankAccounts.AddFunds
     public class AddFundsService : IAddFundsService
     {
         private readonly IAddFundsRepository _addFundsRepository;
-        private readonly ITransactionRepository _transactionRepository; // Make sure to include this dependency.
+        private readonly ITransactionRepository _transactionRepository; 
 
         public AddFundsService(IAddFundsRepository addFundsRepository, ITransactionRepository transactionRepository)
         {
             _addFundsRepository = addFundsRepository;
-            _transactionRepository = transactionRepository; // Initialize in constructor.
+            _transactionRepository = transactionRepository; 
         }
 
         public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)

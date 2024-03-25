@@ -3,8 +3,8 @@
     public class ChangePinRequest
 	{
 		public string CardNumber { get; set; }
-		public string CurrentPin { get; set; }
-		public string NewPin { get; set; }
+		public int CurrentPin { get; set; }
+		public int NewPin { get; set; }
 	}
 
 }

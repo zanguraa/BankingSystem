@@ -3,7 +3,7 @@ namespace BankingSystem.Core.Features.Atm.ChangePin;
 
 public interface IChangePinService
 {
-    Task<bool> ChangePinAsync(string cardNumber, string currentPin, string newPin);
+    Task<bool> ChangePinAsync(string cardNumber, int currentPin, int newPin);
 }
 
 public class ChangePinService : IChangePinService
@@ -15,7 +15,7 @@ public class ChangePinService : IChangePinService
         _changePinRepository = changePinRepository;
     }
 
-    public async Task<bool> ChangePinAsync(string cardNumber, string currentPin, string newPin)
+    public async Task<bool> ChangePinAsync(string cardNumber, int currentPin, int newPin)
     {
         var card = await _changePinRepository.GetCardByNumberAsync(cardNumber);
         if (card == null || card.Pin != currentPin)

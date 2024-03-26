@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Controllers\AtmController.CS1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Controllers\AtmController.CS1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="dbup" Version="5.0.40" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.12" />

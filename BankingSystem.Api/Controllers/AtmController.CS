@@ -2,9 +2,7 @@
 using BankingSystem.Core.Features.Atm.ChangePin;
 using BankingSystem.Core.Features.Atm.ChangePin.Requests;
 using BankingSystem.Core.Features.Atm.ViewBalance;
-using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
-using BankingSystem.Core.Features.Cards;
 using BankingSystem.Core.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +32,6 @@ namespace BankingSystem.Api.Controllers
         [HttpPost("card-authorize")]
         public async Task<IActionResult> Authorize([FromBody] CardAuthorizationRequest request)
         {
-
             var result = await _cardAuthorizationService.AuthorizeCardAsync(request);
 
             if (!result)
@@ -52,8 +49,6 @@ namespace BankingSystem.Api.Controllers
 
         public async Task<IActionResult> ChangePin([FromBody] ChangePinRequest request)
         {
-
-
             var result = await _changePinService.ChangePinAsync(request.CardNumber, request.CurrentPin, request.NewPin);
 
             if (!result)
@@ -61,9 +56,6 @@ namespace BankingSystem.Api.Controllers
                 return BadRequest();
             }
             return Ok(new ChangePinResponse { Success = true, Message = "PIN changed successfully." });
-
-
-
         }
 
         [HttpGet("view-balance")]
@@ -85,7 +77,6 @@ namespace BankingSystem.Api.Controllers
 
             return Ok(balanceInfo);
         }
-
 
 
         [HttpPost("withdraw-money")]

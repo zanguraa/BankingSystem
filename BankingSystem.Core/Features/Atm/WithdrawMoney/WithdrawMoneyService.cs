@@ -77,7 +77,6 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         {
             FromAccountId = card.AccountId,
             FromAccountCurrency = accountInfo.Currency,
-            ToAccountCurrency = requestDto.Currency,
             ToAccountId = card.AccountId,
             FromAmount = amountToDeduct,
             ToAmount = requestDto.Amount,

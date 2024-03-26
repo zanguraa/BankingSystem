@@ -3,8 +3,8 @@
     public class Transaction
     {
         public int TransactionId { get; set; }
-        public int FromAccountId { get; set; }
-        public int ToAccountId { get; set; }
+        public int? FromAccountId { get; set; }
+        public int? ToAccountId { get; set; }
         public string FromAccountCurrency { get; set; }
         public string ToAccountCurrency { get; set; }
         public decimal FromAmount { get; set; }

@@ -26,12 +26,6 @@ public class CreateBankAccountsService : ICreateBankAccountsService
     {
         await ValidateUserDoesNotHaveAccount(createBankAccountRequest.UserId);
 
-        bool accountExists = await _createBankAccountsRepository.ContainsAccountForUserAsync(createBankAccountRequest.UserId);
-        if (accountExists)
-        {
-            throw new InvalidOperationException("An account for this user already exists.");
-        }
-
         var iban = IbanGenerator.GenerateIban();
         var currencies = Enum.GetValues<CurrencyType>();
         var accountIds = new List<int>();
@@ -54,11 +48,6 @@ public class CreateBankAccountsService : ICreateBankAccountsService
 
     private async Task ValidateUserDoesNotHaveAccount(int userId)
     {
-        bool accountExists = await _createBankAccountsRepository.ContainsAccountForUserAsync(userId);
-        if (accountExists)
-        {
-            throw new BankAccountsAlreadyExistException($"An account for user ID {userId} already exists.");
-        }
         bool userExists = await _userRepository.UserExistsAsync(userId);
         if(!userExists)
         {

@@ -1,6 +1,6 @@
 using BankingSystem.Core.Data;
 
-namespace BankingSystem.Core.Features.Cards
+namespace BankingSystem.Core.Features.Cards.CreateCard
 {
     public interface ICardRepository
     {
@@ -12,11 +12,11 @@ namespace BankingSystem.Core.Features.Cards
         Task<UserResponse?> GetUserFullNameById(int userId);
     }
 
-    public class CardRepository : ICardRepository
+    public class CreateCardRepository : ICardRepository
     {
         private readonly IDataManager _dataManager;
 
-        public CardRepository(IDataManager dataManager)
+        public CreateCardRepository(IDataManager dataManager)
         {
             _dataManager = dataManager;
         }

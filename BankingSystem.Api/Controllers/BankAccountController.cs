@@ -19,27 +19,14 @@ public class BankAccountController : ControllerBase
     [HttpPost("create")]
     public async Task<IActionResult> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
     {
-        try
-        {
             if (createBankAccountRequest == null || createBankAccountRequest.UserId == default(int))
             {
                 return BadRequest("UserId is required.");
             }
-            // Create BankAccount object
-            var bankAccount = new BankAccount
-            {
-                UserId = createBankAccountRequest.UserId,
-                Iban = createBankAccountRequest.Iban,
-            };
 
             await _createBankAccountsService.CreateBankAccount(createBankAccountRequest);
 
-            return Ok(); // No need to return any data
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
+            return Ok("Bank Account has created successfully"); 
     }
 
     [HttpPost("addfunds")]

@@ -158,7 +158,6 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
             var transaction = new Transaction
             {
                 FromAccountId = request.FromAccountId,
-                ToAccountId = request.ToAccountId,
                 FromAccountCurrency = request.Currency,
                 ToAccountCurrency = request.ToCurrency,
                 FromAmount = request.Amount + transactionFee,
@@ -174,7 +173,6 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
             return new TransactionResponse
             {
                 FromAccountId = transaction.FromAccountId,
-                ToAccountId = transaction.ToAccountId,
                 Amount = transaction.FromAmount,
                 Currency = transaction.FromAccountCurrency,
                 Fee = transaction.Fee,

@@ -1,11 +1,10 @@
 ﻿using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.BankAccounts.Requests;
-using BankingSystem.Core.Features.Cards.CreateCard;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 using System.Text;
 
-namespace BankingSystem.Core.Features.Cards
+namespace BankingSystem.Core.Features.Cards.CreateCard
 {
     public interface ICardService
     {
@@ -13,13 +12,13 @@ namespace BankingSystem.Core.Features.Cards
         Task<List<Card>> GetCardsByUserIdAsync(int userId);
     }
 
-    public class CardService : ICardService
+    public class CreateCardService : ICardService
     {
         private readonly ICardRepository _cardRepository;
         private readonly ICreateBankAccountsRepository _createBankAccountsRepository;
         private readonly ISeqLogger _seqLogger;
 
-        public CardService(ICardRepository cardRepository, ICreateBankAccountsRepository createBankAccountsRepository, ISeqLogger seqLogger)
+        public CreateCardService(ICardRepository cardRepository, ICreateBankAccountsRepository createBankAccountsRepository, ISeqLogger seqLogger)
         {
             _cardRepository = cardRepository;
             _createBankAccountsRepository = createBankAccountsRepository;
@@ -58,9 +57,10 @@ namespace BankingSystem.Core.Features.Cards
                 throw new ArgumentException("length parameter is out of range");
             }
             StringBuilder sb = new StringBuilder();
+            Random random = new Random();
             for (int i = 0; i < length; i++)
             {
-                sb.Append(new Random().Next(0, 9));
+                sb.Append(random.Next(0, 9));
             }
             return sb.ToString();
         }

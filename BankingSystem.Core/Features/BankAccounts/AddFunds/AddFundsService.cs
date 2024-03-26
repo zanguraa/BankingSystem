@@ -31,7 +31,6 @@ namespace BankingSystem.Core.Features.BankAccounts.AddFunds
             
                 var transaction = new Transaction
                 {
-                    FromAccountId = addFundsRequest.BankAccountId,
                     ToAccountId = addFundsRequest.BankAccountId,
                     ToAmount = addFundsRequest.Amount,
                     TransactionType = (int)TransactionType.AddFunds,

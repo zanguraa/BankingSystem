@@ -11,7 +11,7 @@ public class ReportsService : IReportsService
         _reportsRepository = reportsRepository;
     }
 
-     public async Task<TransactionStatisticsDto> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate)
+    public async Task<TransactionStatisticsDto> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate)
     {
         var statisticsAggregate = await _reportsRepository.GetTransactionStatisticsAsync(startDate, endDate);
 
@@ -65,6 +65,6 @@ public class ReportsService : IReportsService
     {
         return await _reportsRepository.GetUserStatisticsAsync();
     }
-	
+
 }
 

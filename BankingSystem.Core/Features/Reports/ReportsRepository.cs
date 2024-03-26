@@ -73,7 +73,7 @@ namespace BankingSystem.Core.Features.Reports
                   [FromAccountCurrency] AS Currency,
                   SUM([FromAmount]) AS TotalWithdrawn
                 FROM [BankingSystem_db].[dbo].[Transactions]
-                WHERE [TransactionDate] BETWEEN @startDate AND @endDate
+                WHERE [TransactionDate] BETWEEN @startDate AND @endDate AND [TransactionType] = 2
                 GROUP BY [FromAccountCurrency];
             ";
 

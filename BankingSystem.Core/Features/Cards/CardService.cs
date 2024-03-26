@@ -58,9 +58,10 @@ namespace BankingSystem.Core.Features.Cards
                 throw new ArgumentException("length parameter is out of range");
             }
             StringBuilder sb = new StringBuilder();
+            Random random = new Random();
             for (int i = 0; i < length; i++)
             {
-                sb.Append(new Random().Next(0, 9));
+                sb.Append( random.Next(0, 9));
             }
             return sb.ToString();
         }

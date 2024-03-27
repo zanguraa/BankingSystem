@@ -24,6 +24,7 @@ namespace BankingSystem.Test.Transactions
 		[Test]
 		public void ValidateCardAuthorization_NullRequest_ThrowsArgumentNullException()
 		{
+
 			CardAuthorizationRequest request = null;
 
 			// Note: Using ThrowsAsync because the method under test is async.

@@ -12,7 +12,6 @@ public class CardAuthorizationService : ICardAuthorizationService
     private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly ISeqLogger _seqLogger;
-	private string jwtTokken;
 
 	public CardAuthorizationService(
         ICardAuthorizationRepository cardAuthorizationRepository,
@@ -27,7 +26,7 @@ public class CardAuthorizationService : ICardAuthorizationService
     public async Task<string> AuthorizeCardAsync(CardAuthorizationRequest request)
     {
         ValidateCardAuthorization(request);
-        //ეს დავაატე ტესტისთვის 
+        //ეს დავამატე ტესტისთვის 
 		if (request == null) throw new ArgumentNullException(nameof(request));
 		if (string.IsNullOrWhiteSpace(request.CardNumber) || request.CardNumber.Length != 16 || !request.CardNumber.All(char.IsDigit))
 		{
@@ -43,7 +42,7 @@ public class CardAuthorizationService : ICardAuthorizationService
         }
 
         _seqLogger.LogInfo("Card with CardNumber: {CardNumber} is authorized", request.CardNumber);
-
+        // aq davamate fieldi ro errori momexsna da testi gameshva
         return (jwtTokken);
     }
 

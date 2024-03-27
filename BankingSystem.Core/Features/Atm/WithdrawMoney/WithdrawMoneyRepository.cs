@@ -6,7 +6,6 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
     public interface IWithdrawMoneyRepository
     {
         Task<DecimalSum?> GetWithdrawalsOf24hoursByCardId(WithdrawalCheck options);
-        Task<bool> WithdrawAsync(WithdrawRequest request);
     }
 
     public class WithdrawMoneyRepository : IWithdrawMoneyRepository
@@ -17,41 +16,6 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney
         {
             _dataManager = dataManager;
         }
-
-        public async Task<bool> WithdrawAsync(WithdrawRequest request)
-        {
-            var transactionCommands = new List<SqlCommand>
-            {
-                 new SqlCommand
-            {
-                Query = @"
-                    UPDATE BankAccounts
-                    SET InitialAmount = InitialAmount - @Amount
-                    WHERE Id = @AccountId",
-                Params = new { request.AccountId, request.Amount }
-            },
-                new SqlCommand
-            {
-            Query = @"
-                INSERT INTO DailyWithdrawals 
-                (BankAccountId, WithdrawalDate, TotalAmount, Currency, RequestedAmount, RequestedCurrency)
-                VALUES (@BankAccountId, GETDATE(), @TotalAmount, @Currency, @RequestedAmount, @RequestedCurrency)",
-
-
-                Params = new
-            {
-                BankAccountId = request.AccountId,
-                TotalAmount = request.Amount,
-                request.Currency,
-                request.RequestedAmount,
-                request.RequestedCurrency
-            }
-        }
-    };
-
-            return await _dataManager.ExecuteWithTransaction(transactionCommands);
-        }
-
 
         public async Task<DecimalSum?> GetWithdrawalsOf24hoursByCardId(WithdrawalCheck options)
         {

@@ -7,7 +7,12 @@ using System.Text;
 
 namespace BankingSystem.Core.Shared
 {
-    public class JwtTokenGenerator
+    public interface IJwtTokenGenerator
+    {
+        string Generate(string userId, string userRole);
+    }
+
+    public class JwtTokenGenerator : IJwtTokenGenerator
     {
         private readonly IConfiguration configuration;
 
@@ -16,28 +21,27 @@ namespace BankingSystem.Core.Shared
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public string Generate(string userId, string userRole)
+        public string Generate(string id, string role)
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userId),
-                new Claim(ClaimTypes.Role, userRole)
+                new Claim(JwtRegisteredClaimNames.Sub, id),
+                new Claim(ClaimTypes.Role, role)
             };
 
             return GenerateToken(claims);
         }
 
-        public string GenerateTokenForAtmOperations(CardAuthorizationRequest request)
-        {
-            var claims = new List<Claim>
-         {
-               new Claim("CardNumber", request.CardNumber),
-               new Claim("PinCode", request.Pin.ToString()),
-               new Claim("CardHolderStatus", "Active")
-         };
+        //public string GenerateTokenForAtmOperations(CardAuthorizationRequest request)
+        //{
+        //    var claims = new List<Claim>
+        // {
+        //       new Claim("CardNumber", request.CardNumber),
+        //       new Claim(ClaimTypes.Role, "api-atm")
+        // };
 
-            return GenerateToken(claims);
-        }
+        //    return GenerateToken(claims);
+        //}
         private string GenerateToken(List<Claim> claims)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtTokenSecretKey"]!));

@@ -35,14 +35,14 @@ namespace BankingSystem.Api.Controllers
             var result = await _cardAuthorizationService.AuthorizeCardAsync(request);
 
             if (!result) { return BadRequest(); }
-            var token = _jwtTokenGenerator.GenerateTokenForAtmOperations(request);
+            var token = _jwtTokenGenerator.Generate(request.CardNumber, "atm");
 
             return Ok(token);
         }
 
 
         [HttpPost("change-pin")]
-        [Authorize("CardHolder", AuthenticationSchemes = "Bearer")]
+        [Authorize("AtmPolicy", AuthenticationSchemes = "Bearer")]
 
         public async Task<IActionResult> ChangePin([FromBody] ChangePinRequest request)
         {
@@ -52,7 +52,7 @@ namespace BankingSystem.Api.Controllers
         }
 
         [HttpGet("view-balance")]
-        [Authorize("CardHolder", AuthenticationSchemes = "Bearer")]
+        [Authorize("AtmPolicy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> GetBalance()
         {
             var cardNumberClaim = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
@@ -73,7 +73,7 @@ namespace BankingSystem.Api.Controllers
 
 
         [HttpPost("withdraw-money")]
-        [Authorize("CardHolder", AuthenticationSchemes = "Bearer")]
+        [Authorize("AtmPolicy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Withdraw([FromBody] WithdrawAmountCurrency requestDto)
         {
             var tokenCardNumber = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;

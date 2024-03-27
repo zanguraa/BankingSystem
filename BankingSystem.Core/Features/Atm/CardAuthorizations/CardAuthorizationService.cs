@@ -22,7 +22,14 @@ public class CardAuthorizationService : ICardAuthorizationService
     {
         ValidateCardAuthorization(request);
 
-        var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request);
+		if (request == null) throw new ArgumentNullException(nameof(request));
+		if (string.IsNullOrWhiteSpace(request.CardNumber) || request.CardNumber.Length != 16 || !request.CardNumber.All(char.IsDigit))
+		{
+			throw new InvalidCardException("Invalid card number.");
+		}
+
+
+		var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request);
         if (card == null)
         {
             // If no card is found, throw a specific exception for this case.

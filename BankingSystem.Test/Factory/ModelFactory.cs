@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
+using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
 
 namespace BankingSystem.Test.Factory
 {
@@ -38,5 +39,18 @@ namespace BankingSystem.Test.Factory
 			options?.Invoke(request);
 			return request;
 		}
+		public static CardAuthorizationRequest GetCardAuthorizationRequest(Action<CardAuthorizationRequest> options = null)
+		{
+			var request = new CardAuthorizationRequest
+			{
+				CardNumber = "1234567890123456", // Assume a valid card number
+				Pin = 1234 // Assume a valid pin
+			};
+
+			options?.Invoke(request);
+
+			return request;
+		}
+
 	}
 }

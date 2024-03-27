@@ -19,14 +19,9 @@ public class BankAccountController : ControllerBase
     [HttpPost("create")]
     public async Task<IActionResult> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
     {
-            if (createBankAccountRequest == null || createBankAccountRequest.UserId == default(int))
-            {
-                return BadRequest("UserId is required.");
-            }
+           var result = await _createBankAccountsService.CreateBankAccount(createBankAccountRequest);
 
-            await _createBankAccountsService.CreateBankAccount(createBankAccountRequest);
-
-            return Ok("Bank Account has created successfully"); 
+            return Ok(result); 
     }
 
     [HttpPost("addfunds")]

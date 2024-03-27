@@ -6,7 +6,7 @@ namespace BankingSystem.Core.Features.BankAccounts.CreateAccount;
 
 public interface ICreateBankAccountsRepository
 {
-    Task<bool> ContainsAccountForUserAsync(int userId);
+    Task<List<string>> GetIbansByAccountIdsAsync(List<int> accountIds);
     Task<int> CreateBankAccountAsync(BankAccount bankAccount);
     Task<BankAccount?> GetAccountByIbanAsync(string iban);
     Task<BankAccount?> GetAccountByIdAsync(int AccountId);
@@ -55,11 +55,12 @@ public class CreateBankAccountsRepository : ICreateBankAccountsRepository
         return newBankAccount.Id;
     }
 
-    public async Task<bool> ContainsAccountForUserAsync(int userId)
+    public async Task<List<string>> GetIbansByAccountIdsAsync(List<int> accountIds)
     {
-        var accounts = await _dataManager.Query<int, dynamic>(
-            "SELECT Id FROM BankAccounts WHERE UserId = @UserId", new { UserId = userId });
-        return accounts.Any();
+        var ibans = await _dataManager.Query<string, dynamic>(
+            "SELECT Iban FROM BankAccounts WHERE Id IN @AccountIds;", new { AccountIds = accountIds });
+
+        return ibans.ToList();
     }
 
     public async Task<BankAccount?> GetAccountByIdAsync(int AccountId)

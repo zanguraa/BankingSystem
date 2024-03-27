@@ -1,12 +1,13 @@
 ﻿using BankingSystem.Core.Features.BankAccounts.Requests;
 using BankingSystem.Core.Features.Users;
+using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 
 namespace BankingSystem.Core.Features.BankAccounts.CreateAccount;
 
 public interface ICreateBankAccountsService
 {
-    Task<List<int>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest);
+    Task<List<string>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest);
 }
 
 public class CreateBankAccountsService : ICreateBankAccountsService
@@ -14,23 +15,26 @@ public class CreateBankAccountsService : ICreateBankAccountsService
 
     private readonly ICreateBankAccountsRepository _createBankAccountsRepository;
     private readonly IUserRepository _userRepository;
+    private readonly ISeqLogger _seqLogger;
 
 
-    public CreateBankAccountsService(ICreateBankAccountsRepository createBankAccountsRepository, IUserRepository userRepository)
+    public CreateBankAccountsService(ICreateBankAccountsRepository createBankAccountsRepository, IUserRepository userRepository, ISeqLogger seqLogger)
     {
         _createBankAccountsRepository = createBankAccountsRepository;
         _userRepository = userRepository;
+        _seqLogger = seqLogger;
     }
 
-    public async Task<List<int>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
+    public async Task<List<string>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
     {
         await ValidateUserDoesNotHaveAccount(createBankAccountRequest.UserId);
 
-        var iban = IbanGenerator.GenerateIban();
-        var currencies = Enum.GetValues<CurrencyType>();
+        var ibans = new List<string>();
         var accountIds = new List<int>();
+        var currencies = Enum.GetValues<CurrencyType>();
         foreach (var currency in currencies)
         {
+            var iban = IbanGenerator.GenerateIban();
             BankAccount bankAccount = new BankAccount
             {
                 UserId = createBankAccountRequest.UserId,
@@ -40,11 +44,19 @@ public class CreateBankAccountsService : ICreateBankAccountsService
 
             var accountId = await _createBankAccountsRepository.CreateBankAccountAsync(bankAccount);
             accountIds.Add(accountId);
-
         }
 
-        return accountIds;
+        if (accountIds.Count > 0)
+        {
+            ibans = await _createBankAccountsRepository.GetIbansByAccountIdsAsync(accountIds);
+        }
+
+        _seqLogger.LogInfo("Accounts for user: {userId} has been created successfully. Ibans: {Ibans}.", createBankAccountRequest.UserId, ibans);
+
+        return ibans;
     }
+
+
 
     private async Task ValidateUserDoesNotHaveAccount(int userId)
     {

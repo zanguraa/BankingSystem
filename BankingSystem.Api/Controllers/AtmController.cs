@@ -35,7 +35,7 @@ namespace BankingSystem.Api.Controllers
             var result = await _cardAuthorizationService.AuthorizeCardAsync(request);
 
             if (!result) { return BadRequest(); }
-            var token = _jwtTokenGenerator.Generate(request.CardNumber, "atm");
+            var token = _jwtTokenGenerator.GenerateTokenForAtmOperations(request);
 
             return Ok(token);
         }
@@ -55,14 +55,14 @@ namespace BankingSystem.Api.Controllers
         [Authorize("AtmPolicy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> GetBalance()
         {
-            var cardNumberClaim = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
+            var tokenCardNumber = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
 
-            if (string.IsNullOrEmpty(cardNumberClaim))
+            if (string.IsNullOrEmpty(tokenCardNumber))
             {
                 return BadRequest("Invalid token: Card number claim is missing.");
             }
 
-            var balanceInfo = await _viewBalanceService.GetBalanceByCardNumberAsync(cardNumberClaim);
+            var balanceInfo = await _viewBalanceService.GetBalanceByCardNumberAsync(tokenCardNumber);
             if (balanceInfo == null)
             {
                 return NotFound("No balance information found for the provided card number.");

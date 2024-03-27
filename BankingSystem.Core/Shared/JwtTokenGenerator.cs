@@ -32,16 +32,16 @@ namespace BankingSystem.Core.Shared
             return GenerateToken(claims);
         }
 
-        //public string GenerateTokenForAtmOperations(CardAuthorizationRequest request)
-        //{
-        //    var claims = new List<Claim>
-        // {
-        //       new Claim("CardNumber", request.CardNumber),
-        //       new Claim(ClaimTypes.Role, "api-atm")
-        // };
+        public string GenerateTokenForAtmOperations(CardAuthorizationRequest request)
+        {
+            var claims = new List<Claim>
+         {
+               new Claim("CardNumber", request.CardNumber),
+               new Claim(ClaimTypes.Role, "atm")
+         };
 
-        //    return GenerateToken(claims);
-        //}
+            return GenerateToken(claims);
+        }
         private string GenerateToken(List<Claim> claims)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtTokenSecretKey"]!));

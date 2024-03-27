@@ -105,6 +105,7 @@ namespace BankingSystem.Api
                 options.AddPolicy("AtmPolicy", policy =>
                {
                    policy.RequireClaim(ClaimTypes.Role, "atm");
+
                });
             });
 

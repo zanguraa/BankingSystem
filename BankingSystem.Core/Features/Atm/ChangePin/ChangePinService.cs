@@ -25,7 +25,7 @@ public class ChangePinService : IChangePinService
         var card = await _changePinRepository.GetCardByNumberAsync(request.CardNumber);
         if (card == null || card.Pin != request.CurrentPin)
         {
-            throw new InvalidCardException("Current Pin: {currentPin} is incorrect:!", request.CurrentPin);
+            throw new InvalidCardException("Current Pin: is incorrect:!");
         }
 
         return await _changePinRepository.UpdatePinAsync(request.CardNumber, request.CurrentPin, request.NewPin);
@@ -40,7 +40,7 @@ public class ChangePinService : IChangePinService
 
         if (request.CurrentPin.ToString().Length != 4 || !request.CardNumber.ToString().All(char.IsDigit))
         {
-            throw new InvalidCardException("Invalid current PIN format: {Pin} for card {Card}", request.CurrentPin, request.CardNumber);
+            throw new InvalidCardException("Invalid current PIN format: for card {Card}", request.CardNumber);
         }
 
         if (request.NewPin.ToString().Length != 4 || !request.NewPin.ToString().All(char.IsDigit) || request.NewPin == request.CurrentPin)

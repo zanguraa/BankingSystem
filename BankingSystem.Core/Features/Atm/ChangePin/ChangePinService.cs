@@ -1,24 +1,27 @@
 ﻿
 using BankingSystem.Core.Features.Atm.ChangePin.Requests;
+using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 
 namespace BankingSystem.Core.Features.Atm.ChangePin;
 
 public interface IChangePinService
 {
-    Task<bool> ChangePinAsync(ChangePinRequest request);
+    Task<ChangePinResponse> ChangePinAsync(ChangePinRequest request);
 }
 
 public class ChangePinService : IChangePinService
 {
     private readonly IChangePinRepository _changePinRepository;
+    private readonly ISeqLogger _logger;
 
-    public ChangePinService(IChangePinRepository changePinRepository)
+    public ChangePinService(IChangePinRepository changePinRepository, ISeqLogger seqLogger)
     {
         _changePinRepository = changePinRepository;
+        _logger = seqLogger;
     }
 
-    public async Task<bool> ChangePinAsync(ChangePinRequest request)
+    public async Task<ChangePinResponse> ChangePinAsync(ChangePinRequest request)
     {
         ValidateChangePinAsync(request);
 
@@ -28,7 +31,12 @@ public class ChangePinService : IChangePinService
             throw new InvalidCardException("Current Pin: is incorrect:!");
         }
 
-        return await _changePinRepository.UpdatePinAsync(request.CardNumber, request.CurrentPin, request.NewPin);
+        await _changePinRepository.UpdatePinAsync(request.CardNumber, request.CurrentPin, request.NewPin);
+
+        _logger.LogInfo("Pin was changed successfully for cardNumber: {cardNumber}", request.CardNumber);
+
+        var result = new ChangePinResponse { Message = "Pin was changed successfully", Success = true };
+        return result;
     }
 
     private static bool ValidateChangePinAsync(ChangePinRequest request)

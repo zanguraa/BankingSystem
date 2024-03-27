@@ -65,8 +65,12 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         var report24HoursRequest = new WithdrawalCheck { BankAccountId = card.AccountId, WithdrawalDate = DateTime.Now.AddDays(-1) };
         var totalWithdrawnAmountInGel = await _withdrawMoneyRepository.GetWithdrawalsOf24hoursByCardId(report24HoursRequest);
 
-        if (totalWithdrawnAmountInGel.Sum + totalDeduction > _dailyWithdrawalLimitInGel)
-            return new() { IsSuccessful = false, Message = "Daily withdrawal limit exceeded.", RemainingBalance = accountInfo.InitialAmount };
+        if(totalWithdrawnAmountInGel.Sum + totalDeduction > _dailyWithdrawalLimitInGel)
+        {
+            throw new InvalidAtmAmountException("Daily limit Daily withdrawal limit exceeded:{Amount} in {Currency}, for Card: {Card}", requestDto.Amount, requestDto.Currency, requestDto.CardNumber);
+        }
+           
+            
 
         var transactionType = TransactionType.Atm;
 

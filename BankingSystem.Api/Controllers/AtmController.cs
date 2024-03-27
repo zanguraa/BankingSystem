@@ -40,12 +40,11 @@ namespace BankingSystem.Api.Controllers
 
         [HttpPost("change-pin")]
         [Authorize("AtmPolicy", AuthenticationSchemes = "Bearer")]
-
         public async Task<IActionResult> ChangePin([FromBody] ChangePinRequest request)
         {
             var result = await _changePinService.ChangePinAsync(request);
-            if (!result) { return BadRequest(); }
-            return Ok(new ChangePinResponse { Success = true, Message = "PIN changed successfully." });
+
+            return Ok(result);
         }
 
         [HttpGet("view-balance")]

@@ -11,13 +11,16 @@ public class CardAuthorizationService : ICardAuthorizationService
 {
     private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly ISeqLogger _seqLogger;
 
     public CardAuthorizationService(
         ICardAuthorizationRepository cardAuthorizationRepository,
-        IJwtTokenGenerator jwtTokenGenerator)
+        IJwtTokenGenerator jwtTokenGenerator,
+        ISeqLogger seqLogger)
     {
         _cardAuthorizationRepository = cardAuthorizationRepository;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _seqLogger = seqLogger;
     }
 
     public async Task<string> AuthorizeCardAsync(CardAuthorizationRequest request)
@@ -27,6 +30,8 @@ public class CardAuthorizationService : ICardAuthorizationService
         var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request)
         ?? throw new InvalidCardException($"CardNumber {request.CardNumber} not found.");
         var jwtTokken = _jwtTokenGenerator.GenerateTokenForAtmOperations(request);
+
+        _seqLogger.LogInfo("Card with CardNumber: {CardNumber} is authorized", request.CardNumber);
 
         return (jwtTokken);
     }

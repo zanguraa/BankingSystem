@@ -4,26 +4,31 @@ using BankingSystem.Core.Shared.Exceptions;
 
 public interface ICardAuthorizationService
 {
-    Task<bool> AuthorizeCardAsync(CardAuthorizationRequest request);
+    Task<string> AuthorizeCardAsync(CardAuthorizationRequest request);
 }
 
 public class CardAuthorizationService : ICardAuthorizationService
 {
     private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
-    private readonly JwtTokenGenerator _jwtTokenGenerator;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
     public CardAuthorizationService(
-        ICardAuthorizationRepository cardAuthorizationRepository)
+        ICardAuthorizationRepository cardAuthorizationRepository,
+        IJwtTokenGenerator jwtTokenGenerator)
     {
         _cardAuthorizationRepository = cardAuthorizationRepository;
+        _jwtTokenGenerator = jwtTokenGenerator;
     }
 
-    public async Task<bool> AuthorizeCardAsync(CardAuthorizationRequest request)
+    public async Task<string> AuthorizeCardAsync(CardAuthorizationRequest request)
     {
         ValidateCardAuthorization(request);
 
-        var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request);
-        return card == null ? throw new InvalidCardException($"CardNumber {request.CardNumber} not found.") : true;
+        var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request)
+        ?? throw new InvalidCardException($"CardNumber {request.CardNumber} not found.");
+        var jwtTokken = _jwtTokenGenerator.GenerateTokenForAtmOperations(request);
+
+        return (jwtTokken);
     }
 
     private bool ValidateCardAuthorization(CardAuthorizationRequest request)

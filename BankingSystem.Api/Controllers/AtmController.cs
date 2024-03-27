@@ -34,10 +34,7 @@ namespace BankingSystem.Api.Controllers
         {
             var result = await _cardAuthorizationService.AuthorizeCardAsync(request);
 
-            if (!result) { return BadRequest(); }
-            var token = _jwtTokenGenerator.GenerateTokenForAtmOperations(request);
-
-            return Ok(token);
+            return Ok(result);
         }
 
 

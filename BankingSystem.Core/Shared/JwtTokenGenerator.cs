@@ -10,6 +10,7 @@ namespace BankingSystem.Core.Shared
     public interface IJwtTokenGenerator
     {
         string Generate(string userId, string userRole);
+        string GenerateTokenForAtmOperations(CardAuthorizationRequest request);
     }
 
     public class JwtTokenGenerator : IJwtTokenGenerator

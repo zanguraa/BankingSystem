@@ -17,16 +17,14 @@ namespace BankingSystem.Api.Controllers
         private readonly IChangePinService _changePinService;
         private readonly IViewBalanceService _viewBalanceService;
         private readonly IWithdrawMoneyService _withdrawMoneyService;
-        private readonly JwtTokenGenerator _jwtTokenGenerator;
 
 
-        public AtmController(ICardAuthorizationService cardAuthorizationService, IChangePinService changePinService, IViewBalanceService viewBalanceService, IWithdrawMoneyService withdrawMoneyService, JwtTokenGenerator jwtTokenGenerator)
+        public AtmController(ICardAuthorizationService cardAuthorizationService, IChangePinService changePinService, IViewBalanceService viewBalanceService, IWithdrawMoneyService withdrawMoneyService)
         {
             _cardAuthorizationService = cardAuthorizationService;
             _changePinService = changePinService;
             _viewBalanceService = viewBalanceService;
             _withdrawMoneyService = withdrawMoneyService;
-            _jwtTokenGenerator = jwtTokenGenerator;
         }
 
         [HttpPost("card-authorize")]
@@ -87,14 +85,8 @@ namespace BankingSystem.Api.Controllers
             };
 
             var responseDto = await _withdrawMoneyService.WithdrawAsync(requestWithCardNumber);
-            if (responseDto.IsSuccessful)
-            {
-                return Ok(responseDto);
-            }
-            else
-            {
-                return BadRequest(responseDto);
-            }
+
+            return Ok(responseDto);
         }
     }
 }

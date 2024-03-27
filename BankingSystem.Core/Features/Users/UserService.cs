@@ -3,18 +3,28 @@ using BankingSystem.Core.Data.Entities;
 using BankingSystem.Core.Features.Users.CreateUser;
 using BankingSystem.Core.Shared.Exceptions;
 using System.Text.RegularExpressions;
+using BankingSystem.Core.Features.Users.Authorization;
+using BankingSystem.Core.Shared;
 
 namespace BankingSystem.Core.Features.Users
 {
+    public interface IUserService
+    {
+        Task<string> AuthorizeUser(LoginRequest request);
+        Task<UserEntity> RegisterUser(RegisterUserRequest registerRequest);
+    }
+
     public class UserService : IUserService
     {
         private readonly UserManager<UserEntity> _userManager;
         private readonly IUserRepository _userRepository;
+        private readonly IJwtTokenGenerator _jwtGenerator;
 
-        public UserService(UserManager<UserEntity> userManager, IUserRepository userRepository)
+        public UserService(UserManager<UserEntity> userManager, IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
         {
             _userManager = userManager;
             _userRepository = userRepository;
+            _jwtGenerator = jwtTokenGenerator;
         }
 
         public async Task<UserEntity> RegisterUser(RegisterUserRequest registerRequest)
@@ -52,6 +62,26 @@ namespace BankingSystem.Core.Features.Users
             await _userManager.AddToRoleAsync(newUser, "user");
 
             return newUser;
+        }
+
+        public async Task<string> AuthorizeUser(LoginRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email)
+                ?? throw new UserNotFoundException("Email {UserEmail} or Password is inccorect", request.Email);
+
+
+            var isCorrectPassword = await _userManager.CheckPasswordAsync(user, request.Password);
+            if (!isCorrectPassword)
+            {
+                throw new UserNotFoundException("Email {UserEmail} or Password is inccorect", request.Email);
+            }
+
+            var role = await _userManager.GetRolesAsync(user);
+
+            var jwtTokken = _jwtGenerator.Generate(request.Email, "user");
+
+            return jwtTokken;
+
         }
 
         private void ValidateRegisterRequest(RegisterUserRequest registerRequest)

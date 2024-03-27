@@ -15,6 +15,7 @@ using BankingSystem.Core.Features.Users;
 using BankingSystem.Core.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -54,6 +55,7 @@ namespace BankingSystem.Api
 
             builder.Services.AddSingleton<IDataManager, DataManager>();
             builder.Services.AddSingleton<ISeqLogger, SeqLogger>();
+            builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
             builder.Services.AddScoped<IAddFundsService, AddFundsService>();
             builder.Services.AddScoped<IAddFundsRepository, AddFundsRepository>();
@@ -100,9 +102,11 @@ namespace BankingSystem.Api
                     policy.RequireClaim(ClaimTypes.Role, "operator");
                 });
 
-                options.AddPolicy("CardHolder", policy =>
-                    policy.RequireClaim("CardHolderStatus", "Active")
-                );
+                options.AddPolicy("AtmPolicy", policy =>
+               {
+                   policy.RequireClaim(ClaimTypes.Role, "atm");
+
+               });
             });
 
             builder.Services

@@ -7,7 +7,13 @@ using System.Text;
 
 namespace BankingSystem.Core.Shared
 {
-    public class JwtTokenGenerator
+    public interface IJwtTokenGenerator
+    {
+        string Generate(string userId, string userRole);
+        string GenerateTokenForAtmOperations(CardAuthorizationRequest request);
+    }
+
+    public class JwtTokenGenerator : IJwtTokenGenerator
     {
         private readonly IConfiguration configuration;
 
@@ -16,12 +22,12 @@ namespace BankingSystem.Core.Shared
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public string Generate(string userId, string userRole)
+        public string Generate(string id, string role)
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userId),
-                new Claim(ClaimTypes.Role, userRole)
+                new Claim(JwtRegisteredClaimNames.Sub, id),
+                new Claim(ClaimTypes.Role, role)
             };
 
             return GenerateToken(claims);
@@ -32,8 +38,7 @@ namespace BankingSystem.Core.Shared
             var claims = new List<Claim>
          {
                new Claim("CardNumber", request.CardNumber),
-               new Claim("PinCode", request.Pin.ToString()),
-               new Claim("CardHolderStatus", "Active")
+               new Claim(ClaimTypes.Role, "atm")
          };
 
             return GenerateToken(claims);

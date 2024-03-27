@@ -34,42 +34,31 @@ namespace BankingSystem.Api.Controllers
         {
             var result = await _cardAuthorizationService.AuthorizeCardAsync(request);
 
-            if (!result)
-            {
-                return BadRequest();
-            }
-            var token = _jwtTokenGenerator.GenerateTokenForAtmOperations(request);
-
-            return Ok(token);
+            return Ok(result);
         }
 
 
         [HttpPost("change-pin")]
-        [Authorize("CardHolder", AuthenticationSchemes = "Bearer")]
-
+        [Authorize("AtmPolicy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> ChangePin([FromBody] ChangePinRequest request)
         {
-            var result = await _changePinService.ChangePinAsync(request.CardNumber, request.CurrentPin, request.NewPin);
+            var result = await _changePinService.ChangePinAsync(request);
 
-            if (!result)
-            {
-                return BadRequest();
-            }
-            return Ok(new ChangePinResponse { Success = true, Message = "PIN changed successfully." });
+            return Ok(result);
         }
 
         [HttpGet("view-balance")]
-        [Authorize("CardHolder", AuthenticationSchemes = "Bearer")]
+        [Authorize("AtmPolicy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> GetBalance()
         {
-            var cardNumberClaim = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
+            var tokenCardNumber = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
 
-            if (string.IsNullOrEmpty(cardNumberClaim))
+            if (string.IsNullOrEmpty(tokenCardNumber))
             {
                 return BadRequest("Invalid token: Card number claim is missing.");
             }
 
-            var balanceInfo = await _viewBalanceService.GetBalanceByCardNumberAsync(cardNumberClaim);
+            var balanceInfo = await _viewBalanceService.GetBalanceByCardNumberAsync(tokenCardNumber);
             if (balanceInfo == null)
             {
                 return NotFound("No balance information found for the provided card number.");
@@ -80,7 +69,7 @@ namespace BankingSystem.Api.Controllers
 
 
         [HttpPost("withdraw-money")]
-        [Authorize("CardHolder", AuthenticationSchemes = "Bearer")]
+        [Authorize("AtmPolicy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Withdraw([FromBody] WithdrawAmountCurrency requestDto)
         {
             var tokenCardNumber = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;

@@ -39,12 +39,5 @@ namespace BankingSystem.Api.Controllers
             var transactionResponse = await _transactionService.ProcessExternalTransactionAsync(request);
             return Ok(transactionResponse);
         }
-
-        [HttpGet("get-transactions/{accountId}")]
-		public async Task<IActionResult> GetTransactionsByAccountId(int accountId)
-		{
-			var transactions = await _transactionService.GetTransactionsByAccountIdAsync(accountId);
-			return Ok(transactions);
-		}
 	}
 }

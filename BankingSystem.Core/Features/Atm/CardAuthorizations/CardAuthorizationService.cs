@@ -4,40 +4,39 @@ using BankingSystem.Core.Shared.Exceptions;
 
 public interface ICardAuthorizationService
 {
-    Task<bool> AuthorizeCardAsync(CardAuthorizationRequest request);
+    Task<string> AuthorizeCardAsync(CardAuthorizationRequest request);
 }
 
 public class CardAuthorizationService : ICardAuthorizationService
 {
     private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
-    private readonly JwtTokenGenerator _jwtTokenGenerator;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly ISeqLogger _seqLogger;
 
     public CardAuthorizationService(
-        ICardAuthorizationRepository cardAuthorizationRepository)
+        ICardAuthorizationRepository cardAuthorizationRepository,
+        IJwtTokenGenerator jwtTokenGenerator,
+        ISeqLogger seqLogger)
     {
         _cardAuthorizationRepository = cardAuthorizationRepository;
+        _jwtTokenGenerator = jwtTokenGenerator;
+        _seqLogger = seqLogger;
     }
 
-    public async Task<bool> AuthorizeCardAsync(CardAuthorizationRequest request)
+    public async Task<string> AuthorizeCardAsync(CardAuthorizationRequest request)
     {
         ValidateCardAuthorization(request);
 
-		if (request == null) throw new ArgumentNullException(nameof(request));
-		if (string.IsNullOrWhiteSpace(request.CardNumber) || request.CardNumber.Length != 16 || !request.CardNumber.All(char.IsDigit))
-		{
-			throw new InvalidCardException("Invalid card number.");
-		}
-
-
-		var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request);
+        var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request);
         if (card == null)
         {
             // If no card is found, throw a specific exception for this case.
             throw new InvalidCardException($"CardNumber {request.CardNumber} not found.");
         }
 
+        _seqLogger.LogInfo("Card with CardNumber: {CardNumber} is authorized", request.CardNumber);
 
-        return true;
+        return (jwtTokken);
     }
 
     private bool ValidateCardAuthorization(CardAuthorizationRequest request)

@@ -8,6 +8,7 @@ using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.BankAccounts.Requests;
+using BankingSystem.Core.Shared;
 
 public interface IWithdrawMoneyService
 {
@@ -22,13 +23,15 @@ public class WithdrawMoneyService : IWithdrawMoneyService
     private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
     public readonly IViewBalanceRepository _viewBalanceRepository;
     private readonly ITransactionRepository _transactionRepository;
+    private readonly ISeqLogger _seqLogger;
 
     public WithdrawMoneyService(
         IWithdrawMoneyRepository withdrawMoneyRepository,
         ICurrencyConversionService currencyConversionService,
         ICardAuthorizationRepository cardAuthorizationRepository,
         IViewBalanceRepository viewBalanceRepository,
-        ITransactionRepository transactionRepository
+        ITransactionRepository transactionRepository,
+        ISeqLogger seqLogger
         )
     {
         _withdrawMoneyRepository = withdrawMoneyRepository;
@@ -36,21 +39,15 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         _cardAuthorizationRepository = cardAuthorizationRepository;
         _viewBalanceRepository = viewBalanceRepository;
         _transactionRepository = transactionRepository;
+        _seqLogger = seqLogger;
     }
 
     public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequestWithCardNumber requestDto)
     {
         ValidateWithdrawRequest(requestDto);
 
-        var card = await _cardAuthorizationRepository.GetCardByNumberAsync(requestDto.CardNumber);
-        if (card == null)
-            return new() { IsSuccessful = false, Message = "Card not found." };
-
-
-        var accountInfo = await _viewBalanceRepository.GetBalanceInfoByCardNumberAsync(card.CardNumber);
-        if (accountInfo == null)
-            return new() { IsSuccessful = false, Message = "Account information not found." };
-
+        var card = await _cardAuthorizationRepository.GetCardByNumberAsync(requestDto.CardNumber) ?? throw new InvalidCardException("Card not found: {card}", requestDto.CardNumber);
+        var accountInfo = await _viewBalanceRepository.GetBalanceInfoByCardNumberAsync(card.CardNumber) ?? throw new InvalidBalanceException("Balance info not found for card: {card}", card.CardNumber);
 
         decimal amountToDeduct = requestDto.Amount;
         if (requestDto.Currency != accountInfo.Currency)
@@ -87,17 +84,6 @@ public class WithdrawMoneyService : IWithdrawMoneyService
 
         bool withdrawalSuccess = await _transactionRepository.ProcessAtmTransaction(transaction);
 
-
-        var logEntry = new TransactionLog
-        {
-            RequestedAmount = requestDto.Amount,
-            RequestedCurrency = requestDto.Currency,
-            DeductedAmount = withdrawalSuccess ? amountToDeduct : 0,
-            AccountCurrency = accountInfo.Currency,
-            BankAccountId = card.AccountId,
-            WithdrawalDate = DateTime.UtcNow
-        };
-
         var withdrawalResult = new WithdrawResponse
         {
             IsSuccessful = withdrawalSuccess,
@@ -111,11 +97,14 @@ public class WithdrawMoneyService : IWithdrawMoneyService
             WithdrawalDate = DateTime.UtcNow
         };
 
+        _seqLogger.LogInfo("Withdrawal Successfull. account {accountId}, amount {currnecy} {amount}, commision {commision}", card.AccountId, withdrawalResult.RequestedCurrency, requestDto.Amount, withdrawalResult.Commission);
+
         return withdrawalResult;
     }
 
     private void ValidateWithdrawRequest(WithdrawRequestWithCardNumber requestDto)
     {
+        if (requestDto == null) throw new ArgumentNullException(nameof(requestDto));
         if (requestDto.Amount < 5 || requestDto.Amount % 5 != 0)
         {
             throw new InvalidAtmAmountException("Invalid withdrawal amount. Amount must be in multiples of 5");

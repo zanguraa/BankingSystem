@@ -34,10 +34,7 @@ namespace BankingSystem.Api.Controllers
         {
             var result = await _cardAuthorizationService.AuthorizeCardAsync(request);
 
-            if (!result)
-            {
-                return BadRequest();
-            }
+            if (!result) { return BadRequest(); }
             var token = _jwtTokenGenerator.GenerateTokenForAtmOperations(request);
 
             return Ok(token);
@@ -49,12 +46,8 @@ namespace BankingSystem.Api.Controllers
 
         public async Task<IActionResult> ChangePin([FromBody] ChangePinRequest request)
         {
-            var result = await _changePinService.ChangePinAsync(request.CardNumber, request.CurrentPin, request.NewPin);
-
-            if (!result)
-            {
-                return BadRequest();
-            }
+            var result = await _changePinService.ChangePinAsync(request);
+            if (!result) { return BadRequest(); }
             return Ok(new ChangePinResponse { Success = true, Message = "PIN changed successfully." });
         }
 

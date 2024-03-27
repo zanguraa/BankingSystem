@@ -23,14 +23,7 @@ public class CardAuthorizationService : ICardAuthorizationService
         ValidateCardAuthorization(request);
 
         var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request);
-        if (card == null)
-        {
-            // If no card is found, throw a specific exception for this case.
-            throw new InvalidCardException($"CardNumber {request.CardNumber} not found.");
-        }
-
-
-        return true;
+        return card == null ? throw new InvalidCardException($"CardNumber {request.CardNumber} not found.") : true;
     }
 
     private bool ValidateCardAuthorization(CardAuthorizationRequest request)

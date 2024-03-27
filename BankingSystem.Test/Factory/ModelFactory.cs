@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
 using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
+using BankingSystem.Core.Features.Atm.ChangePin.Requests;
 
 namespace BankingSystem.Test.Factory
 {
@@ -51,6 +52,18 @@ namespace BankingSystem.Test.Factory
 
 			return request;
 		}
+		public static ChangePinRequest GetChangePinRequest(Action<ChangePinRequest> customizer = null)
+		{
+			var request = new ChangePinRequest
+			{
+				CardNumber = "1111222233334444", // Valid card number
+				CurrentPin = 1234,
+				NewPin = 5678
+			};
 
+			customizer?.Invoke(request);
+
+			return request;
+		}
 	}
 }

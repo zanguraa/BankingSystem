@@ -5,6 +5,7 @@ using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 using FakeItEasy;
+using BankingSystem.Core.Shared;
 
 namespace BankingSystem.Test.Transactions
 {
@@ -13,12 +14,18 @@ namespace BankingSystem.Test.Transactions
 	{
 		private ICardAuthorizationService _validator;
 		private ICardAuthorizationRepository _fakeCardAuthorizationRepository;
+		private IJwtTokenGenerator _fakeJwtTokenGenerator;
+		private ISeqLogger _fakeSeqLogger;
+
+
 
 		[SetUp]
 		public void Setup()
 		{
 			_fakeCardAuthorizationRepository = A.Fake<ICardAuthorizationRepository>();
-			_validator = new CardAuthorizationService(_fakeCardAuthorizationRepository);
+			_fakeJwtTokenGenerator = A.Fake<IJwtTokenGenerator>();
+			_fakeSeqLogger = A.Fake<ISeqLogger>();
+			_validator = new CardAuthorizationService(_fakeCardAuthorizationRepository, _fakeJwtTokenGenerator, _fakeSeqLogger);
 		}
 
 		[Test]

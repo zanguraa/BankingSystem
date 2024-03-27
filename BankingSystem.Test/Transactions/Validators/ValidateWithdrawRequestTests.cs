@@ -9,6 +9,7 @@ using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 using FakeItEasy;
 using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Features.Transactions.Currency;
+using BankingSystem.Core.Shared;
 
 namespace BankingSystem.Test.Transactions
 {
@@ -21,6 +22,8 @@ namespace BankingSystem.Test.Transactions
 		private IViewBalanceRepository _fakeViewBalanceRepository;
 		private ICardAuthorizationRepository _fakeCardAuthorizationRepository;
 		private ICurrencyConversionService _fakeCurrencyConversionService;
+		private ISeqLogger _fakeSeqLogger;
+
 
 		[SetUp]
 		public void Setup()
@@ -30,11 +33,13 @@ namespace BankingSystem.Test.Transactions
 			_fakeViewBalanceRepository = A.Fake<IViewBalanceRepository>();
 			_fakeCardAuthorizationRepository = A.Fake<ICardAuthorizationRepository>();
 			_fakeCurrencyConversionService = A.Fake<ICurrencyConversionService>();
+			_fakeSeqLogger= A.Fake<SeqLogger>();
 			_validator = new WithdrawMoneyService(_fakeWithdrawMoneyRepository ,
 													_fakeCurrencyConversionService,
 													_fakeCardAuthorizationRepository,
 												   _fakeViewBalanceRepository,
-												   _fakeTransactionRepository
+												   _fakeTransactionRepository,
+												   _fakeSeqLogger
 												);
 		}
 		

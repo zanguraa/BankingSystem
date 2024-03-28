@@ -12,7 +12,7 @@ using BankingSystem.Core.Shared;
 
 public interface IWithdrawMoneyService
 {
-    Task<WithdrawResponse> WithdrawAsync(WithdrawRequestWithCardNumber requestDto);
+    Task<WithdrawResponse> WithdrawAsync(WithdrawAmountCurrencyRequest requestDto, string? cardNumber);
 }
 
 public class WithdrawMoneyService : IWithdrawMoneyService
@@ -42,11 +42,13 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         _seqLogger = seqLogger;
     }
 
-    public async Task<WithdrawResponse> WithdrawAsync(WithdrawRequestWithCardNumber requestDto)
+    public async Task<WithdrawResponse> WithdrawAsync(WithdrawAmountCurrencyRequest requestDto, string? cardNumber)
     {
+        requestDto.CardNumber = cardNumber;
+
         ValidateWithdrawRequest(requestDto);
 
-        var card = await _cardAuthorizationRepository.GetCardByNumberAsync(requestDto.CardNumber) ?? throw new InvalidCardException("Card not found: {card}", requestDto.CardNumber);
+        var card = await _cardAuthorizationRepository.GetCardByNumberAsync(cardNumber) ?? throw new InvalidCardException("Card not found: {card}", requestDto.CardNumber);
         var accountInfo = await _viewBalanceRepository.GetBalanceInfoByCardNumberAsync(card.CardNumber) ?? throw new InvalidBalanceException("Balance info not found for card: {card}", card.CardNumber);
 
         decimal amountToDeduct = requestDto.Amount;
@@ -65,7 +67,8 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         var report24HoursRequest = new WithdrawalCheck { BankAccountId = card.AccountId, WithdrawalDate = DateTime.Now.AddDays(-1) };
         var totalWithdrawnAmountInGel = await _withdrawMoneyRepository.GetWithdrawalsOf24hoursByCardId(report24HoursRequest);
 
-        if(totalWithdrawnAmountInGel.Sum + totalDeduction > _dailyWithdrawalLimitInGel)
+        // საკითხავია სწორია თუ არა ვანოსთან
+        if(totalWithdrawnAmountInGel?.Sum + totalDeduction > _dailyWithdrawalLimitInGel)
         {
             throw new InvalidAtmAmountException("Daily limit Daily withdrawal limit exceeded:{Amount} in {Currency}, for Card: {Card}", requestDto.Amount, requestDto.Currency, requestDto.CardNumber);
         }
@@ -106,7 +109,7 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         return withdrawalResult;
     }
 
-    private void ValidateWithdrawRequest(WithdrawRequestWithCardNumber requestDto)
+    private void ValidateWithdrawRequest(WithdrawAmountCurrencyRequest requestDto)
     {
         if (requestDto == null) throw new ArgumentNullException(nameof(requestDto));
         if (requestDto.Amount < 5 || requestDto.Amount % 5 != 0)

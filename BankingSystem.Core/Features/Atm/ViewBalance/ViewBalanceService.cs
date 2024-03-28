@@ -34,6 +34,7 @@ public class ViewBalanceService : IViewBalanceService
 
     public async Task<BalanceResponse> GetBalanceByCardNumberAsync(string cardNumber)
     {
+        
         var balanceInfo = await _viewBalanceRepository.GetBalanceInfoByCardNumberAsync(cardNumber);
 
         return balanceInfo == null
@@ -44,6 +45,12 @@ public class ViewBalanceService : IViewBalanceService
                 InitialAmount = balanceInfo.InitialAmount,
                 Currency = balanceInfo.Currency
             };
+    }
+
+    public async Task GetbalanceByCardNumberValidator(string cardNumber)
+    {
+        if (string.IsNullOrEmpty(cardNumber))  throw new InvalidCardException("Card Number is not Found: {CardNumber}", cardNumber);
+        var balanceInfo = await GetBalanceByCardNumberAsync(cardNumber) ?? throw new InvalidCardException("Card Number is not Found: {CardNumber}", cardNumber);
     }
 
 }

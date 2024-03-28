@@ -51,16 +51,7 @@ namespace BankingSystem.Api.Controllers
         {
             var tokenCardNumber = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
 
-            if (string.IsNullOrEmpty(tokenCardNumber))
-            {
-                return BadRequest("Invalid token: Card number claim is missing.");
-            }
-
             var balanceInfo = await _viewBalanceService.GetBalanceByCardNumberAsync(tokenCardNumber);
-            if (balanceInfo == null)
-            {
-                return NotFound("No balance information found for the provided card number.");
-            }
 
             return Ok(balanceInfo);
         }
@@ -68,23 +59,11 @@ namespace BankingSystem.Api.Controllers
 
         [HttpPost("withdraw-money")]
         [Authorize("AtmPolicy", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Withdraw([FromBody] WithdrawAmountCurrency requestDto)
+        public async Task<IActionResult> Withdraw([FromBody] WithdrawAmountCurrencyRequest requestDto)
         {
             var tokenCardNumber = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
 
-            if (tokenCardNumber == null)
-            {
-                return Unauthorized("The card number does not match the authorized user.");
-            }
-
-            var requestWithCardNumber = new WithdrawRequestWithCardNumber()
-            {
-                Amount = requestDto.Amount,
-                CardNumber = tokenCardNumber,
-                Currency = requestDto.Currency
-            };
-
-            var responseDto = await _withdrawMoneyService.WithdrawAsync(requestWithCardNumber);
+            var responseDto = await _withdrawMoneyService.WithdrawAsync(requestDto, tokenCardNumber);
 
             return Ok(responseDto);
         }

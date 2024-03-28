@@ -1,6 +1,8 @@
 ﻿using BankingSystem.Core.Features.Reports;
 using Microsoft.AspNetCore.Mvc;
 
+namespace BankingSystem.Api.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
 public class ReportsController : ControllerBase

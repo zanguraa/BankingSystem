@@ -4,40 +4,39 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace BankingSystem.Api.Controllers
+namespace BankingSystem.Api.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class TransactionController : ControllerBase
 {
-    [Route("api/[controller]")]
-	[ApiController]
-	public class TransactionController : ControllerBase
-	{
-		private readonly ITransactionService _transactionService;
+    private readonly ITransactionService _transactionService;
 
-		public TransactionController(ITransactionService transactionService)
-		{
-			_transactionService = transactionService;
+    public TransactionController(ITransactionService transactionService)
+    {
+        _transactionService = transactionService;
 
-        }
+    }
 
-        [HttpPost("internal")]
-        [Authorize("MyApiUserPolicy", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> InternalTransaction([FromBody] CreateTransactionRequest request)
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            request.UserId = userId;
+    [HttpPost("internal")]
+    [Authorize("MyApiUserPolicy", AuthenticationSchemes = "Bearer")]
+    public async Task<IActionResult> InternalTransaction([FromBody] CreateTransactionRequest request)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        request.UserId = userId;
 
-            var transactionResponse = await _transactionService.ProcessInternalTransactionAsync(request);
-            return Ok(transactionResponse);
-        }
+        var transactionResponse = await _transactionService.ProcessInternalTransactionAsync(request);
+        return Ok(transactionResponse);
+    }
 
-        [HttpPost("external")]
-        [Authorize("MyApiUserPolicy", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> ExternalTransaction([FromBody] CreateTransactionRequest request)
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            request.UserId = userId;
+    [HttpPost("external")]
+    [Authorize("MyApiUserPolicy", AuthenticationSchemes = "Bearer")]
+    public async Task<IActionResult> ExternalTransaction([FromBody] CreateTransactionRequest request)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        request.UserId = userId;
 
-            var transactionResponse = await _transactionService.ProcessExternalTransactionAsync(request);
-            return Ok(transactionResponse);
-        }
-	}
+        var transactionResponse = await _transactionService.ProcessExternalTransactionAsync(request);
+        return Ok(transactionResponse);
+    }
 }

@@ -8,6 +8,7 @@ using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
 using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
 using BankingSystem.Core.Features.Atm.ChangePin.Requests;
 using BankingSystem.Core.Features.BankAccounts.AddFunds;
+using BankingSystem.Core.Features.BankAccounts.Requests;
 
 namespace BankingSystem.Test.Factory
 {
@@ -78,6 +79,16 @@ namespace BankingSystem.Test.Factory
 
 			return request;
 		}
+		public static CreateBankAccountRequest GetCreateBankAccountRequest(Action<CreateBankAccountRequest> setup = null)
+		{
+			var request = new CreateBankAccountRequest
+			{
+				UserId = 1 // Set a default valid user id for testing
+			};
 
+			setup?.Invoke(request);
+
+			return request;
+		}
 	}
 }

@@ -70,5 +70,4 @@ public class CreateBankAccountsService : ICreateBankAccountsService
             throw new UserNotFoundException($"user ID {userId} is not valid.");
         }
     }
-
 }

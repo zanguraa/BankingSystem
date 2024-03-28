@@ -7,7 +7,7 @@ using FakeItEasy;
 
 namespace BankingSystem.Test.Transactions.Validators
 {
-    public class ValidateCreateTransactionRequestTests
+	public class ValidateCreateTransactionRequestTests
 	{
 		private ITransactionServiceValidator _validator;
 		private ITransactionRepository _fakeTransactionRepository;
@@ -32,7 +32,7 @@ namespace BankingSystem.Test.Transactions.Validators
 		public void ShouldThrowInvalidTransactionValidationIfRequestUsedIdIsNullOrEmpty(string userId)
 		{
 			var request = ModelFactory.GetCreateTransactionRequest(
-				r=>r.UserId=userId);
+				r => r.UserId = userId);
 
 			Assert.ThrowsAsync<UserValidationException>(
 			   async () => await _validator.ValidateCreateTransactionRequest(request));
@@ -47,7 +47,7 @@ namespace BankingSystem.Test.Transactions.Validators
 			   async () => await _validator.ValidateCreateTransactionRequest(request));
 		}
 		[Test]
-		public void ShouldThrowInvalidTransactionValidationIfRequestToAccountIdIsLessOrEqualZero() 
+		public void ShouldThrowInvalidTransactionValidationIfRequestToAccountIdIsLessOrEqualZero()
 		{
 			var request = ModelFactory.GetCreateTransactionRequest(
 				r => r.ToAccountId = -12);
@@ -55,7 +55,7 @@ namespace BankingSystem.Test.Transactions.Validators
 				async () => await _validator.ValidateCreateTransactionRequest(request));
 		}
 		[Test]
-		public void ShouldThrowInvalidTransactionValidationIfRequestAmountIsLessOrEqualZero() 
+		public void ShouldThrowInvalidTransactionValidationIfRequestAmountIsLessOrEqualZero()
 		{
 			var request = ModelFactory.GetCreateTransactionRequest(
 				r => r.Amount = -1243);

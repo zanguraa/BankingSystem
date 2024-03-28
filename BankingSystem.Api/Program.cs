@@ -1,6 +1,7 @@
 ﻿using BankingSystem.Api.Middlewares;
 using BankingSystem.Core.Data;
 using BankingSystem.Core.Data.Entities;
+using BankingSystem.Core.Features.Atm.CardAuthorizations;
 using BankingSystem.Core.Features.Atm.ChangePin;
 using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Features.Atm.WithdrawMoney;

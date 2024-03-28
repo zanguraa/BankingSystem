@@ -12,9 +12,8 @@ public class CardAuthorizationService : ICardAuthorizationService
     private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly ISeqLogger _seqLogger;
-	private string jwtTokken;
 
-	public CardAuthorizationService(
+    public CardAuthorizationService(
         ICardAuthorizationRepository cardAuthorizationRepository,
         IJwtTokenGenerator jwtTokenGenerator,
         ISeqLogger seqLogger)
@@ -27,23 +26,21 @@ public class CardAuthorizationService : ICardAuthorizationService
     public async Task<string> AuthorizeCardAsync(CardAuthorizationRequest request)
     {
         ValidateCardAuthorization(request);
-        //ეს დავამატე ტესტისთვის 
-		if (request == null) throw new ArgumentNullException(nameof(request));
-		if (string.IsNullOrWhiteSpace(request.CardNumber) || request.CardNumber.Length != 16 || !request.CardNumber.All(char.IsDigit))
-		{
-			throw new InvalidCardException("Invalid card number.");
-		}
+        if (request == null) throw new ArgumentNullException(nameof(request));
+        if (string.IsNullOrWhiteSpace(request.CardNumber) || request.CardNumber.Length != 16 || !request.CardNumber.All(char.IsDigit))
+        {
+            throw new InvalidCardException("Invalid card number.");
+        }
 
 
-		var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request);
+        var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request);
         if (card == null)
         {
-            // If no card is found, throw a specific exception for this case.
             throw new InvalidCardException($"CardNumber {request.CardNumber} not found.");
         }
 
+        var jwtTokken = _jwtTokenGenerator.GenerateTokenForAtmOperations(request);
         _seqLogger.LogInfo("Card with CardNumber: {CardNumber} is authorized", request.CardNumber);
-        // aq davamate fieldi ro errori momexsna da testi gameshva
         return (jwtTokken);
     }
 

@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
-using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
-using BankingSystem.Core.Features.Atm.ChangePin.Requests;
 using BankingSystem.Core.Features.BankAccounts.AddFunds;
 using BankingSystem.Core.Features.BankAccounts.Requests;
+using BankingSystem.Core.Features.Atm.CardAuthorizations.Models.Requests;
+using BankingSystem.Core.Features.Atm.ChangePin.Models.Requests;
 
 namespace BankingSystem.Test.Factory
 {
-	public class ModelFactory
+    public class ModelFactory
 	{
 		public static CreateTransactionRequest GetCreateTransactionRequest(Action<CreateTransactionRequest> options = null)
 		{

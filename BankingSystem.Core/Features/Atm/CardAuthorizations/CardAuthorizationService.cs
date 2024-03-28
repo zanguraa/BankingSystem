@@ -1,4 +1,4 @@
-﻿using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
+﻿using BankingSystem.Core.Features.Atm.CardAuthorizations.Models.Requests;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 

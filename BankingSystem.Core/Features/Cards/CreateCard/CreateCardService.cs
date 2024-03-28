@@ -41,7 +41,11 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
                 UserId = createCardRequest.UserId,
                 AccountId = createCardRequest.AccountId
             };
+
             var result = await _cardRepository.CreateCardAsync(card);
+
+            _seqLogger.LogInfo("Created Card: {CardNumber} for UserId {UserId}", card.CardNumber, createCardRequest.UserId);
+
             return result;
         }
 

@@ -1,4 +1,4 @@
-﻿using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
+﻿using BankingSystem.Core.Features.Atm.CardAuthorizations.Models.Requests;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace BankingSystem.Core.Features.Atm.ChangePin.Requests
+namespace BankingSystem.Core.Features.Atm.ChangePin.Models.Requests
 {
     public class ChangePinRequest
     {

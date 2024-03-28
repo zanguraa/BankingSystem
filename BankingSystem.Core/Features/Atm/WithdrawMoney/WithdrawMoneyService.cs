@@ -4,11 +4,12 @@ using BankingSystem.Core.Features.Transactions.TransactionServices;
 using BankingSystem.Core.Features.Transactions;
 using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 using BankingSystem.Core.Features.Atm.ViewBalance;
-using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.BankAccounts.Requests;
 using BankingSystem.Core.Shared;
+
+namespace BankingSystem.Core.Features.Atm.WithdrawMoney;
 
 public interface IWithdrawMoneyService
 {
@@ -20,7 +21,6 @@ public class WithdrawMoneyService : IWithdrawMoneyService
     private readonly IWithdrawMoneyRepository _withdrawMoneyRepository;
     private readonly ICurrencyConversionService _currencyConversionService;
     private readonly int _dailyWithdrawalLimitInGel = 10000;
-    private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
     public readonly IViewBalanceRepository _viewBalanceRepository;
     private readonly ITransactionRepository _transactionRepository;
     private readonly ISeqLogger _seqLogger;
@@ -28,7 +28,6 @@ public class WithdrawMoneyService : IWithdrawMoneyService
     public WithdrawMoneyService(
         IWithdrawMoneyRepository withdrawMoneyRepository,
         ICurrencyConversionService currencyConversionService,
-        ICardAuthorizationRepository cardAuthorizationRepository,
         IViewBalanceRepository viewBalanceRepository,
         ITransactionRepository transactionRepository,
         ISeqLogger seqLogger
@@ -36,7 +35,6 @@ public class WithdrawMoneyService : IWithdrawMoneyService
     {
         _withdrawMoneyRepository = withdrawMoneyRepository;
         _currencyConversionService = currencyConversionService;
-        _cardAuthorizationRepository = cardAuthorizationRepository;
         _viewBalanceRepository = viewBalanceRepository;
         _transactionRepository = transactionRepository;
         _seqLogger = seqLogger;
@@ -48,8 +46,8 @@ public class WithdrawMoneyService : IWithdrawMoneyService
 
         ValidateWithdrawRequest(requestDto);
 
-        var card = await _cardAuthorizationRepository.GetCardByNumberAsync(cardNumber) ?? throw new InvalidCardException("Card not found: {card}", requestDto.CardNumber);
-        var accountInfo = await _viewBalanceRepository.GetBalanceInfoByCardNumberAsync(card.CardNumber) ?? throw new InvalidBalanceException("Balance info not found for card: {card}", card.CardNumber);
+        var card = await _withdrawMoneyRepository.GetCardByNumberAsync(cardNumber) ?? throw new InvalidCardException("Card not found: {card}", requestDto.CardNumber);
+        var accountInfo = await _withdrawMoneyRepository.GetBalanceInfoByCardNumberAsync(card.CardNumber) ?? throw new InvalidBalanceException("Balance info not found for card: {card}", card.CardNumber);
 
         decimal amountToDeduct = requestDto.Amount;
         if (requestDto.Currency != accountInfo.Currency)
@@ -68,12 +66,10 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         var totalWithdrawnAmountInGel = await _withdrawMoneyRepository.GetWithdrawalsOf24hoursByCardId(report24HoursRequest);
 
         // საკითხავია სწორია თუ არა ვანოსთან
-        if(totalWithdrawnAmountInGel?.Sum + totalDeduction > _dailyWithdrawalLimitInGel)
+        if (totalWithdrawnAmountInGel?.Sum + totalDeduction > _dailyWithdrawalLimitInGel)
         {
             throw new InvalidAtmAmountException("Daily limit Daily withdrawal limit exceeded:{Amount} in {Currency}, for Card: {Card}", requestDto.Amount, requestDto.Currency, requestDto.CardNumber);
         }
-           
-            
 
         var transactionType = TransactionType.Atm;
 

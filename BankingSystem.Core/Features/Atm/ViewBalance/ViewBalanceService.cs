@@ -1,4 +1,4 @@
-﻿using BankingSystem.Core.Features.Atm.ViewBalance.Requests;
+﻿using BankingSystem.Core.Features.Atm.ViewBalance.Models.Response;
 using BankingSystem.Core.Shared.Exceptions;
 
 namespace BankingSystem.Core.Features.Atm.ViewBalance;
@@ -34,7 +34,7 @@ public class ViewBalanceService : IViewBalanceService
 
     public async Task<BalanceResponse> GetBalanceByCardNumberAsync(string cardNumber)
     {
-        
+        await GetbalanceByCardNumberValidator(cardNumber);
         var balanceInfo = await _viewBalanceRepository.GetBalanceInfoByCardNumberAsync(cardNumber);
 
         return balanceInfo == null
@@ -47,9 +47,9 @@ public class ViewBalanceService : IViewBalanceService
             };
     }
 
-    public async Task GetbalanceByCardNumberValidator(string cardNumber)
+    private async Task GetbalanceByCardNumberValidator(string cardNumber)
     {
-        if (string.IsNullOrEmpty(cardNumber))  throw new InvalidCardException("Card Number is not Found: {CardNumber}", cardNumber);
+        if (string.IsNullOrEmpty(cardNumber)) throw new InvalidCardException("Card Number is not Found: {CardNumber}", cardNumber);
         var balanceInfo = await GetBalanceByCardNumberAsync(cardNumber) ?? throw new InvalidCardException("Card Number is not Found: {CardNumber}", cardNumber);
     }
 

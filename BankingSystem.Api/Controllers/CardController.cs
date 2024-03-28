@@ -18,10 +18,7 @@ public class CardController : ControllerBase
     public async Task<IActionResult> CreateCard([FromBody] CreateCardRequest createCardRequest)
     {
         var result = await _cardService.CreateCardAsync(createCardRequest);
-        if (result == null)
-        {
-            return BadRequest("Card didnt create");
-        }
+       
         return Ok(result);
     }
 

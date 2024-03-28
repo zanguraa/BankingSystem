@@ -1,15 +1,15 @@
-﻿using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
-using BankingSystem.Core.Shared.Exceptions;
+﻿using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 using FakeItEasy;
 using BankingSystem.Core.Shared;
+using BankingSystem.Core.Features.Atm.CardAuthorizations.Models.Requests;
 
 namespace BankingSystem.Test.Transactions
 {
-	[TestFixture]
+    [TestFixture]
 	public class ValidateCardAuthorizationTests
 	{
 		private ICardAuthorizationService _validator;

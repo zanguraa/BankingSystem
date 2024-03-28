@@ -1,6 +1,6 @@
-﻿using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
+﻿using BankingSystem.Core.Features.Atm.CardAuthorizations.Models.Requests;
 using BankingSystem.Core.Features.Atm.ChangePin;
-using BankingSystem.Core.Features.Atm.ChangePin.Requests;
+using BankingSystem.Core.Features.Atm.ChangePin.Models.Requests;
 using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
 using BankingSystem.Core.Shared;

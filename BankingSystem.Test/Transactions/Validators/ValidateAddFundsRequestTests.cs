@@ -40,5 +40,13 @@ namespace BankingSystem.Test.Features.BankAccounts.AddFunds
 
 			Assert.ThrowsAsync<InvalidAddFundsValidationException>(() => _addFundsService.AddFunds(request));
 		}
+		
+		[Test]
+		public void When_BankAccountIdIsLessThanOrEqualToZero_ShouldThrow_InvalidAddFundsValidationException()
+		{
+			var request = ModelFactory.GetAddFundsRequest(r => r.BankAccountId = 0);
+
+			Assert.ThrowsAsync<InvalidAddFundsValidationException>(() => _addFundsService.AddFunds(request));
+		}
 	}
 }

@@ -17,27 +17,25 @@ namespace BankingSystem.Core.Features.BankAccounts.AddFunds
     public class AddFundsService : IAddFundsService
     {
         private readonly IAddFundsRepository _addFundsRepository;
-        private readonly ITransactionRepository _transactionRepository; 
 
-        public AddFundsService(IAddFundsRepository addFundsRepository, ITransactionRepository transactionRepository)
+        public AddFundsService(IAddFundsRepository addFundsRepository)
         {
             _addFundsRepository = addFundsRepository;
-            _transactionRepository = transactionRepository; 
         }
 
         public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
         {
             ValidateAddFundsRequest(addFundsRequest);
-            
-                var transaction = new Transaction
-                {
-                    ToAccountId = addFundsRequest.BankAccountId,
-                    ToAmount = addFundsRequest.Amount,
-                    TransactionType = (int)TransactionType.AddFunds,
-                    TransactionDate = DateTime.UtcNow 
-                };
 
-                return await _transactionRepository.ProcessDepositTransactionAsync(transaction);
+            var transaction = new Transaction
+            {
+                ToAccountId = addFundsRequest.BankAccountId,
+                ToAmount = addFundsRequest.Amount,
+                TransactionType = (int)TransactionType.AddFunds,
+                TransactionDate = DateTime.UtcNow
+            };
+
+            return await _addFundsRepository.ProcessDepositTransactionAsync(transaction);
         }
 
         private void ValidateAddFundsRequest(AddFundsRequest request)
@@ -54,7 +52,7 @@ namespace BankingSystem.Core.Features.BankAccounts.AddFunds
 
             if (request.BankAccountId <= 0)
             {
-                throw  new InvalidAddFundsValidationException("The Bank Account ID must be a positive number.");
+                throw new InvalidAddFundsValidationException("The Bank Account ID must be a positive number.");
             }
         }
     }

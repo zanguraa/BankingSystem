@@ -10,7 +10,6 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
         Task<bool> IsCurrencyValid(string currencyCode);
         Task<bool> ProcessAtmTransaction(Transaction transaction);
         Task<bool> ProcessBankTransaction(Transaction transaction);
-        Task<bool> ProcessDepositTransactionAsync(Transaction transactionRequest);
         Task<bool> UpdateAccountBalancesAsync(Transaction transaction, bool isAtmWithdrawal = false);
     }
 
@@ -22,7 +21,6 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
         {
             _dataManager = dataManager;
         }
-
 
         public async Task<IEnumerable<Transaction>> GetTransactionsByAccountIdAsync(int accountId)
         {
@@ -106,32 +104,6 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
             return success;
         }
 
-        public async Task<bool> ProcessDepositTransactionAsync(Transaction transactionRequest)
-        {
-            var SqlCommandList = new List<SqlCommand>
-             {
-                new() {
-                    Query = @"
-                        UPDATE BankAccounts
-                        SET InitialAmount = InitialAmount + @ToAmount 
-                        WHERE Id = @ToAccountId",
-                    Params = transactionRequest
-                },
-                new() {
-                    Query = @"
-                        INSERT INTO Transactions (FromAccountId, ToAccountId, FromAccountCurrency, ToAccountCurrency, FromAmount, ToAmount, TransactionDate, TransactionType, Fee)
-                        VALUES (@FromAccountId, @ToAccountId, @FromAccountCurrency, @ToAccountCurrency, @FromAmount, @ToAmount, @TransactionDate, @TransactionType, @Fee);",
-                    Params = transactionRequest
-                }
-            };
-            bool success = await _dataManager.ExecuteWithTransaction(SqlCommandList);
-
-            if (!success) throw new Exception("An error occurred while processing your request.");
-
-            return success;
-        }
-
-
         public async Task<bool> UpdateAccountBalancesAsync(Transaction transaction, bool isAtmWithdrawal = false)
         {
             var sqlCommandRequests = new List<SqlCommand>
@@ -174,8 +146,6 @@ namespace BankingSystem.Core.Features.Transactions.TransactionsRepositories
             }
             return success;
         }
-
-
 
         public async Task<bool> IsCurrencyValid(string currencyCode)
         {

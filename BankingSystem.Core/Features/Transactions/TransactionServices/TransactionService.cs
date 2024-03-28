@@ -204,13 +204,13 @@ namespace BankingSystem.Core.Features.Transactions.TransactionServices
 
             if (transactionType == TransactionType.External)
             {
-                feePercentage = 0.01M; // 1% fee for external transactions
-                fixedFee = 0.5M; // Additional fixed fee for external transactions
+                feePercentage = 0.01M; 
+                fixedFee = 0.5M; 
             }
 
-            // Calculate the total fee by applying the percentage to the amount and adding the fixed fee
             decimal totalFee = (amount * feePercentage) + fixedFee;
             return totalFee;
         }
+
     }
 }

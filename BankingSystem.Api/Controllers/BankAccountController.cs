@@ -1,4 +1,5 @@
 ﻿using BankingSystem.Core.Features.BankAccounts.AddFunds;
+using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.BankAccounts.Requests;
 using Microsoft.AspNetCore.Mvc;

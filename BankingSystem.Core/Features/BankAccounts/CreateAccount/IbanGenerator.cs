@@ -1,4 +1,6 @@
-﻿public class IbanGenerator
+﻿namespace BankingSystem.Core.Features.BankAccounts.CreateAccount;
+
+public class IbanGenerator
 {
     private static Random random = new Random();
 
@@ -7,7 +9,7 @@
 
         string countryCode = "GE";
         string bankInitials = "CD";
-        string randomBban = IbanGenerator.GenerateRandomNumeric(16);
+        string randomBban = GenerateRandomNumeric(16);
 
         if (randomBban.Length != 16 || !randomBban.All(char.IsDigit))
         {
@@ -21,7 +23,7 @@
 
     private static string GetCountryCodeNumeric(string countryCode)
     {
-        return ((int)countryCode[0] - 'A' + 10).ToString() + ((int)countryCode[1] - 'A' + 10).ToString();
+        return (countryCode[0] - 'A' + 10).ToString() + (countryCode[1] - 'A' + 10).ToString();
     }
 
     private static string GetBankInitialsNumeric(string bankInitials)
@@ -31,7 +33,7 @@
             throw new ArgumentException("Bank initials must be two characters.");
         }
 
-        return ((int)bankInitials[0] - 'A' + 10).ToString() + ((int)bankInitials[1] - 'A' + 10).ToString();
+        return (bankInitials[0] - 'A' + 10).ToString() + (bankInitials[1] - 'A' + 10).ToString();
     }
 
     private static int CalculateCheckDigits(string iban)

@@ -5,10 +5,11 @@ using System;
 using BankingSystem.Core.Shared.Exceptions;
 using FakeItEasy;
 using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
+using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
 
 namespace BankingSystem.Test.Features.BankAccounts.AddFunds
 {
-	[TestFixture]
+    [TestFixture]
 	public class ValidateAddFundsRequestTests
 	{
 		private IAddFundsService _addFundsService;

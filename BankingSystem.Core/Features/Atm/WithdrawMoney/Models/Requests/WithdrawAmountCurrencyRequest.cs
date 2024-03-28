@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace BankingSystem.Core.Features.Atm.WithdrawMoney.Requests
+namespace BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Requests
 {
     public class WithdrawAmountCurrencyRequest
     {

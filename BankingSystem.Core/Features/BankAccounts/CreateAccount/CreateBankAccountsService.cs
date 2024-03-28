@@ -34,8 +34,8 @@ public class CreateBankAccountsService : ICreateBankAccountsService
         var currencies = Enum.GetValues<CurrencyType>();
         foreach (var currency in currencies)
         {
-            var iban = IbanGenerator.GenerateIban();
-            BankAccount bankAccount = new BankAccount
+            string iban = IbanGenerator.GenerateIban();
+            BankAccount bankAccount = new()
             {
                 UserId = createBankAccountRequest.UserId,
                 Iban = iban,

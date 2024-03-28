@@ -1,5 +1,4 @@
-﻿using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
-using BankingSystem.Core.Features.Transactions.Currency;
+﻿using BankingSystem.Core.Features.Transactions.Currency;
 using BankingSystem.Core.Features.Transactions.TransactionServices;
 using BankingSystem.Core.Features.Transactions;
 using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
@@ -8,6 +7,8 @@ using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.BankAccounts.Requests;
 using BankingSystem.Core.Shared;
+using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Requests;
+using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Response;
 
 namespace BankingSystem.Core.Features.Atm.WithdrawMoney;
 

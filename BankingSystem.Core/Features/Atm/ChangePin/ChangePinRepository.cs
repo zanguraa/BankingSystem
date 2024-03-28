@@ -1,6 +1,6 @@
 ﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.Atm.ChangePin;
-using BankingSystem.Core.Features.Cards;
+using BankingSystem.Core.Shared.Models;
 
 namespace BankingSystem.Core.Features.Atm.ChangePin;
 public interface IChangePinRepository

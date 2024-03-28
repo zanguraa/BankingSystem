@@ -1,7 +1,7 @@
 ﻿using BankingSystem.Core.Features.BankAccounts.AddFunds;
 using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount;
-using BankingSystem.Core.Features.BankAccounts.Requests;
+using BankingSystem.Core.Features.BankAccounts.CreateAccount.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Api.Controllers;

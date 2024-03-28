@@ -1,4 +1,5 @@
 ﻿using BankingSystem.Core.Features.Cards.CreateCard;
+using BankingSystem.Core.Features.Cards.CreateCard.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Api.Controllers;

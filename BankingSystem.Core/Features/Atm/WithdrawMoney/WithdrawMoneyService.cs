@@ -5,10 +5,10 @@ using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount;
-using BankingSystem.Core.Features.BankAccounts.Requests;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Requests;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Response;
+using BankingSystem.Core.Shared.Models;
 
 namespace BankingSystem.Core.Features.Atm.WithdrawMoney;
 
@@ -117,7 +117,7 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         {
             throw new InvalidAtmAmountException("Amount exceeds withdrawal limit");
         }
-        if (!Enum.TryParse<CurrencyType>(requestDto.Currency, out var currency) || !Enum.IsDefined(typeof(CurrencyType), currency))
+        if (!Enum.TryParse<Currency>(requestDto.Currency, out var currency) || !Enum.IsDefined(typeof(Currency), currency))
         {
             throw new UnsupportedCurrencyException("Unsupported currency");
         }

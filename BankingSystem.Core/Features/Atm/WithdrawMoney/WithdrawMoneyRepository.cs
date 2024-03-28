@@ -1,7 +1,6 @@
 ﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Models;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Requests;
-using BankingSystem.Core.Features.Cards;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Shared.Models;
 

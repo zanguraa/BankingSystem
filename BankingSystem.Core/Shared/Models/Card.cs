@@ -1,4 +1,4 @@
-﻿namespace BankingSystem.Core.Features.Cards
+﻿namespace BankingSystem.Core.Shared.Models
 {
     public class Card
     {

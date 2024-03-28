@@ -1,4 +1,4 @@
-﻿namespace BankingSystem.Core.Features.Transactions
+﻿namespace BankingSystem.Core.Shared.Models
 {
     public class Transaction
     {

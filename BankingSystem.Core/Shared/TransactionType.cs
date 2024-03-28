@@ -1,4 +1,4 @@
-﻿namespace BankingSystem.Core.Features.Transactions.TransactionServices
+﻿namespace BankingSystem.Core.Shared
 {
     public enum TransactionType
     {

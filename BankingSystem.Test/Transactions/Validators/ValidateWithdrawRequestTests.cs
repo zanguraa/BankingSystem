@@ -5,15 +5,15 @@ using System;
 using BankingSystem.Core.Data;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Features.Transactions.TransactionServices;
-using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 using FakeItEasy;
 using BankingSystem.Core.Features.Atm.ViewBalance;
-using BankingSystem.Core.Features.Transactions.Currency;
 using BankingSystem.Core.Shared;
+using BankingSystem.Core.Features.Transactions.CreateTransactions;
+using BankingSystem.Core.Shared.Services.Currency;
 
 namespace BankingSystem.Test.Transactions
 {
-	[TestFixture]
+    [TestFixture]
 	public class WithdrawMoneyRequestTests
 	{
 		private IWithdrawMoneyService _validator;

@@ -26,4 +26,8 @@
     <ProjectReference Include="..\BankingSystem.DbMigration\BankingSystem.DbMigration.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Cards\CreateCard\Models\Response\" />
+  </ItemGroup>
+
 </Project>

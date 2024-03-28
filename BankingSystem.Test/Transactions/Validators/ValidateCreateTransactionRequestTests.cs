@@ -1,13 +1,12 @@
 ﻿using BankingSystem.Core.Features.Transactions.CreateTransactions;
-using BankingSystem.Core.Features.Transactions.TransactionServices;
-using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
+using BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Requests;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
 
 namespace BankingSystem.Test.Transactions.Validators
 {
-	public class ValidateCreateTransactionRequestTests
+    public class ValidateCreateTransactionRequestTests
 	{
 		private ITransactionServiceValidator _validator;
 		private ITransactionRepository _fakeTransactionRepository;
@@ -16,7 +15,7 @@ namespace BankingSystem.Test.Transactions.Validators
 		public void Setup()
 		{
 			_fakeTransactionRepository = A.Fake<ITransactionRepository>();
-			_validator = new TransactionServiceValidator(_fakeTransactionRepository);
+			_validator = new CreateTransactionServiceValidator(_fakeTransactionRepository);
 		}
 
 		[Test]

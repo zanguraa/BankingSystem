@@ -1,19 +1,18 @@
-﻿using BankingSystem.Core.Features.Transactions.CreateTransactions;
-using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
+﻿using BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Requests;
 using BankingSystem.Core.Shared.Exceptions;
 
-namespace BankingSystem.Core.Features.Transactions.TransactionServices
+namespace BankingSystem.Core.Features.Transactions.CreateTransactions
 {
     public interface ITransactionServiceValidator
     {
         Task ValidateCreateTransactionRequest(CreateTransactionRequest request);
     }
 
-    public class TransactionServiceValidator : ITransactionServiceValidator
+    public class CreateTransactionServiceValidator : ITransactionServiceValidator
     {
         private readonly ITransactionRepository _transactionRepository;
 
-        public TransactionServiceValidator(ITransactionRepository transactionRepository)
+        public CreateTransactionServiceValidator(ITransactionRepository transactionRepository)
         {
             _transactionRepository = transactionRepository;
         }

@@ -1,4 +1,4 @@
-﻿namespace BankingSystem.Core.Features.Cards.CreateCard.Models.Response
+﻿namespace BankingSystem.Core.Shared.Models
 {
     public class UserResponse
     {

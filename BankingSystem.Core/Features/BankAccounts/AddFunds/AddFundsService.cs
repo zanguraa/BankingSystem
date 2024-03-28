@@ -2,8 +2,8 @@
 using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
 using BankingSystem.Core.Features.Transactions;
 using BankingSystem.Core.Features.Transactions.CreateTransactions;
-using BankingSystem.Core.Features.Transactions.TransactionServices;
 using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
+using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 using System;
 using System.Threading.Tasks;

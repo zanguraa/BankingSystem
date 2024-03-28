@@ -4,8 +4,8 @@ using BankingSystem.Test.Factory;
 using System;
 using BankingSystem.Core.Shared.Exceptions;
 using FakeItEasy;
-using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
 using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
+using BankingSystem.Core.Features.Transactions.CreateTransactions;
 
 namespace BankingSystem.Test.Features.BankAccounts.AddFunds
 {

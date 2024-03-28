@@ -1,6 +1,6 @@
-﻿namespace BankingSystem.Core.Features.Transactions.CreateTransactions
+﻿namespace BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Response
 {
-    public class TransactionResponse
+    public class CreateTransactionResponse
     {
         public int? FromAccountId { get; set; }
         public int? ToAccountId { get; set; }

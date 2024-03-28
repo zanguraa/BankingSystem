@@ -11,6 +11,7 @@ public interface IWithdrawMoneyRepository
     Task<DecimalSum?> GetWithdrawalsOf24hoursByCardId(WithdrawalCheck options);
     Task<BalanceInfo?> GetBalanceInfoByCardNumberAsync(string cardNumber);
     Task<Card> GetCardByNumberAsync(string CardNumber);
+    Task<bool> ProcessAtmTransaction(Transaction transactionRequest);
 }
 
 public class WithdrawMoneyRepository : IWithdrawMoneyRepository
@@ -54,6 +55,31 @@ public class WithdrawMoneyRepository : IWithdrawMoneyRepository
             ?? throw new InvalidCardException("card not found {CardNumber}", CardNumber);
 
         return result.FirstOrDefault();
+    }
+
+    public async Task<bool> ProcessAtmTransaction(Transaction transactionRequest)
+    {
+        var SqlCommandList = new List<SqlCommand>
+             {
+                new() {
+                    Query = @"
+                        UPDATE BankAccounts
+                        SET InitialAmount = InitialAmount - @Amount 
+                        WHERE Id = @AccountId",
+                    Params = new { AccountId = transactionRequest.FromAccountId, Amount = transactionRequest.FromAmount + transactionRequest.Fee}
+                },
+                new() {
+                    Query = @"
+                        INSERT INTO Transactions (FromAccountId, ToAccountId, FromAccountCurrency, ToAccountCurrency, FromAmount, ToAmount, TransactionDate, TransactionType, Fee)
+                        VALUES (@FromAccountId, @ToAccountId, @FromAccountCurrency, @ToAccountCurrency, @FromAmount, @ToAmount, @TransactionDate, @TransactionType, @Fee);",
+                    Params = transactionRequest
+                }
+            };
+        bool success = await _dataManager.ExecuteWithTransaction(SqlCommandList);
+
+        if (!success) throw new Exception("An error occurred while processing your request.");
+
+        return success;
     }
 }
 

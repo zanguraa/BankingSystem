@@ -1,5 +1,5 @@
 ﻿using BankingSystem.Core.Features.Transactions.CreateTransactions;
-using BankingSystem.Core.Features.Transactions.TransactionServices;
+using BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -10,9 +10,9 @@ namespace BankingSystem.Api.Controllers;
 [ApiController]
 public class TransactionController : ControllerBase
 {
-    private readonly ITransactionService _transactionService;
+    private readonly ICreateTransactionService _transactionService;
 
-    public TransactionController(ITransactionService transactionService)
+    public TransactionController(ICreateTransactionService transactionService)
     {
         _transactionService = transactionService;
 

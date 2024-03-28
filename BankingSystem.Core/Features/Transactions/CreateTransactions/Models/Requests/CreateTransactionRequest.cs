@@ -1,4 +1,4 @@
-﻿namespace BankingSystem.Core.Features.Transactions.CreateTransactions
+﻿namespace BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Requests
 {
     public class CreateTransactionRequest
     {
@@ -7,6 +7,6 @@
         public decimal Amount { get; set; }
         public string Currency { get; set; }
         public string ToCurrency { get; set; }
-		public string? UserId { get; set; }
-	}
+        public string? UserId { get; set; }
+    }
 }

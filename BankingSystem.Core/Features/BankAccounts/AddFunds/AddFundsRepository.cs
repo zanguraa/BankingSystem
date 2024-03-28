@@ -1,9 +1,9 @@
 ﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.Requests;
-using BankingSystem.Core.Features.Transactions;
 using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Transactions.TransactionServices;
+using BankingSystem.Core.Shared.Models;
 
 namespace BankingSystem.Core.Features.BankAccounts.AddFunds
 {

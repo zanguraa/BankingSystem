@@ -9,11 +9,10 @@ using BankingSystem.Core.Features.BankAccounts.AddFunds;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.Cards.CreateCard;
 using BankingSystem.Core.Features.Reports;
-using BankingSystem.Core.Features.Transactions.Currency;
-using BankingSystem.Core.Features.Transactions.TransactionServices;
-using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
+using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Users;
 using BankingSystem.Core.Shared;
+using BankingSystem.Core.Shared.Services.Currency;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
@@ -66,8 +65,8 @@ namespace BankingSystem.Api
             builder.Services.AddScoped<ICreateBankAccountsService, CreateBankAccountsService>();
             builder.Services.AddScoped<ICardRepository, CreateCardRepository>();
             builder.Services.AddScoped<ICardService, CreateCardService>();
-            builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
-            builder.Services.AddScoped<ITransactionService, TransactionService>();
+            builder.Services.AddScoped<ITransactionRepository, CreateTransactionRepository>();
+            builder.Services.AddScoped<ICreateTransactionService, CreateTransactionService>();
             builder.Services.AddScoped<ICurrencyConversionService, CurrencyConversionService>();
             builder.Services.AddScoped<ICurrencyConversionRepository, CurrencyConversionRepository>();
             builder.Services.AddScoped<ICardAuthorizationRepository, CardAuthorizationRepository>();
@@ -80,7 +79,7 @@ namespace BankingSystem.Api
             builder.Services.AddScoped<IWithdrawMoneyService, WithdrawMoneyService>();
             builder.Services.AddScoped<IReportsService, ReportsService>();
             builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
-            builder.Services.AddScoped<ITransactionServiceValidator, TransactionServiceValidator>();
+            builder.Services.AddScoped<ITransactionServiceValidator, CreateTransactionServiceValidator>();
 
 
             builder.Services

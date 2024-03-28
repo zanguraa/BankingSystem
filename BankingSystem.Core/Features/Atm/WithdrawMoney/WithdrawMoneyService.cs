@@ -1,14 +1,9 @@
-﻿using BankingSystem.Core.Features.Transactions.Currency;
-using BankingSystem.Core.Features.Transactions.TransactionServices;
-using BankingSystem.Core.Features.Transactions;
-using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
-using BankingSystem.Core.Features.Atm.ViewBalance;
-using BankingSystem.Core.Shared.Exceptions;
-using BankingSystem.Core.Features.BankAccounts.CreateAccount;
+﻿using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Requests;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Response;
 using BankingSystem.Core.Shared.Models;
+using BankingSystem.Core.Shared.Services.Currency;
 
 namespace BankingSystem.Core.Features.Atm.WithdrawMoney;
 
@@ -22,22 +17,16 @@ public class WithdrawMoneyService : IWithdrawMoneyService
     private readonly IWithdrawMoneyRepository _withdrawMoneyRepository;
     private readonly ICurrencyConversionService _currencyConversionService;
     private readonly int _dailyWithdrawalLimitInGel = 10000;
-    public readonly IViewBalanceRepository _viewBalanceRepository;
-    private readonly ITransactionRepository _transactionRepository;
     private readonly ISeqLogger _seqLogger;
 
     public WithdrawMoneyService(
         IWithdrawMoneyRepository withdrawMoneyRepository,
         ICurrencyConversionService currencyConversionService,
-        IViewBalanceRepository viewBalanceRepository,
-        ITransactionRepository transactionRepository,
         ISeqLogger seqLogger
         )
     {
         _withdrawMoneyRepository = withdrawMoneyRepository;
         _currencyConversionService = currencyConversionService;
-        _viewBalanceRepository = viewBalanceRepository;
-        _transactionRepository = transactionRepository;
         _seqLogger = seqLogger;
     }
 
@@ -86,7 +75,7 @@ public class WithdrawMoneyService : IWithdrawMoneyService
             TransactionDate = DateTime.UtcNow
         };
 
-        bool withdrawalSuccess = await _transactionRepository.ProcessAtmTransaction(transaction);
+        bool withdrawalSuccess = await _withdrawMoneyRepository.ProcessAtmTransaction(transaction);
 
         var withdrawalResult = new WithdrawResponse
         {

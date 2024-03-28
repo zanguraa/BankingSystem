@@ -1,5 +1,4 @@
-﻿using BankingSystem.Core.Features.BankAccounts.CreateAccount.Models;
-using BankingSystem.Core.Features.BankAccounts.CreateAccount.Models.Requests;
+﻿using BankingSystem.Core.Features.BankAccounts.CreateAccount.Models.Requests;
 using BankingSystem.Core.Features.Cards.CreateCard.Models.Requests;
 using BankingSystem.Core.Features.Users;
 using BankingSystem.Core.Shared;

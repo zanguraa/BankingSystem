@@ -1,7 +1,4 @@
-﻿using BankingSystem.Core.Shared.Models;
-
-namespace BankingSystem.Core.Features.Cards.CreateCard.Models.Requests;
-
+﻿namespace BankingSystem.Core.Shared.Models;
 public class BankAccount
 {
     public int Id { get; set; }

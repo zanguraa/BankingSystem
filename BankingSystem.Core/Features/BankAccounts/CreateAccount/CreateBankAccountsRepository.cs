@@ -1,6 +1,6 @@
 ﻿using BankingSystem.Core.Data;
-using BankingSystem.Core.Features.BankAccounts.CreateAccount.Models;
 using BankingSystem.Core.Features.Cards.CreateCard.Models.Requests;
+using BankingSystem.Core.Shared.Models;
 
 
 namespace BankingSystem.Core.Features.BankAccounts.CreateAccount;

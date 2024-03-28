@@ -7,7 +7,7 @@ namespace BankingSystem.Core.Features.Atm.ChangePin;
 
 public interface IChangePinService
 {
-    Task<ChangePinResponse> ChangePinAsync(ChangePinRequest request);
+    Task<ChangePinResponse> ChangePinAsync(ChangePinRequest request, string cardNumber);
 }
 
 public class ChangePinService : IChangePinService
@@ -21,8 +21,9 @@ public class ChangePinService : IChangePinService
         _logger = seqLogger;
     }
 
-    public async Task<ChangePinResponse> ChangePinAsync(ChangePinRequest request)
+    public async Task<ChangePinResponse> ChangePinAsync(ChangePinRequest request, string cardNumber)
     {
+        request.CardNumber = cardNumber;
         ValidateChangePinAsync(request);
 
         var card = await _changePinRepository.GetCardByNumberAsync(request.CardNumber);

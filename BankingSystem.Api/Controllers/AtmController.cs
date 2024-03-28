@@ -40,7 +40,8 @@ namespace BankingSystem.Api.Controllers
         [Authorize("AtmPolicy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> ChangePin([FromBody] ChangePinRequest request)
         {
-            var result = await _changePinService.ChangePinAsync(request);
+            var tokenCardNumber = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
+            var result = await _changePinService.ChangePinAsync(request, tokenCardNumber);
 
             return Ok(result);
         }
@@ -50,7 +51,6 @@ namespace BankingSystem.Api.Controllers
         public async Task<IActionResult> GetBalance()
         {
             var tokenCardNumber = User.Claims.FirstOrDefault(c => c.Type == "CardNumber")?.Value;
-
             var balanceInfo = await _viewBalanceService.GetBalanceByCardNumberAsync(tokenCardNumber);
 
             return Ok(balanceInfo);

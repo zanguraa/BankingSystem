@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\BankAccounts\Requests\" />
     <Folder Include="Features\Cards\CreateCard\Models\Response\" />
   </ItemGroup>
 

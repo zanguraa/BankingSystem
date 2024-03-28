@@ -7,6 +7,7 @@ using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Requests;
 using BankingSystem.Core.Features.Atm.CardAuthorizations.Requests;
 using BankingSystem.Core.Features.Atm.ChangePin.Requests;
+using BankingSystem.Core.Features.BankAccounts.AddFunds;
 
 namespace BankingSystem.Test.Factory
 {
@@ -65,5 +66,18 @@ namespace BankingSystem.Test.Factory
 
 			return request;
 		}
+		public static AddFundsRequest GetAddFundsRequest(Action<AddFundsRequest> customizer = null)
+		{
+			var request = new AddFundsRequest
+			{
+				BankAccountId = 1, // Default to a valid BankAccountId
+				Amount = 100.00M // Default to a valid amount
+			};
+
+			customizer?.Invoke(request);
+
+			return request;
+		}
+
 	}
 }

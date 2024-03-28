@@ -12,6 +12,7 @@ public class CardAuthorizationService : ICardAuthorizationService
     private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly ISeqLogger _seqLogger;
+	private string jwtTokken;
 
 	public CardAuthorizationService(
         ICardAuthorizationRepository cardAuthorizationRepository,

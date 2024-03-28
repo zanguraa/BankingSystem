@@ -3,6 +3,8 @@ using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.BankAccounts.Requests;
 using Microsoft.AspNetCore.Mvc;
 
+namespace BankingSystem.Api.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
 public class BankAccountController : ControllerBase

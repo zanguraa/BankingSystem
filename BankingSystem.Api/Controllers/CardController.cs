@@ -1,5 +1,6 @@
 ﻿using BankingSystem.Core.Features.Cards.CreateCard;
 using BankingSystem.Core.Features.Cards.CreateCard.Models.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Api.Controllers;
@@ -16,6 +17,7 @@ public class CardController : ControllerBase
     }
 
     [HttpPost("Create/cards")]
+    [Authorize("OperatorPolicy", AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> CreateCard([FromBody] CreateCardRequest createCardRequest)
     {
         var result = await _cardService.CreateCardAsync(createCardRequest);
@@ -24,6 +26,7 @@ public class CardController : ControllerBase
     }
 
     [HttpGet("user/{userId}")]
+    [Authorize("OperatorPolicy", AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> GetCardsByUserId(int userId)
     {
 

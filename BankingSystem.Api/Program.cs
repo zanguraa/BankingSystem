@@ -15,7 +15,6 @@ using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Services.Currency;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;

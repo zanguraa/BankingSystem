@@ -1,60 +1,54 @@
-﻿using Azure.Core;
-using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
-using BankingSystem.Core.Features.Transactions;
-using BankingSystem.Core.Features.Transactions.CreateTransactions;
-using BankingSystem.Core.Features.Transactions.TransactionsRepositories;
+﻿using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
-using System;
-using System.Threading.Tasks;
+using BankingSystem.Core.Shared.Models;
 
-namespace BankingSystem.Core.Features.BankAccounts.AddFunds
+namespace BankingSystem.Core.Features.BankAccounts.AddFunds;
+
+public interface IAddFundsService
 {
-    public interface IAddFundsService
+    Task<bool> AddFunds(AddFundsRequest addFundsRequest);
+}
+
+public class AddFundsService : IAddFundsService
+{
+    private readonly IAddFundsRepository _addFundsRepository;
+
+    public AddFundsService(IAddFundsRepository addFundsRepository)
     {
-        Task<bool> AddFunds(AddFundsRequest addFundsRequest);
+        _addFundsRepository = addFundsRepository;
     }
 
-    public class AddFundsService : IAddFundsService
+    public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
     {
-        private readonly IAddFundsRepository _addFundsRepository;
+        ValidateAddFundsRequest(addFundsRequest);
 
-        public AddFundsService(IAddFundsRepository addFundsRepository)
+        var transaction = new Transaction
         {
-            _addFundsRepository = addFundsRepository;
+            ToAccountId = addFundsRequest.BankAccountId,
+            ToAmount = addFundsRequest.Amount,
+            TransactionType = (int)TransactionType.AddFunds,
+            TransactionDate = DateTime.UtcNow
+        };
+
+        return await _addFundsRepository.ProcessDepositTransactionAsync(transaction);
+    }
+
+    private void ValidateAddFundsRequest(AddFundsRequest request)
+    {
+        if (request == null)
+        {
+            throw new ArgumentNullException(nameof(request), "The request cannot be null.");
         }
 
-        public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
+        if (request.Amount <= 0)
         {
-            ValidateAddFundsRequest(addFundsRequest);
-
-            var transaction = new Transaction
-            {
-                ToAccountId = addFundsRequest.BankAccountId,
-                ToAmount = addFundsRequest.Amount,
-                TransactionType = (int)TransactionType.AddFunds,
-                TransactionDate = DateTime.UtcNow
-            };
-
-            return await _addFundsRepository.ProcessDepositTransactionAsync(transaction);
+            throw new InvalidAddFundsValidationException("The amount must be greater than zero.");
         }
 
-        private void ValidateAddFundsRequest(AddFundsRequest request)
+        if (request.BankAccountId <= 0)
         {
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request), "The request cannot be null.");
-            }
-
-            if (request.Amount <= 0)
-            {
-                throw new InvalidAddFundsValidationException("The amount must be greater than zero.");
-            }
-
-            if (request.BankAccountId <= 0)
-            {
-                throw new InvalidAddFundsValidationException("The Bank Account ID must be a positive number.");
-            }
+            throw new InvalidAddFundsValidationException("The Bank Account ID must be a positive number.");
         }
     }
 }

@@ -2,6 +2,7 @@
 using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount.Models.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Api.Controllers;
@@ -20,14 +21,16 @@ public class BankAccountController : ControllerBase
     }
 
     [HttpPost("create")]
+    [Authorize("OperatorPolicy", AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
     {
-           var result = await _createBankAccountsService.CreateBankAccount(createBankAccountRequest);
+        var result = await _createBankAccountsService.CreateBankAccount(createBankAccountRequest);
 
-            return Ok(result); 
+        return Ok(result);
     }
 
     [HttpPost("addfunds")]
+    [Authorize("OperatorPolicy", AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> AddFunds(AddFundsRequest addFundsRequest)
     {
         await _addFundsService.AddFunds(addFundsRequest);

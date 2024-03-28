@@ -76,11 +76,10 @@ namespace BankingSystem.Core.Features.Users
                 throw new UserNotFoundException("Email {UserEmail} or Password is inccorect", request.Email);
             }
 
-            var role = await _userManager.GetRolesAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
+            var jwtToken = _jwtGenerator.Generate(request.Email, roles.FirstOrDefault());
 
-            var jwtTokken = _jwtGenerator.Generate(request.Email, "user");
-
-            return jwtTokken;
+            return jwtToken;
 
         }
 

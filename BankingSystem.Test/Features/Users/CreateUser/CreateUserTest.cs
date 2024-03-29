@@ -1,9 +1,4 @@
-﻿
-using BankingSystem.Core.Data.Entities;
-using FakeItEasy;
-using Microsoft.AspNetCore.Identity;
-
-namespace BankingSystem.Test.Features.Users.CreateUser
+﻿namespace BankingSystem.Test.Features.Users.CreateUser
 {
     public class CreateUserTest
     {

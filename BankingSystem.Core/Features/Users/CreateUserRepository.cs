@@ -2,17 +2,17 @@
 
 namespace BankingSystem.Core.Features.Users
 {
-    public interface IUserRepository
+    public interface ICreateUserRepository
     {
         Task<bool> UserByPersonalIdExist(string personalId);
         Task<bool> UserExistsAsync(int userId);
     }
 
-    public class UserRepository : IUserRepository
-	{
+    public class CreateUserRepository : ICreateUserRepository
+    {
 
         private readonly IDataManager _dataManager;
-        public UserRepository(IDataManager dataManager)
+        public CreateUserRepository(IDataManager dataManager)
         {
             _dataManager = dataManager;
         }

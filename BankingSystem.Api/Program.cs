@@ -11,6 +11,7 @@ using BankingSystem.Core.Features.Cards.CreateCard;
 using BankingSystem.Core.Features.Reports;
 using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Users;
+using BankingSystem.Core.Features.Users.AuthorizeUser;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Services.Currency;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -58,8 +59,9 @@ namespace BankingSystem.Api
 
             builder.Services.AddScoped<IAddFundsService, AddFundsService>();
             builder.Services.AddScoped<IAddFundsRepository, AddFundsRepository>();
-            builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ICreateUserService, CreateUserService>();
+            builder.Services.AddScoped<IAuthorizeUserService, AuthorizeUserService>();
+            builder.Services.AddScoped<ICreateUserRepository, CreateUserRepository>();
             builder.Services.AddScoped<ICreateBankAccountsRepository, CreateBankAccountsRepository>();
             builder.Services.AddScoped<ICreateBankAccountsService, CreateBankAccountsService>();
             builder.Services.AddScoped<ICardRepository, CreateCardRepository>();

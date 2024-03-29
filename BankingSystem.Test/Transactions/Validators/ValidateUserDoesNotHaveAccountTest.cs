@@ -1,12 +1,8 @@
-﻿using NUnit.Framework;
-using BankingSystem.Core.Features.BankAccounts.CreateAccount;
-using BankingSystem.Core.Features.Users;
+﻿using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
-using System.Threading.Tasks;
-using BankingSystem.Core.Features.BankAccounts.Requests;
 
 namespace BankingSystem.Test.Features.BankAccounts.CreateAccount;
 

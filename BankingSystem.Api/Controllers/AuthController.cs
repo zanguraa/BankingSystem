@@ -1,9 +1,6 @@
-﻿using BankingSystem.Core.Data.Entities;
-using BankingSystem.Core.Features.Users;
-using BankingSystem.Core.Features.Users.Authorization;
-using BankingSystem.Core.Shared;
+﻿using BankingSystem.Core.Features.Users.AuthorizeUser;
+using BankingSystem.Core.Features.Users.AuthorizeUser.Requests;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Api.Controllers;
@@ -12,19 +9,19 @@ namespace BankingSystem.Api.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly IUserService _userService;
+    private readonly IAuthorizeUserService _authorizeUserService;
 
     public AuthController(
-        IUserService userService
-        )
+        IAuthorizeUserService authorizeUserService)
+
     {
-        _userService = userService;
+        _authorizeUserService = authorizeUserService;
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        var result =await _userService.AuthorizeUser(request);
+        var result = await _authorizeUserService.AuthorizeUser(request);
 
         return Ok(result);
     }

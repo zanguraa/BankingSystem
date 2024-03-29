@@ -1,4 +1,4 @@
-﻿namespace BankingSystem.Core.Features.Users.Authorization
+﻿namespace BankingSystem.Core.Features.Users.AuthorizeUser.Requests
 {
     public class LoginRequest
     {

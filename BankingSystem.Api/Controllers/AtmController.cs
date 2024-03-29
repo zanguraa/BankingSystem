@@ -4,7 +4,6 @@ using BankingSystem.Core.Features.Atm.ChangePin.Models.Requests;
 using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Requests;
-using BankingSystem.Core.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

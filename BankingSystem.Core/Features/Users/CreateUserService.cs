@@ -1,30 +1,25 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using BankingSystem.Core.Data.Entities;
-using BankingSystem.Core.Features.Users.CreateUser;
 using BankingSystem.Core.Shared.Exceptions;
 using System.Text.RegularExpressions;
-using BankingSystem.Core.Features.Users.Authorization;
-using BankingSystem.Core.Shared;
+using BankingSystem.Core.Features.Users.CreateUser.Requests;
 
 namespace BankingSystem.Core.Features.Users
 {
-    public interface IUserService
+    public interface ICreateUserService
     {
-        Task<string> AuthorizeUser(LoginRequest request);
         Task<UserEntity> RegisterUser(RegisterUserRequest registerRequest);
     }
 
-    public class UserService : IUserService
+    public class CreateUserService : ICreateUserService
     {
         private readonly UserManager<UserEntity> _userManager;
-        private readonly IUserRepository _userRepository;
-        private readonly IJwtTokenGenerator _jwtGenerator;
+        private readonly ICreateUserRepository _userRepository;
 
-        public UserService(UserManager<UserEntity> userManager, IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
+        public CreateUserService(UserManager<UserEntity> userManager, ICreateUserRepository userRepository)
         {
             _userManager = userManager;
             _userRepository = userRepository;
-            _jwtGenerator = jwtTokenGenerator;
         }
 
         public async Task<UserEntity> RegisterUser(RegisterUserRequest registerRequest)
@@ -62,25 +57,6 @@ namespace BankingSystem.Core.Features.Users
             await _userManager.AddToRoleAsync(newUser, "user");
 
             return newUser;
-        }
-
-        public async Task<string> AuthorizeUser(LoginRequest request)
-        {
-            var user = await _userManager.FindByEmailAsync(request.Email)
-                ?? throw new UserNotFoundException("Email {UserEmail} or Password is inccorect", request.Email);
-
-
-            var isCorrectPassword = await _userManager.CheckPasswordAsync(user, request.Password);
-            if (!isCorrectPassword)
-            {
-                throw new UserNotFoundException("Email {UserEmail} or Password is inccorect", request.Email);
-            }
-
-            var roles = await _userManager.GetRolesAsync(user);
-            var jwtToken = _jwtGenerator.Generate(request.Email, roles.FirstOrDefault());
-
-            return jwtToken;
-
         }
 
         private void ValidateRegisterRequest(RegisterUserRequest registerRequest)

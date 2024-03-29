@@ -1,10 +1,6 @@
 ﻿using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Test.Factory;
-using NUnit.Framework;
-using System;
-using BankingSystem.Core.Data;
 using BankingSystem.Core.Shared.Exceptions;
-using BankingSystem.Core.Features.Transactions.TransactionServices;
 using FakeItEasy;
 using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Shared;

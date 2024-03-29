@@ -1,9 +1,5 @@
-﻿using BankingSystem.Core.Data.Entities;
-using BankingSystem.Core.Features.Users;
-using BankingSystem.Core.Features.Users.CreateUser;
-using BankingSystem.Core.Shared;
+﻿using BankingSystem.Core.Features.Users.CreateUser.Requests;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Api.Controllers;

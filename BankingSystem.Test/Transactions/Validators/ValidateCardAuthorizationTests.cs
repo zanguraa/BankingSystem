@@ -1,8 +1,5 @@
 ﻿using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
-using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 using FakeItEasy;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Features.Atm.CardAuthorizations.Models.Requests;

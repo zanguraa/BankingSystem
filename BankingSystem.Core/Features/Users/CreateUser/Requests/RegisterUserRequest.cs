@@ -1,4 +1,4 @@
-﻿namespace BankingSystem.Core.Features.Users.CreateUser
+﻿namespace BankingSystem.Core.Features.Users.CreateUser.Requests
 {
     public class RegisterUserRequest
     {
@@ -10,8 +10,8 @@
         public string PhoneNumber { get; set; }
         public DateTime BirthdayDate { get; set; }
         public string PersonalId { get; set; }
-		public DateTime RegistrationDate { get; set; }
+        public DateTime RegistrationDate { get; set; }
 
 
-	}
+    }
 }

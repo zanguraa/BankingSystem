@@ -1,4 +1,5 @@
 ﻿using BankingSystem.Core.Features.BankAccounts.CreateAccount;
+using BankingSystem.Core.Features.Users.AuthorizeUser;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
@@ -10,18 +11,19 @@ namespace BankingSystem.Test.Features.BankAccounts.CreateAccount;
 public class ValidateUserDoesNotHaveAccountTests
 {
 	private ICreateBankAccountsService _createBankAccountsService;
-	private ICreateBankAccountsRepository _fakeCreateBankAccountsRepository;
-	private IUserRepository _fakeUserRepository;
-	private ISeqLogger _fakeSeqLogger;
+	private  ICreateBankAccountsRepository _fakeCreateBankAccountsRepository;
+	private  IAuthorizeUserRepository _fakeAuthorizeUserRepository;
+	private  ISeqLogger _fakeSeqLogger;
+
 
 	[SetUp]
 	public void Setup()
 	{
 		_fakeCreateBankAccountsRepository = A.Fake<ICreateBankAccountsRepository>();
-		_fakeUserRepository = A.Fake<IUserRepository>();
+		_fakeAuthorizeUserRepository = A.Fake<IAuthorizeUserRepository>();
 		_fakeSeqLogger = A.Fake<ISeqLogger>();
-		_createBankAccountsService = new CreateBankAccountsService(_fakeCreateBankAccountsRepository, _fakeUserRepository, _fakeSeqLogger);
-	}
+		_createBankAccountsService = new CreateBankAccountsService(_fakeCreateBankAccountsRepository, _fakeAuthorizeUserRepository, _fakeSeqLogger);
+	} 
 
 	[Test]
 	public void When_UserIdDoesNotExist_ShouldThrow_UserNotFoundException()

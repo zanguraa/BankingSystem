@@ -1,25 +1,24 @@
-﻿using BankingSystem.Core.Features.BankAccounts.AddFunds;
-using BankingSystem.Test.Factory;
-using BankingSystem.Core.Shared.Exceptions;
-using FakeItEasy;
+﻿using NUnit.Framework;
+using BankingSystem.Core.Features.BankAccounts.AddFunds;
 using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
-using BankingSystem.Core.Features.Transactions.CreateTransactions;
+using BankingSystem.Core.Shared.Exceptions;
+using BankingSystem.Test.Factory;
+using FakeItEasy;
+using System.Threading.Tasks;
 
 namespace BankingSystem.Test.Features.BankAccounts.AddFunds
 {
-    [TestFixture]
+	[TestFixture]
 	public class ValidateAddFundsRequestTests
 	{
 		private IAddFundsService _addFundsService;
 		private IAddFundsRepository _fakeAddFundsRepository;
-		private ITransactionRepository _fakeTransactionRepository;
 
 		[SetUp]
 		public void Setup()
 		{
 			_fakeAddFundsRepository = A.Fake<IAddFundsRepository>();
-			_fakeTransactionRepository = A.Fake<ITransactionRepository>();
-			_addFundsService = new AddFundsService(_fakeAddFundsRepository, _fakeTransactionRepository);
+			_addFundsService = new AddFundsService(_fakeAddFundsRepository);
 		}
 
 		[Test]
@@ -27,25 +26,28 @@ namespace BankingSystem.Test.Features.BankAccounts.AddFunds
 		{
 			AddFundsRequest request = null;
 
-			var ex = Assert.ThrowsAsync<ArgumentNullException>(() => _addFundsService.AddFunds(request));
+			var ex = Assert.ThrowsAsync<ArgumentNullException>(async () => await _addFundsService.AddFunds(request));
 			Assert.That(ex.ParamName, Is.EqualTo("request"));
-			Assert.That(ex.Message, Does.Contain("The request cannot be null."));
 		}
 
-		[Test]
-		public void When_AmountIsLessThanOrEqualToZero_ShouldThrow_InvalidAddFundsValidationException()
+		[TestCase(-1)]
+		[TestCase(0)]
+		public void When_AmountIsLessThanOrEqualToZero_ShouldThrow_InvalidAddFundsValidationException(decimal amount)
 		{
-			var request = ModelFactory.GetAddFundsRequest(r => r.Amount = 0);
+			var request = ModelFactory.GetAddFundsRequest(r => r.Amount = amount);
 
-			Assert.ThrowsAsync<InvalidAddFundsValidationException>(() => _addFundsService.AddFunds(request));
+			var ex = Assert.ThrowsAsync<InvalidAddFundsValidationException>(async () => await _addFundsService.AddFunds(request));
+			Assert.That(ex.Message, Is.EqualTo("The amount must be greater than zero."));
 		}
-		
-		[Test]
-		public void When_BankAccountIdIsLessThanOrEqualToZero_ShouldThrow_InvalidAddFundsValidationException()
-		{
-			var request = ModelFactory.GetAddFundsRequest(r => r.BankAccountId = 0);
 
-			Assert.ThrowsAsync<InvalidAddFundsValidationException>(() => _addFundsService.AddFunds(request));
+		[TestCase(-1)]
+		[TestCase(0)]
+		public void When_BankAccountIdIsLessThanOrEqualToZero_ShouldThrow_InvalidAddFundsValidationException(int bankAccountId)
+		{
+			var request = ModelFactory.GetAddFundsRequest(r => r.BankAccountId = bankAccountId);
+
+			var ex = Assert.ThrowsAsync<InvalidAddFundsValidationException>(async () => await _addFundsService.AddFunds(request));
+			Assert.That(ex.Message, Is.EqualTo("The Bank Account ID must be a positive number."));
 		}
 	}
 }

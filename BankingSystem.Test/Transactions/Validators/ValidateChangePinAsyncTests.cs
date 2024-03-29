@@ -56,6 +56,4 @@ public class ValidateChangePinAsyncTests
 		Assert.ThrowsAsync<InvalidCardException>(
 			async () => await _changePinService.ChangePinAsync(request));
 	}
-
-	// Add more tests here to cover all scenarios based on your method's logic
 }

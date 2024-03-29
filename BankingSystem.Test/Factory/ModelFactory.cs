@@ -3,6 +3,7 @@ using BankingSystem.Core.Features.Atm.ChangePin.Models.Requests;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount.Models.Requests;
+using BankingSystem.Core.Features.Cards.CreateCard.Models.Requests;
 using BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Requests;
 
 namespace BankingSystem.Test.Factory
@@ -87,5 +88,17 @@ namespace BankingSystem.Test.Factory
 
 			return request;
 		}
+		public static CreateCardRequest GetCreateCardRequest(Action<CreateCardRequest> customize = null)
+		{
+			var request = new CreateCardRequest
+			{
+				UserId = 1, 
+				AccountId = 1,
+			};
+
+			customize?.Invoke(request);
+			return request;
+		}
+
 	}
 }

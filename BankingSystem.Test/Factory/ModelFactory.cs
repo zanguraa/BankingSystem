@@ -6,6 +6,7 @@ using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount.Models.Requests;
 using BankingSystem.Core.Features.Cards.CreateCard.Models.Requests;
 using BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Requests;
+using BankingSystem.Core.Features.Users.AuthorizeUser.Requests;
 using BankingSystem.Core.Features.Users.CreateUser.Requests;
 
 namespace BankingSystem.Test.Factory
@@ -127,6 +128,18 @@ namespace BankingSystem.Test.Factory
 				Currency = "USD"
 			};
 		}
+		public static LoginRequest GetLoginRequest(Action<LoginRequest> customize = null)
+		{
+			var request = new LoginRequest
+			{
+				Email = "user@example.com",
+				Password = "SecurePassword123!"
+			};
+
+			customize?.Invoke(request);
+			return request;
+		}
+
 
 	}
 }

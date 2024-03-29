@@ -1,7 +1,9 @@
 ﻿using BankingSystem.Core.Features.BankAccounts.CreateAccount.Models.Requests;
+using BankingSystem.Core.Features.Users.AuthorizeUser;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BankingSystem.Core.Features.BankAccounts.CreateAccount;
 
@@ -14,14 +16,14 @@ public class CreateBankAccountsService : ICreateBankAccountsService
 {
 
     private readonly ICreateBankAccountsRepository _createBankAccountsRepository;
-    private readonly IUserRepository _userRepository;
+    private readonly IAuthorizeUserRepository _authorizeUserRepository;
     private readonly ISeqLogger _seqLogger;
 
 
-    public CreateBankAccountsService(ICreateBankAccountsRepository createBankAccountsRepository, IUserRepository userRepository, ISeqLogger seqLogger)
+    public CreateBankAccountsService(ICreateBankAccountsRepository createBankAccountsRepository, IAuthorizeUserRepository authorizeUserRepository, ISeqLogger seqLogger)
     {
         _createBankAccountsRepository = createBankAccountsRepository;
-        _userRepository = userRepository;
+        _authorizeUserRepository = authorizeUserRepository;
         _seqLogger = seqLogger;
     }
 
@@ -56,16 +58,14 @@ public class CreateBankAccountsService : ICreateBankAccountsService
         return ibans;
     }
 
-
-
     private async Task ValidateUserDoesNotHaveAccount(int userId)
     {
-        bool userExists = await _userRepository.UserExistsAsync(userId);
-        if(!userExists)
+        bool userExists = await _authorizeUserRepository.UserExistsAsync(userId);
+        if (!userExists)
         {
             throw new UserNotFoundException($"user ID {userId} is not exists.");
         }
-        if(userId == 0)
+        if (userId == 0)
         {
             throw new UserNotFoundException($"user ID {userId} is not valid.");
         }

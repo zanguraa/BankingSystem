@@ -1,4 +1,5 @@
-﻿using BankingSystem.Core.Features.Users.CreateUser.Requests;
+﻿using BankingSystem.Core.Features.Users;
+using BankingSystem.Core.Features.Users.CreateUser.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,18 +10,18 @@ namespace BankingSystem.Api.Controllers;
 public class RegisterController : ControllerBase
 {
 
-    private readonly IUserService _userService;
+    private readonly ICreateUserService _createUserService;
 
-    public RegisterController(IUserService userService)
+    public RegisterController(ICreateUserService createUserService)
     {
-        _userService = userService;
+        _createUserService = createUserService;
     }
 
     [HttpPost("register")]
     [Authorize("OperatorPolicy", AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
     {
-        await _userService.RegisterUser(request);
+        await _createUserService.RegisterUser(request);
 
         return Ok();
     }

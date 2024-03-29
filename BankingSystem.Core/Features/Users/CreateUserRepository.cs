@@ -5,7 +5,6 @@ namespace BankingSystem.Core.Features.Users
     public interface ICreateUserRepository
     {
         Task<bool> UserByPersonalIdExist(string personalId);
-        Task<bool> UserExistsAsync(int userId);
     }
 
     public class CreateUserRepository : ICreateUserRepository
@@ -29,13 +28,7 @@ namespace BankingSystem.Core.Features.Users
             return result.Any();
         }
 
-        public async Task<bool> UserExistsAsync(int userId)
-        {
-            string sql = "SELECT TOP 1 1 FROM [BankingSystem_db].[dbo].[Users] WHERE id = @userId";
-
-            var result = await _dataManager.Query<int, dynamic>(sql, new { userId });
-            return result.Any();
-        }
+        
 
     }
 }

@@ -30,7 +30,7 @@ namespace BankingSystem.Test.Factory
 		{
 			var request = new WithdrawAmountCurrencyRequest
 			{
-				CardNumber = "1234567890123456", 
+				CardNumber = "6410341801621247", 
 				Amount = 50,
 				Currency = "USD"
 			};
@@ -43,8 +43,8 @@ namespace BankingSystem.Test.Factory
 		{
 			var request = new CardAuthorizationRequest
 			{
-				CardNumber = "1234567890123456", // Assume a valid card number
-				Pin = 1234 // Assume a valid pin
+				CardNumber = "6410341801621247", 
+				Pin = 1234 
 			};
 
 			options?.Invoke(request);
@@ -55,7 +55,7 @@ namespace BankingSystem.Test.Factory
 		{
 			var request = new ChangePinRequest
 			{
-				CardNumber = "1111222233334444", // Valid card number
+				CardNumber = "6410341801621247", 
 				CurrentPin = 1234,
 				NewPin = 5678
 			};
@@ -68,22 +68,22 @@ namespace BankingSystem.Test.Factory
 		{
 			var request = new AddFundsRequest
 			{
-				BankAccountId = 1, // Default to a valid BankAccountId
-				Amount = 100.00M // Default to a valid amount
+				BankAccountId = 1, 
+				Amount = 100.00M 
 			};
 
 			customizer?.Invoke(request);
 
 			return request;
 		}
-		public static CreateBankAccountRequest GetCreateBankAccountRequest(Action<CreateBankAccountRequest> setup = null)
+		public static CreateBankAccountRequest GetCreateBankAccountRequest(Action<CreateBankAccountRequest> customize = null)
 		{
 			var request = new CreateBankAccountRequest
 			{
-				UserId = 1 // Set a default valid user id for testing
+				UserId = 1, 
 			};
 
-			setup?.Invoke(request);
+			customize?.Invoke(request);
 
 			return request;
 		}

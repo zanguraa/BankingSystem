@@ -5,6 +5,7 @@ using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount.Models.Requests;
 using BankingSystem.Core.Features.Cards.CreateCard.Models.Requests;
 using BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Requests;
+using BankingSystem.Core.Features.Users.CreateUser.Requests;
 
 namespace BankingSystem.Test.Factory
 {
@@ -99,6 +100,22 @@ namespace BankingSystem.Test.Factory
 			customize?.Invoke(request);
 			return request;
 		}
+		public static RegisterUserRequest GetRegisterUserRequest(Action<RegisterUserRequest> customizeRequest = null)
+		{
+			var request = new RegisterUserRequest
+			{
+				Email = "test@example.com",
+				FirstName = "John",
+				LastName = "Doe",
+				PersonalId = "12345678901",
+				PhoneNumber = "123456789",
+				BirthdayDate = new DateTime(1990, 1, 1),
+				Password = "Password123!"
+			};
 
+			customizeRequest?.Invoke(request);
+
+			return request;
+		}
 	}
 }

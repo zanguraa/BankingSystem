@@ -1,12 +1,13 @@
 ﻿using BankingSystem.Core.Features.Atm.CardAuthorizations.Models.Requests;
 using BankingSystem.Core.Features.Atm.ChangePin.Models.Requests;
+using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount.Models.Requests;
 using BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Requests;
 
 namespace BankingSystem.Test.Factory
 {
-    public class ModelFactory
+	public class ModelFactory
 	{
 		public static CreateTransactionRequest GetCreateTransactionRequest(Action<CreateTransactionRequest> options = null)
 		{
@@ -14,21 +15,22 @@ namespace BankingSystem.Test.Factory
 			{
 				UserId = "1",
 				FromAccountId = 1,
-				ToAccountId= 2,
-				Amount= 1,
-				Currency="GEL",
-				ToCurrency="GEL"
+				ToAccountId = 2,
+				Amount = 1,
+				Currency = "GEL",
+				ToCurrency = "GEL"
 			};
 
 			options?.Invoke(request);
 
 			return request;
 		}
-		public static WithdrawRequestWithCardNumber GetWithdrawMoneyRequest(Action<WithdrawRequestWithCardNumber> options = null)
+
+		public static WithdrawAmountCurrencyRequest GetWithdrawMoneyRequest(Action<WithdrawAmountCurrencyRequest> options = null)
 		{
-			WithdrawRequestWithCardNumber request = new()
+			var request = new WithdrawAmountCurrencyRequest
 			{
-				CardNumber = "1234567890123456",
+				CardNumber = "1234567890123456", 
 				Amount = 50,
 				Currency = "USD"
 			};
@@ -36,6 +38,7 @@ namespace BankingSystem.Test.Factory
 			options?.Invoke(request);
 			return request;
 		}
+
 		public static CardAuthorizationRequest GetCardAuthorizationRequest(Action<CardAuthorizationRequest> options = null)
 		{
 			var request = new CardAuthorizationRequest

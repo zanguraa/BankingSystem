@@ -1,5 +1,6 @@
 ﻿using BankingSystem.Core.Features.Atm.CardAuthorizations.Models.Requests;
 using BankingSystem.Core.Features.Atm.ChangePin.Models.Requests;
+using BankingSystem.Core.Features.Atm.ViewBalance.Models.Response;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount.Models.Requests;
@@ -117,5 +118,15 @@ namespace BankingSystem.Test.Factory
 
 			return request;
 		}
+		public static BalanceResponse CreateBalanceResponse()
+		{
+			return new BalanceResponse
+			{
+				UserId = "1",
+				InitialAmount = 1000,
+				Currency = "USD"
+			};
+		}
+
 	}
 }

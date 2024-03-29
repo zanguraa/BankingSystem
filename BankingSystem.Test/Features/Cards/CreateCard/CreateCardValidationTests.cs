@@ -40,6 +40,7 @@ public class CreateCardValidationTests
 	{
 		var request = ModelFactory.GetCreateCardRequest(r => r.AccountId = -1);
 
+
 		Assert.ThrowsAsync<BankAccountNotFoundException>(() => _cardService.CreateCardAsync(request));
 	}
 }

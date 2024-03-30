@@ -1,5 +1,4 @@
-﻿using BankingSystem.Core.Features.Transactions;
-using BankingSystem.Core.Features.Transactions.Shared;
+﻿using BankingSystem.Core.Features.Transactions.Shared;
 using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;

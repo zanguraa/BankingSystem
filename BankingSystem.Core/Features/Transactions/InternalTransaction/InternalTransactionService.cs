@@ -5,6 +5,7 @@ using BankingSystem.Core.Features.Transactions.Shared;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Services.Currency;
 using BankingSystem.Core.Shared.Models;
+using BankingSystem.Core.Shared.Exceptions;
 
 namespace BankingSystem.Core.Features.Transactions.InternalTransaction
 {
@@ -18,26 +19,38 @@ namespace BankingSystem.Core.Features.Transactions.InternalTransaction
         private readonly ICreateTransactionRepository _createtransactionRepository;
         private readonly ICurrencyConversionService _currencyConversionService;
         private readonly ICreateTransactionService _createTransactionService;
+        private readonly ITransactionServiceValidator _transactionServiceValidator;
         private readonly ISeqLogger _logger;
-        public InternalTransactionService(ICreateTransactionRepository transactionRepository, ICurrencyConversionService currencyConversionService, ICreateTransactionService createTransactionService, ISeqLogger logger)
+        public InternalTransactionService(
+            ICreateTransactionRepository transactionRepository,
+            ICurrencyConversionService currencyConversionService,
+            ICreateTransactionService createTransactionService,
+            ISeqLogger logger,
+            ITransactionServiceValidator transactionServiceValidator)
         {
             _createtransactionRepository = transactionRepository;
             _currencyConversionService = currencyConversionService;
             _createTransactionService = createTransactionService;
             _logger = logger;
+            _transactionServiceValidator = transactionServiceValidator;
         }
 
         public async Task<CreateTransactionResponse> ProcessInternalTransactionAsync(CreateTransactionRequest request)
         {
             using var semaphore = new SemaphoreSlim(1, 1);
 
-            // await ValidateCreateTransactionRequest(request);
+            await _transactionServiceValidator.ValidateCreateTransactionRequest(request);
             await _createTransactionService.CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
 
             await semaphore.WaitAsync();
 
             var fromAccount = await _createtransactionRepository.GetAccountByIdAsync(request.FromAccountId);
             var toAccount = await _createtransactionRepository.GetAccountByIdAsync(request.ToAccountId);
+
+            if (fromAccount.UserId.ToString() != request.UserId || toAccount.UserId.ToString() != request.UserId)
+            {
+                throw new InvalidAccountException("Both accounts must belong to the user with id: {userId}. account Id's: {fromAccount} - {toAccount}. only {fromAccount} is belong to {userId}", request.UserId, fromAccount.Id, toAccount.Id);
+            }
 
             decimal convertedAmount = _currencyConversionService.Convert(request.Amount, request.Currency, request.ToCurrency);
 

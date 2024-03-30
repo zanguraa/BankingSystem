@@ -1,8 +1,7 @@
-﻿using BankingSystem.Core.Features.Transactions.Shared;
-using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
+﻿using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
 using BankingSystem.Core.Shared.Exceptions;
 
-namespace BankingSystem.Core.Features.Transactions
+namespace BankingSystem.Core.Features.Transactions.Shared
 {
     public interface ITransactionServiceValidator
     {
@@ -43,6 +42,10 @@ namespace BankingSystem.Core.Features.Transactions
             if (request.ToAccountId <= 0)
             {
                 throw new InvalidTransactionValidation("To Account ID must be positive.");
+            }
+            if (request.FromAccountId == request.ToAccountId)
+            {
+                throw new InvalidAccountException("from AccountId and to AccountId is same!!!");
             }
 
             if (request.Amount <= 0)

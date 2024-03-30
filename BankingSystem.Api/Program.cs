@@ -9,7 +9,6 @@ using BankingSystem.Core.Features.BankAccounts.AddFunds;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.Cards.CreateCard;
 using BankingSystem.Core.Features.Reports;
-using BankingSystem.Core.Features.Transactions;
 using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Transactions.InternalTransaction;
 using BankingSystem.Core.Features.Transactions.Shared;

@@ -83,11 +83,7 @@ public class ExternalTransactionService : IExternalTransactionService
             Fee = transaction.Fee,
             TransactionDate = transaction.TransactionDate
         };
-
-
     }
-
-
 
     private decimal CalculateTransactionFee(decimal amount, TransactionType transactionType)
     {

@@ -1,7 +1,10 @@
 ﻿using BankingSystem.Core.Features.Transactions.CreateTransactions;
-using BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Requests;
+using BankingSystem.Core.Features.Transactions.InternalTransaction;
+using BankingSystem.Core.Features.Transactions.Shared;
+using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using System.Security.Claims;
 
 namespace BankingSystem.Api.Controllers;
@@ -11,10 +14,14 @@ namespace BankingSystem.Api.Controllers;
 public class TransactionController : ControllerBase
 {
     private readonly ICreateTransactionService _transactionService;
+    private readonly IInternalTransactionService _internalTransactionService;
+    private readonly IExternalTransactionService _externalTransactionService;
 
-    public TransactionController(ICreateTransactionService transactionService)
+    public TransactionController(ICreateTransactionService transactionService, IInternalTransactionService internalTransactionService, IExternalTransactionService externalTransactionService)
     {
         _transactionService = transactionService;
+        _internalTransactionService = internalTransactionService;
+        _externalTransactionService = externalTransactionService;
 
     }
 
@@ -22,10 +29,7 @@ public class TransactionController : ControllerBase
     [Authorize("MyApiUserPolicy", AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> InternalTransaction([FromBody] CreateTransactionRequest request)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        request.UserId = userId;
-
-        var transactionResponse = await _transactionService.ProcessInternalTransactionAsync(request);
+        var transactionResponse = await _internalTransactionService.ProcessInternalTransactionAsync(request);
         return Ok(transactionResponse);
     }
 
@@ -33,10 +37,7 @@ public class TransactionController : ControllerBase
     [Authorize("MyApiUserPolicy", AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> ExternalTransaction([FromBody] CreateTransactionRequest request)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        request.UserId = userId;
-
-        var transactionResponse = await _transactionService.ProcessExternalTransactionAsync(request);
+        var transactionResponse = await _externalTransactionService.ProcessExternalTransactionAsync(request);
         return Ok(transactionResponse);
     }
 }

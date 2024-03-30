@@ -1,4 +1,4 @@
-﻿namespace BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Requests
+﻿namespace BankingSystem.Core.Features.Transactions.Shared.Models.Requests
 {
     public class CreateTransactionRequest
     {

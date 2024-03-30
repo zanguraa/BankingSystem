@@ -29,6 +29,9 @@
   <ItemGroup>
     <Folder Include="Features\BankAccounts\Requests\" />
     <Folder Include="Features\Cards\CreateCard\Models\Response\" />
+    <Folder Include="Features\Transactions\InternalTransaction\Requests\" />
+    <Folder Include="Features\Transactions\ExternalTransaction\Requests\" />
+    <Folder Include="Features\Transactions\WithdrawalTransaction\Requests\" />
   </ItemGroup>
 
 </Project>

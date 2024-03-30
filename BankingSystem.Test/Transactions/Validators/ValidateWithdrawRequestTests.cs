@@ -4,8 +4,8 @@ using BankingSystem.Core.Shared.Exceptions;
 using FakeItEasy;
 using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Shared;
-using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Shared.Services.Currency;
+using BankingSystem.Core.Features.Transactions.Shared;
 
 namespace BankingSystem.Test.Transactions
 {

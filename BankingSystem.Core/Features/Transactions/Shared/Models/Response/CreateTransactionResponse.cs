@@ -1,4 +1,4 @@
-﻿namespace BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Response
+﻿namespace BankingSystem.Core.Features.Transactions.Shared.Models.Response
 {
     public class CreateTransactionResponse
     {

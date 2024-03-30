@@ -3,7 +3,7 @@ using BankingSystem.Test.Factory;
 using BankingSystem.Core.Shared.Exceptions;
 using FakeItEasy;
 using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
-using BankingSystem.Core.Features.Transactions.CreateTransactions;
+using BankingSystem.Core.Features.Transactions.Shared;
 
 namespace BankingSystem.Test.Features.BankAccounts.AddFunds
 {

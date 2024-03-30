@@ -2,35 +2,24 @@
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Models;
 
-namespace BankingSystem.Core.Features.Transactions.CreateTransactions;
+namespace BankingSystem.Core.Features.Transactions.Shared;
 
-public interface ITransactionRepository
+public interface ICreateTransactionRepository
 {
     Task<bool> CheckAccountOwnershipAsync(int accountId, string userId);
-    Task<IEnumerable<Transaction>> GetTransactionsByAccountIdAsync(int accountId);
     Task<bool> IsCurrencyValid(string currencyCode);
     Task<bool> ProcessBankTransaction(Transaction transaction);
-    Task<bool> UpdateAccountBalancesAsync(Transaction transaction, bool isAtmWithdrawal = false);
+    Task<bool> UpdateAccountBalancesAsync(Transaction transaction);
     Task<BankAccount?> GetAccountByIdAsync(int AccountId);
 }
 
-public class CreateTransactionRepository : ITransactionRepository
+public class CreateTransactionRepository : ICreateTransactionRepository
 {
     private readonly IDataManager _dataManager;
 
     public CreateTransactionRepository(IDataManager dataManager)
     {
         _dataManager = dataManager;
-    }
-
-    public async Task<IEnumerable<Transaction>> GetTransactionsByAccountIdAsync(int accountId)
-    {
-        string query = @"
-            SELECT * FROM Transactions
-            WHERE FromAccountId = @AccountId OR ToAccountId = @AccountId";
-
-        var transactions = await _dataManager.Query<Transaction, dynamic>(query, new { AccountId = accountId });
-        return transactions;
     }
 
     public async Task<bool> CheckAccountOwnershipAsync(int accountId, string userId)
@@ -41,15 +30,8 @@ public class CreateTransactionRepository : ITransactionRepository
         return count.FirstOrDefault() > 0;
     }
 
-
-
     public async Task<bool> ProcessBankTransaction(Transaction transactionRequest)
     {
-        if (transactionRequest.TransactionType == (int)TransactionType.External)
-        {
-            transactionRequest.FromAmount += transactionRequest.Fee;
-        }
-
         var SqlCommandList = new List<SqlCommand>
          {
             new() {
@@ -82,7 +64,7 @@ public class CreateTransactionRepository : ITransactionRepository
         return success;
     }
 
-    public async Task<bool> UpdateAccountBalancesAsync(Transaction transaction, bool isAtmWithdrawal = false)
+    public async Task<bool> UpdateAccountBalancesAsync(Transaction transaction)
     {
         var sqlCommandRequests = new List<SqlCommand>
 {
@@ -103,18 +85,6 @@ public class CreateTransactionRepository : ITransactionRepository
         Params = transaction
     }
 };
-
-        if (!isAtmWithdrawal && transaction.ToAccountId != null)
-        {
-            sqlCommandRequests.Add(new SqlCommand
-            {
-                Query = @"
-                UPDATE BankAccounts
-                SET InitialAmount = InitialAmount + @Amount
-                WHERE Id = @AccountId",
-                Params = new { AccountId = transaction.ToAccountId, Amount = transaction.ToAmount }
-            });
-        }
 
         bool success = await _dataManager.ExecuteWithTransaction(sqlCommandRequests);
 

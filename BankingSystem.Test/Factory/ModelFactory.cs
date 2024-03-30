@@ -2,7 +2,7 @@
 using BankingSystem.Core.Features.Atm.ChangePin.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount.Models.Requests;
-using BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Requests;
+using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
 
 namespace BankingSystem.Test.Factory
 {

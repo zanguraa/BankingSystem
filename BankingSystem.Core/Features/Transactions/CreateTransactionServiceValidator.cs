@@ -1,7 +1,8 @@
-﻿using BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Requests;
+﻿using BankingSystem.Core.Features.Transactions.Shared;
+using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
 using BankingSystem.Core.Shared.Exceptions;
 
-namespace BankingSystem.Core.Features.Transactions.CreateTransactions
+namespace BankingSystem.Core.Features.Transactions
 {
     public interface ITransactionServiceValidator
     {
@@ -10,11 +11,11 @@ namespace BankingSystem.Core.Features.Transactions.CreateTransactions
 
     public class CreateTransactionServiceValidator : ITransactionServiceValidator
     {
-        private readonly ITransactionRepository _transactionRepository;
+        private readonly ICreateTransactionRepository _createtransactionRepository;
 
-        public CreateTransactionServiceValidator(ITransactionRepository transactionRepository)
+        public CreateTransactionServiceValidator(ICreateTransactionRepository transactionRepository)
         {
-            _transactionRepository = transactionRepository;
+            _createtransactionRepository = transactionRepository;
         }
 
         public async Task ValidateCreateTransactionRequest(CreateTransactionRequest request)
@@ -49,8 +50,8 @@ namespace BankingSystem.Core.Features.Transactions.CreateTransactions
                 throw new InvalidTransactionValidation("Transaction amount must be greater than zero.");
             }
 
-            bool fromCurrencyIsValid = await _transactionRepository.IsCurrencyValid(request.Currency);
-            bool toCurrencyIsValid = await _transactionRepository.IsCurrencyValid(request.ToCurrency);
+            bool fromCurrencyIsValid = await _createtransactionRepository.IsCurrencyValid(request.Currency);
+            bool toCurrencyIsValid = await _createtransactionRepository.IsCurrencyValid(request.ToCurrency);
 
             if (!fromCurrencyIsValid || !toCurrencyIsValid)
             {

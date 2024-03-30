@@ -55,11 +55,22 @@ namespace BankingSystem.Core.Features.Transactions.Shared
 
             bool fromCurrencyIsValid = await _createtransactionRepository.IsCurrencyValid(request.Currency);
             bool toCurrencyIsValid = await _createtransactionRepository.IsCurrencyValid(request.ToCurrency);
-
+            var fromAccount = await _createtransactionRepository.GetAccountByIdAsync(request.FromAccountId);
+            var toAccount = await _createtransactionRepository.GetAccountByIdAsync(request.ToAccountId);
             if (!fromCurrencyIsValid || !toCurrencyIsValid)
             {
                 throw new ArgumentException("One or both currency codes are invalid.");
             }
+            if (fromAccount.Currency.ToString() != request.Currency)
+            {
+                throw new InvalidTransactionValidation($"The currency for From Account ID {request.FromAccountId} does not match the request currency.");
+            }
+
+            if (toAccount.Currency.ToString() != request.ToCurrency)
+            {
+                throw new InvalidTransactionValidation($"The currency for To Account ID {request.ToAccountId} does not match the request to currency.");
+            }
+
         }
     }
 }

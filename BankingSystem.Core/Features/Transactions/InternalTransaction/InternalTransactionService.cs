@@ -54,7 +54,6 @@ namespace BankingSystem.Core.Features.Transactions.InternalTransaction
 
             decimal convertedAmount = _currencyConversionService.Convert(request.Amount, request.Currency, request.ToCurrency);
 
-
             if (fromAccount == null || toAccount == null || fromAccount.UserId != toAccount.UserId)
             {
                 throw new ArgumentException("Invalid accounts for internal transaction.");
@@ -83,7 +82,6 @@ namespace BankingSystem.Core.Features.Transactions.InternalTransaction
             semaphore.Release();
 
             _logger.LogInfo("Internal Transaction! fromAccount: {fromAccount}, was sent money: {amount}-{currency} toAccountId {toAccountId}", request.FromAccountId, request.Amount, request.ToCurrency, request.ToAccountId);
-
 
             return new CreateTransactionResponse
             {

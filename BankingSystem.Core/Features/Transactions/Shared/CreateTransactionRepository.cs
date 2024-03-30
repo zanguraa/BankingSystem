@@ -1,5 +1,4 @@
 ﻿using BankingSystem.Core.Data;
-using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Models;
 
 namespace BankingSystem.Core.Features.Transactions.Shared;

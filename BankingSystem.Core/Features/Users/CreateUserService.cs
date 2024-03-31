@@ -95,6 +95,23 @@ namespace BankingSystem.Core.Features.Users
             {
                 throw new UserValidationException("Invalid birthday date.");
             }
+            var currentYear = DateTime.UtcNow.Year;
+            var birthYear = registerRequest.BirthdayDate.Year;
+
+            if (currentYear - birthYear < 18)
+            {
+                throw new UserValidationException("New user must be eighteen years old!");
+            }
+            else if (currentYear - birthYear == 18)
+            {
+                var today = DateTime.UtcNow;
+                var eighteenthBirthday = registerRequest.BirthdayDate.AddYears(18);
+
+                if (eighteenthBirthday > today)
+                {
+                    throw new UserValidationException("New user must be eighteen years old!");
+                }
+            }
         }
 
     }

@@ -6,27 +6,30 @@ using BankingSystem.Test.Factory;
 using FakeItEasy;
 using System.Threading.Tasks;
 
-namespace BankingSystem.Test.Features.BankAccounts.AddFunds
+namespace BankingSystem.Test.Features.BankAccounts
 {
     [TestFixture]
     public class ValidateAddFundsRequestTests
-    {
-        private IAddFundsService _addFundsService;
-        private IAddFundsRepository _fakeAddFundsRepository;
+    {   
+      
+		
+		private IAddFundsService _addFundsService;
+		private IAddFundsRepository _fakeAddFundsRepository; // Assuming you have a way to replace this with a mock or fake.
 
-        [SetUp]
-        public void Setup()
-        {
-            _fakeAddFundsRepository = A.Fake<IAddFundsRepository>();
-            _addFundsService = new AddFundsService(_fakeAddFundsRepository);
-        }
+		[SetUp]
+		public void Setup()
+		{
+			_fakeAddFundsRepository = A.Fake<IAddFundsRepository>(); // Create a fake repository instance
+			_addFundsService = new AddFundsService(_fakeAddFundsRepository); // Inject the fake repository into the service
+		}
 
-        [Test]
+
+		[Test]
         public void When_AddFundsRequestIsNull_ShouldThrow_ArgumentNullException()
         {
             AddFundsRequest request = null;
 
-            var ex = Assert.ThrowsAsync<ArgumentNullException>(async () => await _addFundsService.AddFunds(request));
+            var ex = Assert.ThrowsAsync<ArgumentNullException>(async () => await  _addFundsService.AddFunds(request));
             Assert.That(ex.ParamName, Is.EqualTo("request"));
         }
 

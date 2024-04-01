@@ -9,6 +9,9 @@ using BankingSystem.Core.Features.BankAccounts.AddFunds;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.Cards.CreateCard;
 using BankingSystem.Core.Features.Reports;
+using BankingSystem.Core.Features.Reports.TransactionStatistics;
+using BankingSystem.Core.Features.Reports.UserStatistics;
+using BankingSystem.Core.Features.Reports.Withdrawals;
 using BankingSystem.Core.Features.Transactions.CreateTransactions;
 using BankingSystem.Core.Features.Transactions.InternalTransaction;
 using BankingSystem.Core.Features.Transactions.Shared;
@@ -83,8 +86,13 @@ namespace BankingSystem.Api
             builder.Services.AddScoped<IViewBalanceService, ViewBalanceService>();
             builder.Services.AddScoped<IWithdrawMoneyRepository, WithdrawMoneyRepository>();
             builder.Services.AddScoped<IWithdrawMoneyService, WithdrawMoneyService>();
-            builder.Services.AddScoped<IReportsService, ReportsService>();
-            builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
+            builder.Services.AddScoped<IWithdrawalsService, WithdrawalsService>();
+            builder.Services.AddScoped<IWithdrawalsRepository, WithdrawalsRepository>();
+            builder.Services.AddScoped<IUserStatisticsService, UserStatisticsService>();
+            builder.Services.AddScoped<IUserStatisticsRepository, UserStatisticsRepository>();
+            builder.Services.AddScoped<ITransactionStatisticsService, TransactionStatisticsService>();
+            builder.Services.AddScoped<ITransactionStatisticsRepository, TransactionStatisticsRepository>();
+
             builder.Services.AddScoped<ITransactionServiceValidator, CreateTransactionServiceValidator>();
 
 

@@ -1,4 +1,4 @@
-﻿namespace BankingSystem.Core.Features.Atm.WithdrawMoney.Requests
+﻿namespace BankingSystem.Core.Features.Reports.Shared.Requests
 {
     public class WithdrawnAmountByCurrencyDto
     {

@@ -138,5 +138,16 @@ namespace BankingSystem.Test.Factory
 			customize?.Invoke(request);
 			return request;
 		}
+		public static WithdrawAmountCurrencyRequest GetWithdrawAmountCurrencyRequest(Action<WithdrawAmountCurrencyRequest> customize = null)
+		{
+			var request = new WithdrawAmountCurrencyRequest
+			{
+				Amount = 100,
+				Currency = "USD"
+			};
+
+			customize?.Invoke(request);
+			return request;
+		}
 	}
 }

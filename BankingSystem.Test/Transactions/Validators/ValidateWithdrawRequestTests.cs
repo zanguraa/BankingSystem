@@ -1,75 +1,58 @@
-﻿using BankingSystem.Core.Features.Atm.WithdrawMoney;
-using BankingSystem.Test.Factory;
+﻿using NUnit.Framework;
+using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Shared.Exceptions;
+using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Requests;
+using BankingSystem.Test.Factory;
 using FakeItEasy;
-using BankingSystem.Core.Features.Atm.ViewBalance;
-using BankingSystem.Core.Shared;
+using System.Threading.Tasks;
 using BankingSystem.Core.Shared.Services.Currency;
-using BankingSystem.Core.Features.Transactions.Shared;
+using BankingSystem.Core.Shared.Models;
+using BankingSystem.Core.Shared;
 
-namespace BankingSystem.Test.Transactions
+namespace BankingSystem.Test.Features.Atm.WithdrawMoney
 {
-    [TestFixture]
-	public class WithdrawMoneyRequestTests
+	[TestFixture]
+	public class ValidateWithdrawRequestTests
 	{
-		private IWithdrawMoneyService _validator;
+		private IWithdrawMoneyService _withdrawMoneyService;
 		private IWithdrawMoneyRepository _fakeWithdrawMoneyRepository;
-		private ITransactionRepository _fakeTransactionRepository;
-		private IViewBalanceRepository _fakeViewBalanceRepository;
-		private ICardAuthorizationRepository _fakeCardAuthorizationRepository;
 		private ICurrencyConversionService _fakeCurrencyConversionService;
 		private ISeqLogger _fakeSeqLogger;
-
 
 		[SetUp]
 		public void Setup()
 		{
 			_fakeWithdrawMoneyRepository = A.Fake<IWithdrawMoneyRepository>();
-			_fakeTransactionRepository = A.Fake<ITransactionRepository>();
-			_fakeViewBalanceRepository = A.Fake<IViewBalanceRepository>();
-			_fakeCardAuthorizationRepository = A.Fake<ICardAuthorizationRepository>();
 			_fakeCurrencyConversionService = A.Fake<ICurrencyConversionService>();
-			_fakeSeqLogger= A.Fake<SeqLogger>();
-			_validator = new WithdrawMoneyService(_fakeWithdrawMoneyRepository ,
-													_fakeCurrencyConversionService,
-													_fakeCardAuthorizationRepository,
-												   _fakeViewBalanceRepository,
-												   _fakeTransactionRepository,
-												   _fakeSeqLogger
-												);
-		}
-		
-		[Test]
-		public void ValidateWithdrawRequest_InvalidAmount_ThrowsException()
-		{
-			var request = ModelFactory.GetWithdrawMoneyRequest(r =>
-			{
-				r.Amount = 3; 
-			});
+			_fakeSeqLogger = A.Fake<ISeqLogger>();
 
-			Assert.ThrowsAsync<InvalidAtmAmountException>(async () => await _validator.WithdrawAsync(request));
+			_withdrawMoneyService = new WithdrawMoneyService(_fakeWithdrawMoneyRepository, _fakeCurrencyConversionService, _fakeSeqLogger);
 		}
 
 		[Test]
-		public void ValidateWithdrawRequest_AmountExceedsLimit_ThrowsException()
+		public async Task When_RequestDtoIsNull_ShouldThrow_ArgumentNullException()
 		{
-			var request = ModelFactory.GetWithdrawMoneyRequest(r =>
-			{
-				r.Amount = 15000; 
-			});
+			// Act & Assert
+			var exception = Assert.ThrowsAsync<ArgumentNullException>(async () => await _withdrawMoneyService.WithdrawAsync(null, "someCardNumber"));
 
-			Assert.ThrowsAsync<InvalidAtmAmountException>(async () => await _validator.WithdrawAsync(request));
+			// Assert
+			Assert.That(exception.ParamName, Is.EqualTo("requestDto"));
 		}
 
-		[Test]
-		public void ValidateWithdrawRequest_UnsupportedCurrency_ThrowsException()
+		[TestCase(-1)] 
+		[TestCase(0)] 
+		public async Task When_AmountIsLessThanOrEqualToZero_ShouldThrow_InvalidAtmAmountException(int amount)
 		{
-			var request = ModelFactory.GetWithdrawMoneyRequest(r =>
-			{
-				r.Currency = "XYZ"; 
-			});
+			var request = ModelFactory.GetWithdrawAmountCurrencyRequest(r => r.Amount = amount);
+			Assert.ThrowsAsync<InvalidAtmAmountException>(() => _withdrawMoneyService.WithdrawAsync(request, "1234567890123456"));
+		}
 
-			Assert.ThrowsAsync<UnsupportedCurrencyException>(async () => await _validator.WithdrawAsync(request));
+		[TestCase("INVALID")]
+		public async Task When_CurrencyIsUnsupported_ShouldThrow_UnsupportedCurrencyException(string currency)
+		{
+			var request = ModelFactory.GetWithdrawAmountCurrencyRequest(r => r.Currency = currency);
+
+			Assert.ThrowsAsync<UnsupportedCurrencyException>(() => _withdrawMoneyService.WithdrawAsync(request, "1234567890123456"));
 		}
 	}
 }

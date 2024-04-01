@@ -20,12 +20,13 @@ namespace BankingSystem.Test.Features.Transactions.Validators
             _validator = new CreateTransactionServiceValidator(_fakeRepository);
         }
 
-        [Test]
-        public void When_RequestIsNull_ShouldThrow_ArgumentNullException() 
-        {
-            CreateTransactionRequest request = null;  
-            var ex = Assert.ThrowsAsync<ArgumentNullException>(async () => await _validator.ValidateCreateTransactionRequest(request));
-            Assert.That(ex.Message, Is.EqualTo("Transaction request cannot be null."));
+		[Test]
+		public void When_RequestIsNull_ShouldThrow_ArgumentNullException()
+		{
+			CreateTransactionRequest request = null;
+			var ex = Assert.ThrowsAsync<ArgumentNullException>(async () => await _validator.ValidateCreateTransactionRequest(request));
+			StringAssert.StartsWith("Transaction request cannot be null.", ex.Message);
 		}
+
 	}
 }

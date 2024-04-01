@@ -23,20 +23,20 @@ namespace BankingSystem.Core.Features.Reports.Withdrawals
             endDate = endDate.AddDays(1).AddSeconds(-1);
 
             const string withdrawalQuery = @"
-    SELECT 
-        ISNULL([ToAccountCurrency], [FromAccountCurrency]) AS Currency,
-        SUM(CASE 
-                WHEN [ToAccountCurrency] IS NOT NULL THEN [ToAmount]
-                ELSE [FromAmount] 
-            END) AS TotalWithdrawn
-    FROM 
-        [BankingSystem_db].[dbo].[Transactions]
-    WHERE 
-        [TransactionDate] BETWEEN @startDate AND @endDate 
-        AND [TransactionType] = 2
-    GROUP BY 
-        ISNULL([ToAccountCurrency], [FromAccountCurrency]);
-";
+                    SELECT 
+                        ISNULL([ToAccountCurrency], [FromAccountCurrency]) AS Currency,
+                        SUM(CASE 
+                                WHEN [ToAccountCurrency] IS NOT NULL THEN [ToAmount]
+                                ELSE [FromAmount] 
+                            END) AS TotalWithdrawn
+                    FROM 
+                        [BankingSystem_db].[dbo].[Transactions]
+                    WHERE 
+                        [TransactionDate] BETWEEN @startDate AND @endDate 
+                        AND [TransactionType] = 2
+                    GROUP BY 
+                        ISNULL([ToAccountCurrency], [FromAccountCurrency]);
+                ";
 
 
             var withdrawalAmounts = await _dataManager.Query<WithdrawnAmountByCurrencyDto, dynamic>(withdrawalQuery, new { startDate, endDate });

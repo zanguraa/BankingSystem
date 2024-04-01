@@ -68,18 +68,7 @@ namespace BankingSystem.Test.Factory
 
 			return request;
 		}
-		public static AddFundsRequest GetAddFundsRequest(Action<AddFundsRequest> customizer = null)
-		{
-			var request = new AddFundsRequest
-			{
-				BankAccountId = 1, 
-				Amount = 100.00M 
-			};
-
-			customizer?.Invoke(request);
-
-			return request;
-		}
+	
 		public static CreateBankAccountRequest GetCreateBankAccountRequest(Action<CreateBankAccountRequest> customize = null)
 		{
 			var request = new CreateBankAccountRequest
@@ -140,6 +129,16 @@ namespace BankingSystem.Test.Factory
 			return request;
 		}
 
+		public static AddFundsRequest GetAddFundsRequest(Action<AddFundsRequest> customizer = null)
+		{
+			var request = new AddFundsRequest
+			{
+				BankAccountId = 1, 
+				Amount = 100.00M 
+			};
 
+			customizer?.Invoke(request);
+			return request;
+		}
 	}
 }

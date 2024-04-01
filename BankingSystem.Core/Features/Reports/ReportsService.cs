@@ -3,10 +3,10 @@
 namespace BankingSystem.Core.Features.Reports;
 public interface IReportsService
 {
-    Task<TransactionStatisticsDto> GetAverageRevenuePerTransactionAsync(DateTime startDate, DateTime endDate);
-    Task<Dictionary<string, int>> GetDailyTransactionCountsAsync(DateTime startDate, DateTime endDate);
-    Task<TotalWithdrawnAmountDto> GetTotalWithdrawnAmountAsync(DateTime startDate, DateTime endDate);
-    Task<TransactionStatisticsDto> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate);
+    Task<TransactionStatisticsDto> GetAverageRevenuePerTransactionAsync(ReportsRequest request);
+    Task<Dictionary<string, int>> GetDailyTransactionCountsAsync(ReportsRequest request);
+    Task<TotalWithdrawnAmountDto> GetTotalWithdrawnAmountAsync(ReportsRequest request);
+    Task<TransactionStatisticsDto> GetTransactionStatisticsAsync(ReportsRequest request);
     Task<UserStatisticsDto> GetUserStatisticsAsync();
 }
 
@@ -20,9 +20,9 @@ public class ReportsService : IReportsService
         _reportsRepository = reportsRepository;
     }
 
-    public async Task<TransactionStatisticsDto> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate)
+    public async Task<TransactionStatisticsDto> GetTransactionStatisticsAsync(ReportsRequest request)
     {
-        var statisticsAggregate = await _reportsRepository.GetTransactionStatisticsAsync(startDate, endDate);
+        var statisticsAggregate = await _reportsRepository.GetTransactionStatisticsAsync(request.StartDate, request.EndDate);
 
         return new TransactionStatisticsDto
         {
@@ -33,9 +33,9 @@ public class ReportsService : IReportsService
         };
     }
 
-    public async Task<Dictionary<string, int>> GetDailyTransactionCountsAsync(DateTime startDate, DateTime endDate)
+    public async Task<Dictionary<string, int>> GetDailyTransactionCountsAsync(ReportsRequest request)
     {
-        var transactionCountsFromRepo = await _reportsRepository.GetDailyTransactionCountsAsync(startDate, endDate);
+        var transactionCountsFromRepo = await _reportsRepository.GetDailyTransactionCountsAsync(request.StartDate, request.EndDate);
 
         // Convert the list to a dictionary with the date as the key and transaction count as the value for faster lookups
         var transactionCountsDict = transactionCountsFromRepo
@@ -43,7 +43,7 @@ public class ReportsService : IReportsService
 
         var completeTransactionCounts = new Dictionary<string, int>();
 
-        for (var date = startDate; date <= endDate; date = date.AddDays(1))
+        for (var date = request.StartDate; date <= request.EndDate; date = date.AddDays(1))
         {
             var dateString = date.ToString("yyyy-MM-dd");
             // Check if the dictionary contains the date as a string
@@ -60,14 +60,14 @@ public class ReportsService : IReportsService
         return completeTransactionCounts;
     }
 
-    public async Task<TotalWithdrawnAmountDto> GetTotalWithdrawnAmountAsync(DateTime startDate, DateTime endDate)
+    public async Task<TotalWithdrawnAmountDto> GetTotalWithdrawnAmountAsync(ReportsRequest request)
     {
-        return await _reportsRepository.GetTotalWithdrawnAmountAsync(startDate, endDate);
+        return await _reportsRepository.GetTotalWithdrawnAmountAsync(request.StartDate, request.EndDate);
     }
 
-    public async Task<TransactionStatisticsDto> GetAverageRevenuePerTransactionAsync(DateTime startDate, DateTime endDate)
+    public async Task<TransactionStatisticsDto> GetAverageRevenuePerTransactionAsync(ReportsRequest request)
     {
-        return await _reportsRepository.GetAverageRevenuePerTransactionAsync(startDate, endDate);
+        return await _reportsRepository.GetAverageRevenuePerTransactionAsync(request.StartDate, request.EndDate);
     }
 
     public async Task<UserStatisticsDto> GetUserStatisticsAsync()

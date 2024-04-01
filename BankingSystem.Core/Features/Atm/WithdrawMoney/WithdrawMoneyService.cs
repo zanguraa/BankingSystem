@@ -97,8 +97,12 @@ public class WithdrawMoneyService : IWithdrawMoneyService
 
     private void ValidateWithdrawRequest(WithdrawAmountCurrencyRequest requestDto)
     {
-        if (requestDto == null) throw new ArgumentNullException(nameof(requestDto));
-        if (requestDto.Amount < 5 || requestDto.Amount % 5 != 0)
+		if (requestDto == null)
+		{
+			throw new ArgumentNullException(nameof(requestDto), "The request cannot be null.");
+		}
+
+		if (requestDto.Amount < 5 || requestDto.Amount % 5 != 0)
         {
             throw new InvalidAtmAmountException("Invalid withdrawal amount. Amount must be in multiples of 5");
         }

@@ -1,4 +1,5 @@
-﻿using BankingSystem.Core.Features.Reports;
+﻿using Azure.Core;
+using BankingSystem.Core.Features.Reports;
 using BankingSystem.Core.Features.Reports.Requests;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,17 +16,17 @@ public class ReportsController : ControllerBase
 		_reportsService = reportsService;
 	}
 
-	[HttpGet("transaction-statistics")]
-	public async Task<IActionResult> GetTransactionStatistics([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+	[HttpPost("transaction-statistics")]
+	public async Task<IActionResult> GetTransactionStatistics([FromBody] ReportsRequest request)
 	{
-		var result = await _reportsService.GetTransactionStatisticsAsync(startDate, endDate);
+		var result = await _reportsService.GetTransactionStatisticsAsync(request);
 		return Ok(result);
 	}
 
-	[HttpGet("daily-transaction-counts")]
-	public async Task<IActionResult> GetDailyTransactionCounts([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+	[HttpPost("daily-transaction-counts")]
+	public async Task<IActionResult> GetDailyTransactionCounts([FromBody] ReportsRequest request)
 	{
-		var result = await _reportsService.GetDailyTransactionCountsAsync(startDate, endDate);
+		var result = await _reportsService.GetDailyTransactionCountsAsync(request);
 		return Ok(result);
 	}
 
@@ -36,10 +37,10 @@ public class ReportsController : ControllerBase
 		return Ok(result);
 	}
 
-	[HttpGet("average-revenue-per-transaction")]
-	public async Task<IActionResult> GetAverageRevenuePerTransaction([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+	[HttpPost("average-revenue-per-transaction")]
+	public async Task<IActionResult> GetAverageRevenuePerTransaction([FromBody] ReportsRequest request)
 	{
-		var result = await _reportsService.GetAverageRevenuePerTransactionAsync(startDate, endDate);
+		var result = await _reportsService.GetAverageRevenuePerTransactionAsync(request);
 		return Ok(result);
 	}
 

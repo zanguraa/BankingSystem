@@ -13,23 +13,6 @@ namespace BankingSystem.Test.Factory
 {
 	public class ModelFactory
 	{
-		public static CreateTransactionRequest GetCreateTransactionRequest(Action<CreateTransactionRequest> options = null)
-		{
-			CreateTransactionRequest request = new()
-			{
-				UserId = "1",
-				FromAccountId = 1,
-				ToAccountId = 2,
-				Amount = 1,
-				Currency = "GEL",
-				ToCurrency = "GEL"
-			};
-
-			options?.Invoke(request);
-
-			return request;
-		}
-
 		public static WithdrawAmountCurrencyRequest GetWithdrawMoneyRequest(Action<WithdrawAmountCurrencyRequest> options = null)
 		{
 			var request = new WithdrawAmountCurrencyRequest
@@ -138,6 +121,21 @@ namespace BankingSystem.Test.Factory
 			};
 
 			customizer?.Invoke(request);
+			return request;
+		}
+		public static CreateTransactionRequest GetCreateTransactionRequest(Action<CreateTransactionRequest> customize = null)
+		{
+			var request = new CreateTransactionRequest
+			{
+				UserId = "test-user",
+				FromAccountId = 1,
+				ToAccountId = 2,
+				Amount = 100,
+				Currency = "USD",
+				ToCurrency = "EUR"
+			};
+
+			customize?.Invoke(request);
 			return request;
 		}
 	}

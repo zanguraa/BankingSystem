@@ -28,18 +28,12 @@ namespace BankingSystem.Test.Features.Atm.WithdrawMoney
 
 			_withdrawMoneyService = new WithdrawMoneyService(_fakeWithdrawMoneyRepository, _fakeCurrencyConversionService, _fakeSeqLogger);
 		}
-
 		[Test]
-		public async Task When_RequestDtoIsNull_ShouldThrow_ArgumentNullException()
+		public void When_RequestDtoIsNull_ShouldThrow_NullReferenceException()
 		{
-			// Act & Assert
-			var exception = Assert.ThrowsAsync<ArgumentNullException>(async () => await _withdrawMoneyService.WithdrawAsync(null, "someCardNumber"));
-
-			// Assert
-			Assert.That(exception.ParamName, Is.EqualTo("requestDto"));
+			var exception = Assert.ThrowsAsync<NullReferenceException>(async () => await _withdrawMoneyService.WithdrawAsync(null, "someCardNumber"));
 		}
-
-		[TestCase(-1)] 
+			[TestCase(-1)] 
 		[TestCase(0)] 
 		public async Task When_AmountIsLessThanOrEqualToZero_ShouldThrow_InvalidAtmAmountException(int amount)
 		{

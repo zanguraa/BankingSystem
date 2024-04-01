@@ -33,7 +33,8 @@ namespace BankingSystem.Test.Features.Atm.WithdrawMoney
 		{
 			var exception = Assert.ThrowsAsync<NullReferenceException>(async () => await _withdrawMoneyService.WithdrawAsync(null, "someCardNumber"));
 		}
-			[TestCase(-1)] 
+			
+		[TestCase(-1)] 
 		[TestCase(0)] 
 		public async Task When_AmountIsLessThanOrEqualToZero_ShouldThrow_InvalidAtmAmountException(int amount)
 		{

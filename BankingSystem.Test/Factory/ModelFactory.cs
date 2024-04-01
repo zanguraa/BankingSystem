@@ -149,5 +149,12 @@ namespace BankingSystem.Test.Factory
 			customize?.Invoke(request);
 			return request;
 		}
+		public static CreateTransactionRequest CreateTransactionRequest()
+		{
+			return new CreateTransactionRequest
+			{
+				// Set up properties as needed
+			};
+		}
 	}
 }

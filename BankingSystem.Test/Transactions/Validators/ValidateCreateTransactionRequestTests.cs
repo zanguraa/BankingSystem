@@ -1,65 +1,94 @@
-﻿using BankingSystem.Core.Features.Transactions.Shared;
+﻿using NUnit.Framework;
+using BankingSystem.Core.Features.Transactions.Shared;
 using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
+using System;
+using System.Threading.Tasks;
 
-namespace BankingSystem.Test.Transactions.Validators
+namespace BankingSystem.Test.Features.Transactions
 {
-    public class ValidateCreateTransactionRequestTests
+	[TestFixture]
+	public class ValidateCreateTransactionRequestTests
 	{
-		private ITransactionServiceValidator _validator;
-		private ITransactionRepository _fakeTransactionRepository;
+		private ITransactionServiceValidator _transactionServiceValidator;
+		private ICreateTransactionRepository _fakeCreateTransactionRepository;
 
 		[SetUp]
 		public void Setup()
 		{
-			_fakeTransactionRepository = A.Fake<ITransactionRepository>();
-			_validator = new CreateTransactionServiceValidator(_fakeTransactionRepository);
+			_fakeCreateTransactionRepository = A.Fake<ICreateTransactionRepository>();
+			_transactionServiceValidator = new CreateTransactionServiceValidator(_fakeCreateTransactionRepository);
 		}
 
 		[Test]
-		public void ShouldThrowArgumentNullExceptionIfRequestIsNull()
+		public void When_RequestIsNull_ShouldThrow_ArgumentNullException()
 		{
-			CreateTransactionRequest request = null;
-			Assert.ThrowsAsync<ArgumentNullException>(
-				async () => await _validator.ValidateCreateTransactionRequest(request));
+			Assert.ThrowsAsync<ArgumentNullException>(() =>
+				_transactionServiceValidator.ValidateCreateTransactionRequest(null));
 		}
 
-		[TestCase("")]
-		[TestCase(null)]
-		public void ShouldThrowInvalidTransactionValidationIfRequestUsedIdIsNullOrEmpty(string userId)
+		[Test]
+		public void When_UserIdIsEmpty_ShouldThrow_UserValidationException()
 		{
-			var request = ModelFactory.GetCreateTransactionRequest(
-				r => r.UserId = userId);
+			var request = ModelFactory.GetCreateTransactionRequest(r => r.UserId = "");
 
-			Assert.ThrowsAsync<UserValidationException>(
-			   async () => await _validator.ValidateCreateTransactionRequest(request));
+			Assert.ThrowsAsync<UserValidationException>(() =>
+				_transactionServiceValidator.ValidateCreateTransactionRequest(request));
 		}
-		[Test]
-		public void ShouldThrowInvalidTransactionValidationIfRequestFromAccountIdIsLessOrEqualZero()
-		{
-			var request = ModelFactory.GetCreateTransactionRequest(
-				r => r.FromAccountId = -23);
 
-			Assert.ThrowsAsync<InvalidTransactionValidation>(
-			   async () => await _validator.ValidateCreateTransactionRequest(request));
-		}
 		[Test]
-		public void ShouldThrowInvalidTransactionValidationIfRequestToAccountIdIsLessOrEqualZero()
+		public void When_FromAccountIdIsInvalid_ShouldThrow_InvalidTransactionValidation()
 		{
-			var request = ModelFactory.GetCreateTransactionRequest(
-				r => r.ToAccountId = -12);
-			Assert.ThrowsAsync<InvalidTransactionValidation>(
-				async () => await _validator.ValidateCreateTransactionRequest(request));
+			var request = ModelFactory.GetCreateTransactionRequest(r => r.FromAccountId = -1);
+
+			Assert.ThrowsAsync<InvalidTransactionValidation>(() =>
+				_transactionServiceValidator.ValidateCreateTransactionRequest(request));
 		}
+
 		[Test]
-		public void ShouldThrowInvalidTransactionValidationIfRequestAmountIsLessOrEqualZero()
+		public void When_ToAccountIdIsInvalid_ShouldThrow_InvalidTransactionValidation()
 		{
-			var request = ModelFactory.GetCreateTransactionRequest(
-				r => r.Amount = -1243);
-			Assert.ThrowsAsync<InvalidTransactionValidation>(
-			   async () => await _validator.ValidateCreateTransactionRequest(request));
+			var request = ModelFactory.GetCreateTransactionRequest(r => r.ToAccountId = -1);
+
+			Assert.ThrowsAsync<InvalidTransactionValidation>(() =>
+				_transactionServiceValidator.ValidateCreateTransactionRequest(request));
 		}
-	}
+
+		[Test]
+		public void When_AmountIsInvalid_ShouldThrow_InvalidTransactionValidation()
+		{
+			var request = ModelFactory.GetCreateTransactionRequest(r => r.Amount = -100);
+
+			Assert.ThrowsAsync<InvalidTransactionValidation>(() =>
+				_transactionServiceValidator.ValidateCreateTransactionRequest(request));
+		}
+
+		[Test]
+		public void When_CurrenciesAreInvalid_ShouldThrow_ArgumentException()
+		{
+			var request = ModelFactory.GetCreateTransactionRequest(r =>
+			{
+				r.Currency = "INVALID";
+				r.ToCurrency = "ALSO_INVALID";
+			});
+
+			Assert.ThrowsAsync<ArgumentException>(() =>
+				_transactionServiceValidator.ValidateCreateTransactionRequest(request));
+		}
+
+		[Test]
+		public void When_FromAccountIdEqualsToAccountId_ShouldThrow_InvalidAccountException()
+		{
+			var request = ModelFactory.GetCreateTransactionRequest(r =>
+			{
+				r.FromAccountId = 1;
+				r.ToAccountId = 1;
+			});
+
+			Assert.ThrowsAsync<InvalidAccountException>(() =>
+				_transactionServiceValidator.ValidateCreateTransactionRequest(request));
+		} 
+	} 
 }

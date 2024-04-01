@@ -43,18 +43,14 @@ public class ValidateUserCredentialsAsyncTests
 	[Test]
 	public async Task AuthorizeUser_WithInvalidEmail_ShouldThrowUserNotFoundException()
 	{
-		// Arrange
-		var fakeUserManager = A.Fake<UserManager<UserEntity>>(); // Ensure proper UserManager<UserEntity> mocking
+		var fakeUserManager = A.Fake<UserManager<UserEntity>>(); 
 		var loginRequest = new LoginRequest { Email = "invalid@example.com", Password = "password" };
 		var userService = new AuthorizeUserService(fakeUserManager, _jwtTokenGeneratorMock);
 
-		// Setup UserManager to return null for FindByEmailAsync when provided with an invalid email
 		A.CallTo(() => fakeUserManager.FindByEmailAsync(loginRequest.Email)).Returns(Task.FromResult<UserEntity>(null));
 
-		// Act & Assert
 		var ex = Assert.ThrowsAsync<UserNotFoundException>(async () => await userService.AuthorizeUser(loginRequest));
 
-		// Assertion to validate the exception
 		Assert.That(ex, Is.TypeOf<UserNotFoundException>());
 	}
 

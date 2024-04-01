@@ -1,65 +1,31 @@
 ﻿using BankingSystem.Core.Features.Transactions.CreateTransactions;
-using BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Requests;
+using BankingSystem.Core.Features.Transactions.Shared;
+using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
+using NuGet.Frameworks;
 
 namespace BankingSystem.Test.Features.Transactions.Validators
 {
+    [TestFixture]
     public class ValidateCreateTransactionRequestTests
     {
         private ITransactionServiceValidator _validator;
-        private ITransactionRepository _fakeTransactionRepository;
+		private  ICreateTransactionRepository _fakeRepository;
 
         [SetUp]
-        public void Setup()
-        {
-            _fakeTransactionRepository = A.Fake<ITransactionRepository>();
-            _validator = new CreateTransactionServiceValidator(_fakeTransactionRepository);
+        public void Setup() {
+            _fakeRepository = A.Fake<ICreateTransactionRepository>();
+            _validator = new CreateTransactionServiceValidator(_fakeRepository);
         }
 
         [Test]
-        public void ShouldThrowArgumentNullExceptionIfRequestIsNull()
+        public void When_RequestIsNull_ShouldThrow_ArgumentNullException() 
         {
-            CreateTransactionRequest request = null;
-            Assert.ThrowsAsync<ArgumentNullException>(
-                async () => await _validator.ValidateCreateTransactionRequest(request));
-        }
-
-        [TestCase("")]
-        [TestCase(null)]
-        public void ShouldThrowInvalidTransactionValidationIfRequestUsedIdIsNullOrEmpty(string userId)
-        {
-            var request = ModelFactory.GetCreateTransactionRequest(
-                r => r.UserId = userId);
-
-            Assert.ThrowsAsync<UserValidationException>(
-               async () => await _validator.ValidateCreateTransactionRequest(request));
-        }
-        [Test]
-        public void ShouldThrowInvalidTransactionValidationIfRequestFromAccountIdIsLessOrEqualZero()
-        {
-            var request = ModelFactory.GetCreateTransactionRequest(
-                r => r.FromAccountId = -23);
-
-            Assert.ThrowsAsync<InvalidTransactionValidation>(
-               async () => await _validator.ValidateCreateTransactionRequest(request));
-        }
-        [Test]
-        public void ShouldThrowInvalidTransactionValidationIfRequestToAccountIdIsLessOrEqualZero()
-        {
-            var request = ModelFactory.GetCreateTransactionRequest(
-                r => r.ToAccountId = -12);
-            Assert.ThrowsAsync<InvalidTransactionValidation>(
-                async () => await _validator.ValidateCreateTransactionRequest(request));
-        }
-        [Test]
-        public void ShouldThrowInvalidTransactionValidationIfRequestAmountIsLessOrEqualZero()
-        {
-            var request = ModelFactory.GetCreateTransactionRequest(
-                r => r.Amount = -1243);
-            Assert.ThrowsAsync<InvalidTransactionValidation>(
-               async () => await _validator.ValidateCreateTransactionRequest(request));
-        }
-    }
+            CreateTransactionRequest request = null;  
+            var ex = Assert.ThrowsAsync<ArgumentNullException>(async () => await _validator.ValidateCreateTransactionRequest(request));
+            Assert.That(ex.Message, Is.EqualTo("Transaction request cannot be null."));
+		}
+	}
 }

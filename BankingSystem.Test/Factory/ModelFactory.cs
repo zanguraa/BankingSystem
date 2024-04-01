@@ -4,14 +4,10 @@ using BankingSystem.Core.Features.Atm.ViewBalance.Models.Response;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.AddFunds.Models.Requests;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount.Models.Requests;
-<<<<<<< HEAD
 using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
-=======
 using BankingSystem.Core.Features.Cards.CreateCard.Models.Requests;
-using BankingSystem.Core.Features.Transactions.CreateTransactions.Models.Requests;
 using BankingSystem.Core.Features.Users.AuthorizeUser.Requests;
 using BankingSystem.Core.Features.Users.CreateUser.Requests;
->>>>>>> 4c90c670c0c64f4456255f58f321ad92a9c1aeb8
 
 namespace BankingSystem.Test.Factory
 {

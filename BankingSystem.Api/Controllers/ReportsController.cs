@@ -1,4 +1,5 @@
 ﻿using BankingSystem.Core.Features.Reports;
+using BankingSystem.Core.Features.Reports.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Api.Controllers;
@@ -28,10 +29,10 @@ public class ReportsController : ControllerBase
 		return Ok(result);
 	}
 
-	[HttpGet("total-withdrawn-amount")]
-	public async Task<IActionResult> GetTotalWithdrawnAmount([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+	[HttpPost("total-withdrawn-amount")]
+	public async Task<IActionResult> GetTotalWithdrawnAmount([FromBody] ReportsRequest request)
 	{
-		var result = await _reportsService.GetTotalWithdrawnAmountAsync(startDate, endDate);
+		var result = await _reportsService.GetTotalWithdrawnAmountAsync(request);
 		return Ok(result);
 	}
 

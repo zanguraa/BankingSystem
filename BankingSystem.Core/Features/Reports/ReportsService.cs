@@ -5,7 +5,7 @@ public interface IReportsService
 {
     Task<TransactionStatisticsDto> GetAverageRevenuePerTransactionAsync(DateTime startDate, DateTime endDate);
     Task<Dictionary<string, int>> GetDailyTransactionCountsAsync(DateTime startDate, DateTime endDate);
-    Task<TotalWithdrawnAmountDto> GetTotalWithdrawnAmountAsync(DateTime startDate, DateTime endDate);
+    Task<TotalWithdrawnAmountDto> GetTotalWithdrawnAmountAsync(ReportsRequest request);
     Task<TransactionStatisticsDto> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate);
     Task<UserStatisticsDto> GetUserStatisticsAsync();
 }
@@ -60,9 +60,9 @@ public class ReportsService : IReportsService
         return completeTransactionCounts;
     }
 
-    public async Task<TotalWithdrawnAmountDto> GetTotalWithdrawnAmountAsync(DateTime startDate, DateTime endDate)
+    public async Task<TotalWithdrawnAmountDto> GetTotalWithdrawnAmountAsync(ReportsRequest request)
     {
-        return await _reportsRepository.GetTotalWithdrawnAmountAsync(startDate, endDate);
+        return await _reportsRepository.GetTotalWithdrawnAmountAsync(request.StartDate, request.EndDate);
     }
 
     public async Task<TransactionStatisticsDto> GetAverageRevenuePerTransactionAsync(DateTime startDate, DateTime endDate)

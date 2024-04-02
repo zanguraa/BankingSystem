@@ -6,7 +6,7 @@ namespace BankingSystem.Core.Features.Atm.CardAuthorizations;
 
 public interface ICardAuthorizationRepository
 {
-    Task<Card> GetCardFromRequestAsync(CardAuthorizationRequest request);
+    Task<Card> GetCardFromRequestAsync(string cardNumber, string hashedPin);
 }
 
 public class CardAuthorizationRepository : ICardAuthorizationRepository
@@ -18,10 +18,11 @@ public class CardAuthorizationRepository : ICardAuthorizationRepository
         _dataManager = dataManager;
     }
 
-    public async Task<Card> GetCardFromRequestAsync(CardAuthorizationRequest request)
+    public async Task<Card> GetCardFromRequestAsync(string cardNumber, string hashedPin)
     {
+
         var query = "SELECT * FROM Cards WHERE CardNumber = @CardNumber and Pin = @Pin";
-        var result = await _dataManager.Query<Card, dynamic>(query, request);
+        var result = await _dataManager.Query<Card, dynamic>(query, new { CardNumber = cardNumber, Pin = hashedPin });
         return result.FirstOrDefault();
     }
 }

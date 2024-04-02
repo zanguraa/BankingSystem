@@ -1,6 +1,7 @@
 ﻿
 using BankingSystem.Core.Features.Atm.ChangePin.Models.Requests;
 using BankingSystem.Core.Features.Atm.ChangePin.Models.Response;
+using BankingSystem.Core.Features.Atm.Shared;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 
@@ -14,11 +15,17 @@ public interface IChangePinService
 public class ChangePinService : IChangePinService
 {
     private readonly IChangePinRepository _changePinRepository;
+    private readonly IPinHasher _passwordHasher;
     private readonly ISeqLogger _logger;
 
-    public ChangePinService(IChangePinRepository changePinRepository, ISeqLogger seqLogger)
+    public ChangePinService(
+        IChangePinRepository changePinRepository,
+        ISeqLogger seqLogger,
+        IPinHasher passwordHasher
+        )
     {
         _changePinRepository = changePinRepository;
+        _passwordHasher = passwordHasher;
         _logger = seqLogger;
     }
 
@@ -33,7 +40,9 @@ public class ChangePinService : IChangePinService
             throw new InvalidCardException("Current Pin: is incorrect:!");
         }
 
-        await _changePinRepository.UpdatePinAsync(request.CardNumber, request.CurrentPin, request.NewPin);
+        string hashedPin = _passwordHasher.HashHmacSHA256(request.NewPin);
+
+        await _changePinRepository.UpdatePinAsync(request.CardNumber, request.CurrentPin, hashedPin);
 
         _logger.LogInfo("Pin was changed successfully for cardNumber: {cardNumber}", request.CardNumber);
 

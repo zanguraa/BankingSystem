@@ -1,8 +1,10 @@
-﻿using BankingSystem.Core.Features.BankAccounts.CreateAccount;
+﻿using BankingSystem.Core.Features.Atm.Shared;
+using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.Cards.CreateCard.Models.Requests;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Shared.Models;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace BankingSystem.Core.Features.Cards.CreateCard
@@ -17,12 +19,19 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
     {
         private readonly ICardRepository _cardRepository;
         private readonly ICreateBankAccountsRepository _createBankAccountsRepository;
+        private readonly IPinHasher _passwordHasher;
         private readonly ISeqLogger _seqLogger;
 
-        public CreateCardService(ICardRepository cardRepository, ICreateBankAccountsRepository createBankAccountsRepository, ISeqLogger seqLogger)
+        public CreateCardService(
+            ICardRepository cardRepository,
+            ICreateBankAccountsRepository createBankAccountsRepository,
+            ISeqLogger seqLogger,
+            IPinHasher passwordHasher
+            )
         {
             _cardRepository = cardRepository;
             _createBankAccountsRepository = createBankAccountsRepository;
+            _passwordHasher = passwordHasher;
             _seqLogger = seqLogger;
         }
 
@@ -38,7 +47,7 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
                 FullName = validationResult.User.FirstName.ToUpper() + " " + validationResult.User.LastName.ToUpper(),
                 ExpirationDate = new DateTime(currentTime.Year, currentTime.Month, 1).AddYears(2).AddMonths(1).AddDays(-1),
                 Cvv = int.Parse(GenerateNumbers(3)),
-                Pin = (GenerateNumbers(4)),
+                Pin = _passwordHasher.HashHmacSHA256(GenerateNumbers(4).ToString()),
                 UserId = createCardRequest.UserId,
                 AccountId = createCardRequest.AccountId
             };
@@ -69,6 +78,8 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
             }
             return sb.ToString();
         }
+
+
 
         private async Task<ValidatedCardData> CreateCardValidation(CreateCardRequest createCardRequest)
         {

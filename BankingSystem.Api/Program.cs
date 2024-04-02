@@ -3,6 +3,7 @@ using BankingSystem.Core.Data;
 using BankingSystem.Core.Data.Entities;
 using BankingSystem.Core.Features.Atm.CardAuthorizations;
 using BankingSystem.Core.Features.Atm.ChangePin;
+using BankingSystem.Core.Features.Atm.Shared;
 using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Features.BankAccounts.AddFunds;
@@ -61,6 +62,7 @@ namespace BankingSystem.Api
             builder.Services.AddSingleton<IDataManager, DataManager>();
             builder.Services.AddSingleton<ISeqLogger, SeqLogger>();
             builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+            builder.Services.AddSingleton<IPinHasher, PinHasher>();
 
             builder.Services.AddScoped<IAddFundsService, AddFundsService>();
             builder.Services.AddScoped<IAddFundsRepository, AddFundsRepository>();
@@ -92,7 +94,6 @@ namespace BankingSystem.Api
             builder.Services.AddScoped<IUserStatisticsRepository, UserStatisticsRepository>();
             builder.Services.AddScoped<ITransactionStatisticsService, TransactionStatisticsService>();
             builder.Services.AddScoped<ITransactionStatisticsRepository, TransactionStatisticsRepository>();
-
             builder.Services.AddScoped<ITransactionServiceValidator, CreateTransactionServiceValidator>();
 
 

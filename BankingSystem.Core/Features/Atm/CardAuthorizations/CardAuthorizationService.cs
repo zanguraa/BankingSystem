@@ -1,5 +1,6 @@
 ﻿using BankingSystem.Core.Features.Atm.CardAuthorizations;
 using BankingSystem.Core.Features.Atm.CardAuthorizations.Models.Requests;
+using BankingSystem.Core.Features.Atm.Shared;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 
@@ -12,15 +13,18 @@ public class CardAuthorizationService : ICardAuthorizationService
 {
     private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IPinHasher _pinHasher;
     private readonly ISeqLogger _seqLogger;
 
     public CardAuthorizationService(
         ICardAuthorizationRepository cardAuthorizationRepository,
         IJwtTokenGenerator jwtTokenGenerator,
-        ISeqLogger seqLogger)
+        ISeqLogger seqLogger,
+        IPinHasher pinHasher)
     {
         _cardAuthorizationRepository = cardAuthorizationRepository;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _pinHasher = pinHasher;
         _seqLogger = seqLogger;
     }
 
@@ -33,8 +37,9 @@ public class CardAuthorizationService : ICardAuthorizationService
             throw new InvalidCardException("Invalid card number.");
         }
 
+        string hashedPin = _pinHasher.HashHmacSHA256(request.Pin);
 
-        var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request);
+        var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request.CardNumber, hashedPin);
         if (card == null)
         {
             throw new InvalidCardException($"CardNumber {request.CardNumber} not found.");
@@ -54,10 +59,6 @@ public class CardAuthorizationService : ICardAuthorizationService
         if (string.IsNullOrEmpty(request.CardNumber))
         {
             throw new InvalidCardException("CardNumber can not be empty");
-        }
-        if (request.Pin <= 0)
-        {
-            throw new InvalidCardException("invalid PinCode");
         }
         if (request.CardNumber.Length != 16 && !request.CardNumber.All(char.IsDigit))
         {

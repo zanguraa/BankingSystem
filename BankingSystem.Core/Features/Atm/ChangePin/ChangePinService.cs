@@ -48,12 +48,12 @@ public class ChangePinService : IChangePinService
             throw new InvalidCardException("Invalid card number format: {cardNumber}.", request.CardNumber);
         }
 
-        if (request.CurrentPin.ToString().Length != 4 || !request.CardNumber.ToString().All(char.IsDigit))
+        if (request.CurrentPin.Length != 4 || !request.CardNumber.All(char.IsDigit))
         {
             throw new InvalidCardException("Invalid current PIN format: for card {Card}", request.CardNumber);
         }
 
-        if (request.NewPin.ToString().Length != 4 || !request.NewPin.ToString().All(char.IsDigit) || request.NewPin == request.CurrentPin)
+        if (request.NewPin.Length != 4 || !request.NewPin.All(char.IsDigit) || request.NewPin == request.CurrentPin)
         {
             throw new InvalidCardException("Invalid new PIN format or new PIN is the same as current PIN.");
         }

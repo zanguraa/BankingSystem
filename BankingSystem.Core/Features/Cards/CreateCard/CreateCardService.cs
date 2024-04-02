@@ -38,7 +38,7 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
                 FullName = validationResult.User.FirstName.ToUpper() + " " + validationResult.User.LastName.ToUpper(),
                 ExpirationDate = new DateTime(currentTime.Year, currentTime.Month, 1).AddYears(2).AddMonths(1).AddDays(-1),
                 Cvv = int.Parse(GenerateNumbers(3)),
-                Pin = int.Parse(GenerateNumbers(4)),
+                Pin = (GenerateNumbers(4)),
                 UserId = createCardRequest.UserId,
                 AccountId = createCardRequest.AccountId
             };

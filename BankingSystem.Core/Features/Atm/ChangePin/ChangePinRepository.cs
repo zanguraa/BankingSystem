@@ -5,7 +5,7 @@ namespace BankingSystem.Core.Features.Atm.ChangePin;
 public interface IChangePinRepository
 {
     Task<Card> GetCardByNumberAsync(string cardNumber);
-    Task<bool> UpdatePinAsync(string cardNumber, int currentPin, int newPin);
+    Task<bool> UpdatePinAsync(string cardNumber, string currentPin, string newPin);
 }
 public class ChangePinRepository : IChangePinRepository
 {
@@ -23,7 +23,7 @@ public class ChangePinRepository : IChangePinRepository
         return card.First();
     }
 
-    public async Task<bool> UpdatePinAsync(string cardNumber, int currentPin, int newPin)
+    public async Task<bool> UpdatePinAsync(string cardNumber, string currentPin, string newPin)
     {
         var updatePinQuery = "UPDATE Cards SET Pin = @NewPin WHERE CardNumber = @CardNumber AND Pin = @CurrentPin";
         var result = await _dataManager.Execute(updatePinQuery, new { CardNumber = cardNumber, CurrentPin = currentPin, NewPin = newPin });

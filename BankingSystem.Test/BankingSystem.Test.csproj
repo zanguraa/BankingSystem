@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <Folder Include="Fakes\" />
-    <Folder Include="Transactions\InternalTransaction\" />
   </ItemGroup>
 
   <ItemGroup>

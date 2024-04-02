@@ -34,7 +34,7 @@ namespace BankingSystem.Core.Features.Reports.TransactionStatistics
                 TransactionsInEUR = statisticsAggregate.TransactionsInEUR
             };
         }
-
+        
         public async Task<Dictionary<string, int>> GetDailyTransactionCountsAsync(ReportsRequest request)
         {
             var transactionCountsFromRepo = await _transactionStatisticsRepository.GetDailyTransactionCountsAsync(request.StartDate, request.EndDate);

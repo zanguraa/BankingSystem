@@ -20,11 +20,11 @@ namespace BankingSystem.Core.Features.Users.CreateUser.Models.Requests
         {
             return new RegisteredUserResponse
             {
-                FullName = FirstName  +  LastName,
-                Email = Email,
-                Message = "New user has created successfully"
+                Message = "New user has created successfully",
+                FullName = FirstName + " " + LastName,
+                Email = Email
             };
-            
+
         }
     }
 }

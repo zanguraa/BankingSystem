@@ -3,6 +3,7 @@ using BankingSystem.Core.Features.Atm.CardAuthorizations.Models.Requests;
 using BankingSystem.Core.Features.Atm.Shared;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
+using BankingSystem.Core.Shared.Services;
 
 public interface ICardAuthorizationService
 {
@@ -13,16 +14,19 @@ public class CardAuthorizationService : ICardAuthorizationService
 {
     private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly ICryptoService _cryptoService;
     private readonly ISeqLogger _seqLogger;
 
     public CardAuthorizationService(
         ICardAuthorizationRepository cardAuthorizationRepository,
         IJwtTokenGenerator jwtTokenGenerator,
+        ICryptoService cryptoService,
         ISeqLogger seqLogger
         )
     {
         _cardAuthorizationRepository = cardAuthorizationRepository;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _cryptoService = cryptoService;
         _seqLogger = seqLogger;
     }
 
@@ -35,8 +39,9 @@ public class CardAuthorizationService : ICardAuthorizationService
             throw new InvalidCardException("Invalid card number.");
         }
 
+        var encryptedPin = _cryptoService.Encrypt(request.Pin);
 
-        var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request.CardNumber, request.Pin);
+        var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request.CardNumber, encryptedPin);
         if (card == null)
         {
             throw new InvalidCardException($"CardNumber {request.CardNumber} not found.");

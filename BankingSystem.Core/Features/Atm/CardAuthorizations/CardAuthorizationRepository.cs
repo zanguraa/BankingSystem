@@ -6,6 +6,7 @@ namespace BankingSystem.Core.Features.Atm.CardAuthorizations;
 public interface ICardAuthorizationRepository
 {
     Task<Card> GetCardFromRequestAsync(string cardNumber, string hashedPin);
+    Task UpdateCardStatusAsync(int cardId, bool isActive);
 }
 
 public class CardAuthorizationRepository : ICardAuthorizationRepository
@@ -25,4 +26,9 @@ public class CardAuthorizationRepository : ICardAuthorizationRepository
         return result.FirstOrDefault();
     }
 
+    public async Task UpdateCardStatusAsync(int cardId, bool isActive)
+    {
+        var query = "UPDATE Cards SET IsActive = @IsActive WHERE Id = @CardId";
+        await _dataManager.Execute(query, new { IsActive = isActive, CardId = cardId });
+    }
 }

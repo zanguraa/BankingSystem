@@ -33,6 +33,9 @@ public class CardAuthorizationService : ICardAuthorizationService
     public async Task<string> AuthorizeCardAsync(CardAuthorizationRequest request)
     {
         await ValidateCardAuthorization(request);
+
+
+
         var jwtTokken = _jwtTokenGenerator.GenerateTokenForAtmOperations(request);
         _seqLogger.LogInfo("Card with CardNumber: {CardNumber} is authorized", request.CardNumber);
         return (jwtTokken);
@@ -59,6 +62,7 @@ public class CardAuthorizationService : ICardAuthorizationService
         }
         if (card.ExpirationDate < DateTime.Now)
         {
+            await _cardAuthorizationRepository.UpdateCardStatusAsync(card.Id, false);
             throw new InvalidCardException($"Card with CardNumber {request.CardNumber} has expired.");
         }
         if (string.IsNullOrEmpty(request.CardNumber))

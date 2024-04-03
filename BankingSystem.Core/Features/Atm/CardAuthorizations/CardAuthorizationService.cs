@@ -2,6 +2,7 @@
 using BankingSystem.Core.Features.Atm.CardAuthorizations.Models.Requests;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
+using BankingSystem.Core.Shared.Models;
 using BankingSystem.Core.Shared.Services;
 
 public interface ICardAuthorizationService
@@ -31,31 +32,34 @@ public class CardAuthorizationService : ICardAuthorizationService
 
     public async Task<string> AuthorizeCardAsync(CardAuthorizationRequest request)
     {
-        ValidateCardAuthorization(request);
-        if (request == null) throw new ArgumentNullException(nameof(request));
-        if (string.IsNullOrWhiteSpace(request.CardNumber) || request.CardNumber.Length != 16 || !request.CardNumber.All(char.IsDigit))
-        {
-            throw new InvalidCardException("Invalid card number.");
-        }
-
-        var encryptedPin = _cryptoService.Encrypt(request.Pin);
-
-        var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request.CardNumber, encryptedPin);
-        if (card == null)
-        {
-            throw new InvalidCardException($"CardNumber {request.CardNumber} not found.");
-        }
-
+        await ValidateCardAuthorization(request);
         var jwtTokken = _jwtTokenGenerator.GenerateTokenForAtmOperations(request);
         _seqLogger.LogInfo("Card with CardNumber: {CardNumber} is authorized", request.CardNumber);
         return (jwtTokken);
     }
 
-    private bool ValidateCardAuthorization(CardAuthorizationRequest request)
+    private async Task<bool> ValidateCardAuthorization(CardAuthorizationRequest request)
     {
+        var encryptedPin =  _cryptoService.Encrypt(request.Pin);
+
+        var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request.CardNumber, encryptedPin);
+
+        if (request == null) throw new ArgumentNullException(nameof(request));
+        if (string.IsNullOrWhiteSpace(request.CardNumber) || request.CardNumber.Length != 16 || !request.CardNumber.All(char.IsDigit))
+        {
+            throw new InvalidCardException("Invalid card number.");
+        }
+        if (card == null)
+        {
+            throw new InvalidCardException($"CardNumber {request.CardNumber} not found.");
+        }
         if (request == null)
         {
             throw new ArgumentNullException(nameof(request));
+        }
+        if (card.ExpirationDate < DateTime.Now)
+        {
+            throw new InvalidCardException($"Card with CardNumber {request.CardNumber} has expired.");
         }
         if (string.IsNullOrEmpty(request.CardNumber))
         {

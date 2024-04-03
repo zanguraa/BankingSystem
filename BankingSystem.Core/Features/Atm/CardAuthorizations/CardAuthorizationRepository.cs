@@ -21,7 +21,8 @@ public class CardAuthorizationRepository : ICardAuthorizationRepository
     {
 
         var query = "SELECT * FROM Cards WHERE CardNumber = @CardNumber and Pin = @Pin";
-        var result = await _dataManager.Query<Card, dynamic>(query, new { CardNumber = cardNumber, Pin = hashedPin });
+        var result = await _dataManager.Query<Card, dynamic>(query, new { CardNumber = cardNumber, Pin = hashedPin});
         return result.FirstOrDefault();
     }
+
 }

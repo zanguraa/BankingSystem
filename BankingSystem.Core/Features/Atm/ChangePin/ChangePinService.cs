@@ -1,7 +1,5 @@
-﻿
-using BankingSystem.Core.Features.Atm.ChangePin.Models.Requests;
+﻿using BankingSystem.Core.Features.Atm.ChangePin.Models.Requests;
 using BankingSystem.Core.Features.Atm.ChangePin.Models.Response;
-using BankingSystem.Core.Features.Atm.Shared;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Shared.Services;

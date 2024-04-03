@@ -1,5 +1,4 @@
 ﻿using BankingSystem.Core.Features.Cards.CreateCard.Models.Response;
-using System.Net.NetworkInformation;
 
 namespace BankingSystem.Core.Shared.Models
 {

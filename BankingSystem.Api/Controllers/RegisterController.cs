@@ -1,5 +1,5 @@
-﻿using BankingSystem.Core.Features.Users;
-using BankingSystem.Core.Features.Users.CreateUser.Requests;
+﻿using BankingSystem.Core.Features.Users.CreateUser;
+using BankingSystem.Core.Features.Users.CreateUser.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +23,7 @@ public class RegisterController : ControllerBase
     {
         await _createUserService.RegisterUser(request);
 
-        return Ok();
+        return Ok(request.RegisteredUserResponse());
     }
 
     [HttpGet]

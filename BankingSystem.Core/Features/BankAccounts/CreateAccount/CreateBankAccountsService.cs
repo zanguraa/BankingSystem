@@ -3,7 +3,6 @@ using BankingSystem.Core.Features.Users.AuthorizeUser;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Shared.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace BankingSystem.Core.Features.BankAccounts.CreateAccount;
 

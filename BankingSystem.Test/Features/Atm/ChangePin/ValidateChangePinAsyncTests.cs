@@ -1,10 +1,7 @@
 ﻿using BankingSystem.Core.Features.Atm.ChangePin;
-using BankingSystem.Core.Features.Atm.ChangePin.Models.Requests;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
-using NUnit.Framework;
 using FakeItEasy;
-using System.Threading.Tasks;
 using BankingSystem.Core.Shared.Models;
 using BankingSystem.Core.Shared;
 

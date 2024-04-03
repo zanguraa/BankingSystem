@@ -1,5 +1,4 @@
-﻿using BankingSystem.Core.Features.Atm.Shared;
-using BankingSystem.Core.Features.BankAccounts.CreateAccount;
+﻿using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.Cards.CreateCard.Models.Requests;
 using BankingSystem.Core.Features.Cards.CreateCard.Models.Response;
 using BankingSystem.Core.Shared;
@@ -81,16 +80,12 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
             return sb.ToString();
         }
 
-
-
         private async Task<ValidatedCardData> CreateCardValidation(CreateCardRequest createCardRequest)
         {
-
             if (createCardRequest.UserId <= 0)
             {
                 throw new UserNotFoundException("Invalid User ID.{userId}", createCardRequest.UserId);
             }
-
             if (createCardRequest.AccountId <= 0)
             {
                 throw new BankAccountNotFoundException("Invalid Account ID.{BankAccountId}", createCardRequest.AccountId);

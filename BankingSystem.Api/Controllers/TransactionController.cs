@@ -4,8 +4,6 @@ using BankingSystem.Core.Features.Transactions.Shared;
 using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System.Security.Claims;
 
 namespace BankingSystem.Api.Controllers;
 

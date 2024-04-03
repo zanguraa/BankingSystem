@@ -1,6 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿using BankingSystem.Core.Features.Users.CreateUser.Models.response;
+using System.Text.Json.Serialization;
 
-namespace BankingSystem.Core.Features.Users.CreateUser.Requests
+namespace BankingSystem.Core.Features.Users.CreateUser.Models.Requests
 {
     public class RegisterUserRequest
     {
@@ -15,6 +16,15 @@ namespace BankingSystem.Core.Features.Users.CreateUser.Requests
         [JsonIgnore]
         public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
 
-
+        public RegisteredUserResponse RegisteredUserResponse()
+        {
+            return new RegisteredUserResponse
+            {
+                FullName = FirstName  +  LastName,
+                Email = Email,
+                Message = "New user has created successfully"
+            };
+            
+        }
     }
 }

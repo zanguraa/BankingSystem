@@ -1,6 +1,6 @@
 ﻿using BankingSystem.Core.Data;
 
-namespace BankingSystem.Core.Features.Users
+namespace BankingSystem.Core.Features.Users.CreateUser
 {
     public interface ICreateUserRepository
     {
@@ -28,7 +28,7 @@ namespace BankingSystem.Core.Features.Users
             return result.Any();
         }
 
-        
+
 
     }
 }

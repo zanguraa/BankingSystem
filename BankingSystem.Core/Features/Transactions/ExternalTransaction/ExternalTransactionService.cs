@@ -2,7 +2,6 @@
 using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
 using BankingSystem.Core.Features.Transactions.Shared.Models.Response;
 using BankingSystem.Core.Shared;
-using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Shared.Models;
 using BankingSystem.Core.Shared.Services.Currency;
 

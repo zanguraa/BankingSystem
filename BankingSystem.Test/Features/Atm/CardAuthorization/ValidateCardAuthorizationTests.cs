@@ -1,10 +1,7 @@
 ﻿using BankingSystem.Core.Features.Atm.CardAuthorizations;
-using BankingSystem.Core.Features.Atm.CardAuthorizations.Models.Requests;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
-using NUnit.Framework;
 using FakeItEasy;
-using System.Threading.Tasks;
 using BankingSystem.Core.Shared;
 
 namespace BankingSystem.Test.Features.Atm.CardAuthorizations;

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System.Collections;
 using System.Security.Cryptography;
 using System.Text;
 

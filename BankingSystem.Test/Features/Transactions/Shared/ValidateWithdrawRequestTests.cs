@@ -1,12 +1,8 @@
-﻿using NUnit.Framework;
-using BankingSystem.Core.Features.Atm.WithdrawMoney;
+﻿using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Shared.Exceptions;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Requests;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
-using System.Threading.Tasks;
 using BankingSystem.Core.Shared.Services.Currency;
-using BankingSystem.Core.Shared.Models;
 using BankingSystem.Core.Shared;
 
 namespace BankingSystem.Test.Features.Transactions.Shared

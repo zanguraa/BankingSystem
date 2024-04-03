@@ -1,5 +1,4 @@
 ﻿using BankingSystem.Core.Data;
-using BankingSystem.Core.Features.Atm.CardAuthorizations.Models.Requests;
 using BankingSystem.Core.Shared.Models;
 
 namespace BankingSystem.Core.Features.Atm.CardAuthorizations;

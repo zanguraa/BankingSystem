@@ -2,13 +2,15 @@
 using BankingSystem.Core.Data.Entities;
 using BankingSystem.Core.Shared.Exceptions;
 using System.Text.RegularExpressions;
-using BankingSystem.Core.Features.Users.CreateUser.Requests;
+using BankingSystem.Core.Features.Users.CreateUser.Models.Requests;
+using BankingSystem.Core.Features.Users.CreateUser.Models.response;
+using Azure.Core;
 
-namespace BankingSystem.Core.Features.Users
+namespace BankingSystem.Core.Features.Users.CreateUser
 {
     public interface ICreateUserService
     {
-        Task<UserEntity> RegisterUser(RegisterUserRequest registerRequest);
+        Task<RegisteredUserResponse> RegisterUser(RegisterUserRequest registerRequest);
     }
 
     public class CreateUserService : ICreateUserService
@@ -22,7 +24,7 @@ namespace BankingSystem.Core.Features.Users
             _userRepository = userRepository;
         }
 
-        public async Task<UserEntity> RegisterUser(RegisterUserRequest registerRequest)
+        public async Task<RegisteredUserResponse> RegisterUser(RegisterUserRequest registerRequest)
         {
             ValidateRegisterRequest(registerRequest);
 
@@ -56,7 +58,7 @@ namespace BankingSystem.Core.Features.Users
             }
             await _userManager.AddToRoleAsync(newUser, "user");
 
-            return newUser;
+            return registerRequest.RegisteredUserResponse();
         }
 
         private void ValidateRegisterRequest(RegisterUserRequest registerRequest)

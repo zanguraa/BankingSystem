@@ -1,14 +1,12 @@
-﻿using NUnit.Framework;
-using BankingSystem.Core.Features.Users;
-using BankingSystem.Core.Features.Users.CreateUser.Requests;
-using BankingSystem.Core.Shared.Exceptions;
+﻿using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
-using System;
+using BankingSystem.Core.Features.Users.CreateUser;
+using BankingSystem.Core.Features.Users.CreateUser.Models.Requests;
 
 namespace BankingSystem.Test.Features.Users
 {
-	[TestFixture]
+    [TestFixture]
 	public class ValidateRegisterRequestTests
 	{
 		private ICreateUserService _createUserService;

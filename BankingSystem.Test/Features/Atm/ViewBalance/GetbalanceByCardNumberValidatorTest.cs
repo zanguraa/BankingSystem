@@ -1,13 +1,10 @@
-﻿using NUnit.Framework;
-using BankingSystem.Core.Features.Atm.ViewBalance;
+﻿using BankingSystem.Core.Features.Atm.ViewBalance;
 using BankingSystem.Core.Shared.Exceptions;
 using FakeItEasy;
-using System.Threading.Tasks;
-using BankingSystem.Core.Shared.Models;
 
 namespace BankingSystem.Test.Features.Atm.ViewBalance
 {
-	[TestFixture]
+    [TestFixture]
 	public class GetbalanceByCardNumberValidatorTests
 	{
 		private IViewBalanceService _viewBalanceService;

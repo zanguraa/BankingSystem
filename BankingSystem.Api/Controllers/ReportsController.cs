@@ -1,6 +1,4 @@
-﻿using Azure.Core;
-using BankingSystem.Core.Features.Reports;
-using BankingSystem.Core.Features.Reports.Shared.Requests;
+﻿using BankingSystem.Core.Features.Reports.Shared.Requests;
 using BankingSystem.Core.Features.Reports.TransactionStatistics;
 using BankingSystem.Core.Features.Reports.UserStatistics;
 using BankingSystem.Core.Features.Reports.Withdrawals;

@@ -1,16 +1,13 @@
 ﻿using BankingSystem.Core.Features.Atm.WithdrawMoney;
-using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Requests;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Shared.Services.Currency;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
-using NUnit.Framework;
-using System.Threading.Tasks;
 
 namespace BankingSystem.Test.Features.Atm.WithdrawMoney
 {
-	[TestFixture]
+    [TestFixture]
 	public class WithdrawMoneyRequestTests
 	{
 		private IWithdrawMoneyService _withdrawMoneyService;

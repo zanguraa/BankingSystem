@@ -6,8 +6,6 @@ using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
 using Microsoft.AspNetCore.Identity;
-using NUnit.Framework;
-using System.Threading.Tasks;
 
 namespace BankingSystem.Test.Features.Users;
 

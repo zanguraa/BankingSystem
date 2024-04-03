@@ -1,12 +1,9 @@
 ﻿using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.Cards.CreateCard;
-using BankingSystem.Core.Features.Cards.CreateCard.Models.Requests;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
-using NUnit.Framework;
-using System.Threading.Tasks;
 
 namespace BankingSystem.Test.Features.Cards;
 

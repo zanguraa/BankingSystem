@@ -7,11 +7,11 @@ using BankingSystem.Core.Features.BankAccounts.CreateAccount.Models.Requests;
 using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
 using BankingSystem.Core.Features.Cards.CreateCard.Models.Requests;
 using BankingSystem.Core.Features.Users.AuthorizeUser.Requests;
-using BankingSystem.Core.Features.Users.CreateUser.Requests;
+using BankingSystem.Core.Features.Users.CreateUser.Models.Requests;
 
 namespace BankingSystem.Test.Factory
 {
-	public class ModelFactory
+    public class ModelFactory
 	{
 		public static WithdrawAmountCurrencyRequest GetWithdrawMoneyRequest(Action<WithdrawAmountCurrencyRequest> options = null)
 		{

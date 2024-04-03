@@ -1,11 +1,7 @@
-﻿using NUnit.Framework;
-using BankingSystem.Core.Features.Transactions.Shared;
-using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
+﻿using BankingSystem.Core.Features.Transactions.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
-using System;
-using System.Threading.Tasks;
 
 namespace BankingSystem.Test.Features.Transactions.Shared
 {

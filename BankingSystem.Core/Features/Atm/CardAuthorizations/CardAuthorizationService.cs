@@ -13,18 +13,16 @@ public class CardAuthorizationService : ICardAuthorizationService
 {
     private readonly ICardAuthorizationRepository _cardAuthorizationRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
-    private readonly IPinHasher _pinHasher;
     private readonly ISeqLogger _seqLogger;
 
     public CardAuthorizationService(
         ICardAuthorizationRepository cardAuthorizationRepository,
         IJwtTokenGenerator jwtTokenGenerator,
-        ISeqLogger seqLogger,
-        IPinHasher pinHasher)
+        ISeqLogger seqLogger
+        )
     {
         _cardAuthorizationRepository = cardAuthorizationRepository;
         _jwtTokenGenerator = jwtTokenGenerator;
-        _pinHasher = pinHasher;
         _seqLogger = seqLogger;
     }
 
@@ -37,9 +35,8 @@ public class CardAuthorizationService : ICardAuthorizationService
             throw new InvalidCardException("Invalid card number.");
         }
 
-        string hashedPin = _pinHasher.HashHmacSHA256(request.Pin);
 
-        var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request.CardNumber, hashedPin);
+        var card = await _cardAuthorizationRepository.GetCardFromRequestAsync(request.CardNumber, request.Pin);
         if (card == null)
         {
             throw new InvalidCardException($"CardNumber {request.CardNumber} not found.");

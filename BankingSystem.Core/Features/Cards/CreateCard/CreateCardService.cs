@@ -1,17 +1,18 @@
 ﻿using BankingSystem.Core.Features.Atm.Shared;
 using BankingSystem.Core.Features.BankAccounts.CreateAccount;
 using BankingSystem.Core.Features.Cards.CreateCard.Models.Requests;
+using BankingSystem.Core.Features.Cards.CreateCard.Models.Response;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Shared.Models;
-using System.Security.Cryptography;
+using BankingSystem.Core.Shared.Services;
 using System.Text;
 
 namespace BankingSystem.Core.Features.Cards.CreateCard
 {
     public interface ICardService
     {
-        Task<Card> CreateCardAsync(CreateCardRequest createCardRequest);
+        Task<CardDto> CreateCardAsync(CreateCardRequest createCardRequest);
         Task<List<Card>> GetCardsByUserIdAsync(int userId);
     }
 
@@ -19,27 +20,28 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
     {
         private readonly ICardRepository _cardRepository;
         private readonly ICreateBankAccountsRepository _createBankAccountsRepository;
-        private readonly IPinHasher _passwordHasher;
+        private readonly ICryptoService _cryptoService;
         private readonly ISeqLogger _seqLogger;
 
         public CreateCardService(
             ICardRepository cardRepository,
             ICreateBankAccountsRepository createBankAccountsRepository,
             ISeqLogger seqLogger,
-            IPinHasher passwordHasher
+            ICryptoService cryptoService
             )
         {
             _cardRepository = cardRepository;
             _createBankAccountsRepository = createBankAccountsRepository;
-            _passwordHasher = passwordHasher;
+            _cryptoService = cryptoService;
             _seqLogger = seqLogger;
         }
 
-        public async Task<Card> CreateCardAsync(CreateCardRequest createCardRequest)
+        public async Task<CardDto> CreateCardAsync(CreateCardRequest createCardRequest)
         {
             var validationResult = await CreateCardValidation(createCardRequest);
 
             var currentTime = DateTime.UtcNow;
+            var pin = GenerateNumbers(4).ToString();
 
             var card = new Card
             {
@@ -47,7 +49,7 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
                 FullName = validationResult.User.FirstName.ToUpper() + " " + validationResult.User.LastName.ToUpper(),
                 ExpirationDate = new DateTime(currentTime.Year, currentTime.Month, 1).AddYears(2).AddMonths(1).AddDays(-1),
                 Cvv = int.Parse(GenerateNumbers(3)),
-                Pin = _passwordHasher.HashHmacSHA256(GenerateNumbers(4).ToString()),
+                Pin = _cryptoService.Encrypt(pin),
                 UserId = createCardRequest.UserId,
                 AccountId = createCardRequest.AccountId
             };
@@ -56,7 +58,7 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
 
             _seqLogger.LogInfo("Created Card: {CardNumber} for UserId {UserId}", card.CardNumber, createCardRequest.UserId);
 
-            return result;
+            return result.ToDto(pin);
         }
 
         public async Task<List<Card>> GetCardsByUserIdAsync(int userId)

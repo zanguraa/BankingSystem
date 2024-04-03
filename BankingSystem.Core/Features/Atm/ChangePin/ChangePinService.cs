@@ -15,17 +15,14 @@ public interface IChangePinService
 public class ChangePinService : IChangePinService
 {
     private readonly IChangePinRepository _changePinRepository;
-    private readonly IPinHasher _passwordHasher;
     private readonly ISeqLogger _logger;
 
     public ChangePinService(
         IChangePinRepository changePinRepository,
-        ISeqLogger seqLogger,
-        IPinHasher passwordHasher
+        ISeqLogger seqLogger
         )
     {
         _changePinRepository = changePinRepository;
-        _passwordHasher = passwordHasher;
         _logger = seqLogger;
     }
 
@@ -40,9 +37,8 @@ public class ChangePinService : IChangePinService
             throw new InvalidCardException("Current Pin: is incorrect:!");
         }
 
-        string hashedPin = _passwordHasher.HashHmacSHA256(request.NewPin);
 
-        await _changePinRepository.UpdatePinAsync(request.CardNumber, request.CurrentPin, hashedPin);
+        await _changePinRepository.UpdatePinAsync(request.CardNumber, request.CurrentPin, request.NewPin);
 
         _logger.LogInfo("Pin was changed successfully for cardNumber: {cardNumber}", request.CardNumber);
 

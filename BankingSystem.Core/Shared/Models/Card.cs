@@ -1,4 +1,7 @@
-﻿namespace BankingSystem.Core.Shared.Models
+﻿using BankingSystem.Core.Features.Cards.CreateCard.Models.Response;
+using System.Net.NetworkInformation;
+
+namespace BankingSystem.Core.Shared.Models
 {
     public class Card
     {
@@ -14,5 +17,16 @@
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public int UserId { get; set; }
         public int AccountId { get; set; }
+        public CardDto ToDto(string pin)
+        {
+            return new CardDto
+            {
+                CardNumber = CardNumber,
+                FullName = FullName,
+                ExpirationDate = ExpirationDate,
+                Pin = pin
+            };
+
+        }
     }
 }

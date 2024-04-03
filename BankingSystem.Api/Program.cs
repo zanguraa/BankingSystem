@@ -19,6 +19,7 @@ using BankingSystem.Core.Features.Transactions.Shared;
 using BankingSystem.Core.Features.Users;
 using BankingSystem.Core.Features.Users.AuthorizeUser;
 using BankingSystem.Core.Shared;
+using BankingSystem.Core.Shared.Services;
 using BankingSystem.Core.Shared.Services.Currency;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -62,7 +63,7 @@ namespace BankingSystem.Api
             builder.Services.AddSingleton<IDataManager, DataManager>();
             builder.Services.AddSingleton<ISeqLogger, SeqLogger>();
             builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-            builder.Services.AddSingleton<IPinHasher, PinHasher>();
+            builder.Services.AddSingleton<ICryptoService, CryptoService>();
 
             builder.Services.AddScoped<IAddFundsService, AddFundsService>();
             builder.Services.AddScoped<IAddFundsRepository, AddFundsRepository>();

@@ -9,9 +9,6 @@ namespace BankingSystem.Core.Shared
         void LogError(string message, params object?[]? parameters);
         void LogFatal(string message, params object?[]? parameters);
         void LogInfo(string message, params object?[]? parameters);
-
-
-
     }
 
     public class SeqLogger : ISeqLogger

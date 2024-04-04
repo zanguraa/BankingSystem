@@ -25,14 +25,51 @@ namespace BankingSystem.Api.Middlewares
             {
                 await ReturnErrorResult(context, notFoundException, StatusCodes.Status404NotFound);
             }
+            catch (BankAccountNotFoundException ex)
+            {
+                await ReturnErrorResult(context, ex, StatusCodes.Status404NotFound);
+            }
+            catch (InvalidAccountException ex)
+            {
+                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
+            }
+            catch (InvalidAddFundsValidationException ex)
+            {
+                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
+            }
+            catch (InvalidAtmAmountException ex)
+            {
+                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
+            }
+            catch (InvalidBalanceException ex)
+            {
+                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
+            }
+            catch (InvalidCardException ex)
+            {
+                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
+            }
+            catch (InvalidTransactionValidation ex)
+            {
+                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
+            }
+            catch (UnsupportedCurrencyException ex)
+            {
+                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
+            }
+            catch (UserNotFoundException ex)
+            {
+                await ReturnErrorResult(context, ex, StatusCodes.Status404NotFound);
+            }
+            catch (UserValidationException ex)
+            {
+                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
+            }
             catch (DomainException dex)
             {
                 await ReturnErrorResult(context, dex, StatusCodes.Status500InternalServerError);
             }
-            catch (Exception ex)
-            {
-                await ReturnErrorResult(context, ex, StatusCodes.Status500InternalServerError);
-            }
+            
         }
 
         private async Task ReturnErrorResult(HttpContext context, DomainException exception, int statusCode)
@@ -44,27 +81,10 @@ namespace BankingSystem.Api.Middlewares
             {
                 Status = statusCode,
                 Title = exception.Message,
-                IsSuccess = true
+                IsSuccess = false
             };
 
             context.Response.StatusCode = statusCode;
-
-            await context.Response.WriteAsJsonAsync(problemDetails);
-        }
-
-        private async Task ReturnErrorResult(HttpContext context, Exception exception, int statusCode)
-        {
-            _seqLogger.LogFatal("{message}{stackTrace}", exception.Message, exception.StackTrace);
-
-            var problemDetails = new
-            {
-                Status = statusCode,
-                Title = "Server Error",
-                IsSuccess = true
-            };
-
-            context.Response.StatusCode = statusCode;
-
             await context.Response.WriteAsJsonAsync(problemDetails);
         }
     }

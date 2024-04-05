@@ -3,6 +3,7 @@ using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
 using BankingSystem.Core.Shared;
+using BankingSystem.Core.Shared.Services;
 
 namespace BankingSystem.Test.Features.Atm.CardAuthorizations;
 
@@ -12,6 +13,7 @@ public class ValidateCardAuthorizationTests
 	private ICardAuthorizationService _service;
 	private ICardAuthorizationRepository _repository;
 	private IJwtTokenGenerator _jwtTokenGenerator;
+	private ICryptoService _cryptoService;
 	private ISeqLogger _logger;
 
 	[SetUp]
@@ -19,8 +21,9 @@ public class ValidateCardAuthorizationTests
 	{
 		_repository = A.Fake<ICardAuthorizationRepository>();
 		_jwtTokenGenerator = A.Fake<IJwtTokenGenerator>();
+		_cryptoService = A.Fake<ICryptoService>();
 		_logger = A.Fake<ISeqLogger>();
-		_service = new CardAuthorizationService(_repository, _jwtTokenGenerator, _logger);
+		_service = new CardAuthorizationService(_repository, _jwtTokenGenerator, _cryptoService, _logger);
 	}
 
 	[Test]
@@ -40,7 +43,7 @@ public class ValidateCardAuthorizationTests
 	[Test]
 	public async Task AuthorizeCardAsync_WithInvalidPin_ThrowsInvalidCardException()
 	{
-		var request = ModelFactory.GetCardAuthorizationRequest(r => r.Pin = -1);
+		var request = ModelFactory.GetCardAuthorizationRequest(r => r.Pin = "-1");
 		Assert.ThrowsAsync<InvalidCardException>(async () => await _service.AuthorizeCardAsync(request));
 	}
 

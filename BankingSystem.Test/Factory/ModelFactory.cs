@@ -31,7 +31,7 @@ namespace BankingSystem.Test.Factory
 			var request = new CardAuthorizationRequest
 			{
 				CardNumber = "6410341801621247", 
-				Pin = 1234 
+				Pin = "1234" 
 			};
 
 			options?.Invoke(request);
@@ -43,8 +43,8 @@ namespace BankingSystem.Test.Factory
 			var request = new ChangePinRequest
 			{
 				CardNumber = "6410341801621247", 
-				CurrentPin = 1234,
-				NewPin = 5678
+				CurrentPin = "1234",
+				NewPin = "5678"
 			};
 
 			customizer?.Invoke(request);

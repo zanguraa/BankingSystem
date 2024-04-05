@@ -4,6 +4,7 @@ using BankingSystem.Test.Factory;
 using FakeItEasy;
 using BankingSystem.Core.Shared.Models;
 using BankingSystem.Core.Shared;
+using BankingSystem.Core.Shared.Services;
 
 namespace BankingSystem.Test.Features.Atm.ChangePin;
 
@@ -13,13 +14,15 @@ public class ValidateChangePinAsyncTests
 	private IChangePinService _changePinService;
 	private IChangePinRepository _changePinRepository;
 	private ISeqLogger _logger;
-
+	private ICryptoService _cryptoService;
+	
 	[SetUp]
 	public void SetUp()
 	{
 		_changePinRepository = A.Fake<IChangePinRepository>();
+		_cryptoService = A.Fake<ICryptoService>();
 		_logger = A.Fake<ISeqLogger>();
-		_changePinService = new ChangePinService(_changePinRepository, _logger);
+		_changePinService = new ChangePinService(_changePinRepository,_logger,_cryptoService);
 	}
 
 	[Test]
@@ -34,8 +37,8 @@ public class ValidateChangePinAsyncTests
 	[Test]
 	public async Task ValidateChangePinAsync_InvalidCurrentPinFormat_ThrowsInvalidCardException()
 	{
-		var request = ModelFactory.GetChangePinRequest(r => r.CurrentPin = 1234); // Valid format for setup
-		A.CallTo(() => _changePinRepository.GetCardByNumberAsync(request.CardNumber)).Returns(Task.FromResult(new Card { Pin = 5678 })); // Simulate current PIN mismatch
+		var request = ModelFactory.GetChangePinRequest(r => r.CurrentPin = "1234"); // Valid format for setup
+		A.CallTo(() => _changePinRepository.GetCardByNumberAsync(request.CardNumber)).Returns(Task.FromResult(new Card { Pin = "5678" })); // Simulate current PIN mismatch
 
 		Assert.ThrowsAsync<InvalidCardException>(async () => await _changePinService.ChangePinAsync(request, request.CardNumber));
 	}
@@ -45,8 +48,8 @@ public class ValidateChangePinAsyncTests
 	{
 		var request = ModelFactory.GetChangePinRequest(r =>
 		{
-			r.CurrentPin = 1234;
-			r.NewPin = 1234; // New PIN is the same as the current PIN
+			r.CurrentPin = "1234";
+			r.NewPin = "1234"; // New PIN is the same as the current PIN
 		});
 		A.CallTo(() => _changePinRepository.GetCardByNumberAsync(request.CardNumber)).Returns(Task.FromResult(new Card { Pin = request.CurrentPin })); // Simulate valid current PIN
 

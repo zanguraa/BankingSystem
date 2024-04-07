@@ -20,16 +20,17 @@ namespace BankingSystem.Test.Features.Transactions.Shared
             _addFundsService = new AddFundsService(_fakeAddFundsRepository);
         }
 
-        [Test]
-        public void When_AddFundsRequestIsNull_ShouldThrow_ArgumentNullException()
-        {
-            AddFundsRequest request = null;
+		[Test]
+		public void When_AddFundsRequestIsNull_ShouldThrow_ArgumentNullException()
+		{
+			AddFundsRequest request = null;
 
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => _addFundsService.AddFunds(request));
-            Assert.That(exception.ParamName, Is.EqualTo("addFundsRequest"));
-        }
+			var exception = Assert.ThrowsAsync<ArgumentNullException>(() => _addFundsService.AddFunds(request));
+			Assert.That(exception.ParamName, Is.EqualTo("request")); 
+		}
 
-        [TestCase(-100)]
+
+		[TestCase(-100)]
         [TestCase(0)]
         public async Task When_AmountIsLessThanOrEqualToZero_ShouldThrow_InvalidAddFundsValidationException(decimal amount)
         {

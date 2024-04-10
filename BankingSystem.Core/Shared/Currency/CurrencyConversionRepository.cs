@@ -1,11 +1,11 @@
 ﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Shared.Models;
 
-namespace BankingSystem.Core.Shared.Services.Currency;
+namespace BankingSystem.Core.Shared.Currency;
 
 public interface ICurrencyConversionRepository
 {
-    Task<List<CurrencyModel>> GetAllCurrencies();
+    Task<List<CurrencyModel>> GetAllCurrenciesAsync();
 }
 
 public class CurrencyConversionRepository : ICurrencyConversionRepository
@@ -16,7 +16,7 @@ public class CurrencyConversionRepository : ICurrencyConversionRepository
     {
         _dataManager = dataManager;
     }
-    public async Task<List<CurrencyModel>> GetAllCurrencies()
+    public async Task<List<CurrencyModel>> GetAllCurrenciesAsync()
     {
         string query = "SELECT * FROM Currencies";
 

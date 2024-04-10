@@ -5,7 +5,7 @@ namespace BankingSystem.Core.Features.Transactions.Shared
 {
     public interface ITransactionServiceValidator
     {
-        Task ValidateCreateTransactionRequest(CreateTransactionRequest request);
+        Task ValidateCreateTransactionRequestAsync(CreateTransactionRequest request);
     }
 
     public class CreateTransactionServiceValidator : ITransactionServiceValidator
@@ -17,7 +17,7 @@ namespace BankingSystem.Core.Features.Transactions.Shared
             _createtransactionRepository = transactionRepository;
         }
 
-        public async Task ValidateCreateTransactionRequest(CreateTransactionRequest request)
+        public async Task ValidateCreateTransactionRequestAsync(CreateTransactionRequest request)
         {
             if (request == null)
             {

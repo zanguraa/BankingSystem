@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace BankingSystem.Core.Shared.Services
+namespace BankingSystem.Core.Shared
 {
     public interface ICryptoService
     {

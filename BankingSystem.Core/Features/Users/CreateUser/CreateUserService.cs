@@ -10,7 +10,7 @@ namespace BankingSystem.Core.Features.Users.CreateUser
 {
     public interface ICreateUserService
     {
-        Task<RegisteredUserResponse> RegisterUser(RegisterUserRequest registerRequest);
+        Task<RegisteredUserResponse> RegisterUserAsync(RegisterUserRequest registerRequest);
     }
 
     public class CreateUserService : ICreateUserService
@@ -24,7 +24,7 @@ namespace BankingSystem.Core.Features.Users.CreateUser
             _userRepository = userRepository;
         }
 
-        public async Task<RegisteredUserResponse> RegisterUser(RegisterUserRequest registerRequest)
+        public async Task<RegisteredUserResponse> RegisterUserAsync(RegisterUserRequest registerRequest)
         {
             ValidateRegisterRequest(registerRequest);
 
@@ -34,7 +34,7 @@ namespace BankingSystem.Core.Features.Users.CreateUser
                 throw new UserValidationException("Email is already registered.");
             }
 
-            var existingUserByPersonalId = await _userRepository.UserByPersonalIdExist(registerRequest.PersonalId);
+            var existingUserByPersonalId = await _userRepository.UserByPersonalIdExistAsync(registerRequest.PersonalId);
             if (existingUserByPersonalId)
             {
                 throw new UserValidationException("Personal ID is already registered.");

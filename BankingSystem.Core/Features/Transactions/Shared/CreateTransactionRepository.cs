@@ -7,7 +7,7 @@ public interface ICreateTransactionRepository
 {
     Task<bool> CheckAccountOwnershipAsync(int accountId, string userId);
     Task<bool> IsCurrencyValid(string currencyCode);
-    Task<bool> ProcessBankTransaction(Transaction transaction);
+    Task<bool> ProcessBankTransactionAsync(Transaction transaction);
     Task<bool> UpdateAccountBalancesAsync(Transaction transaction);
     Task<BankAccount?> GetAccountByIdAsync(int AccountId);
 }
@@ -29,7 +29,7 @@ public class CreateTransactionRepository : ICreateTransactionRepository
         return count.FirstOrDefault() > 0;
     }
 
-    public async Task<bool> ProcessBankTransaction(Transaction transactionRequest)
+    public async Task<bool> ProcessBankTransactionAsync(Transaction transactionRequest)
     {
         var SqlCommandList = new List<SqlCommand>
          {

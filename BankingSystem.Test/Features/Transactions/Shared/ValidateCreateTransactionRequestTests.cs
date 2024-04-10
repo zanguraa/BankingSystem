@@ -22,7 +22,7 @@ namespace BankingSystem.Test.Features.Transactions.Shared
         public void When_RequestIsNull_ShouldThrow_ArgumentNullException()
         {
             Assert.ThrowsAsync<ArgumentNullException>(() =>
-                _transactionServiceValidator.ValidateCreateTransactionRequest(null));
+                _transactionServiceValidator.ValidateCreateTransactionRequestAsync(null));
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace BankingSystem.Test.Features.Transactions.Shared
             var request = ModelFactory.GetCreateTransactionRequest(r => r.UserId = "");
 
             Assert.ThrowsAsync<UserValidationException>(() =>
-                _transactionServiceValidator.ValidateCreateTransactionRequest(request));
+                _transactionServiceValidator.ValidateCreateTransactionRequestAsync(request));
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace BankingSystem.Test.Features.Transactions.Shared
             var request = ModelFactory.GetCreateTransactionRequest(r => r.FromAccountId = -1);
 
             Assert.ThrowsAsync<InvalidTransactionValidation>(() =>
-                _transactionServiceValidator.ValidateCreateTransactionRequest(request));
+                _transactionServiceValidator.ValidateCreateTransactionRequestAsync(request));
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace BankingSystem.Test.Features.Transactions.Shared
             var request = ModelFactory.GetCreateTransactionRequest(r => r.ToAccountId = -1);
 
             Assert.ThrowsAsync<InvalidTransactionValidation>(() =>
-                _transactionServiceValidator.ValidateCreateTransactionRequest(request));
+                _transactionServiceValidator.ValidateCreateTransactionRequestAsync(request));
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace BankingSystem.Test.Features.Transactions.Shared
             var request = ModelFactory.GetCreateTransactionRequest(r => r.Amount = -100);
 
             Assert.ThrowsAsync<InvalidTransactionValidation>(() =>
-                _transactionServiceValidator.ValidateCreateTransactionRequest(request));
+                _transactionServiceValidator.ValidateCreateTransactionRequestAsync(request));
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace BankingSystem.Test.Features.Transactions.Shared
             });
 
             Assert.ThrowsAsync<ArgumentException>(() =>
-                _transactionServiceValidator.ValidateCreateTransactionRequest(request));
+                _transactionServiceValidator.ValidateCreateTransactionRequestAsync(request));
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace BankingSystem.Test.Features.Transactions.Shared
             });
 
             Assert.ThrowsAsync<InvalidAccountException>(() =>
-                _transactionServiceValidator.ValidateCreateTransactionRequest(request));
+                _transactionServiceValidator.ValidateCreateTransactionRequestAsync(request));
         }
     }
 }

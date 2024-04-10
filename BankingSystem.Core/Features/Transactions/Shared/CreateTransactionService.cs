@@ -1,9 +1,9 @@
 ﻿using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
 using BankingSystem.Core.Features.Transactions.Shared.Models.Response;
 using BankingSystem.Core.Shared;
+using BankingSystem.Core.Shared.Currency;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Shared.Models;
-using BankingSystem.Core.Shared.Services.Currency;
 
 namespace BankingSystem.Core.Features.Transactions.Shared;
 
@@ -38,7 +38,7 @@ public class CreateTransactionService : ICreateTransactionService
     {
         using var semaphore = new SemaphoreSlim(1, 1);
 
-        await _transactionServiceValidator.ValidateCreateTransactionRequest(request);
+        await _transactionServiceValidator.ValidateCreateTransactionRequestAsync(request);
         await CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
 
         await semaphore.WaitAsync();

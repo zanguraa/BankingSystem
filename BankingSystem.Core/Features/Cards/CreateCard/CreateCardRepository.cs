@@ -6,11 +6,11 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
     public interface ICardRepository
     {
         Task<Card> CreateCardAsync(Card card);
-        Task<Card?> GetCardByCardNumber(string CardNumber);
+        Task<Card?> GetCardByCardNumberAsync(string CardNumber);
         Task<Card> GetCardByIdAsync(int cardId);
-        Task<List<Card>> GetCards();
+        Task<List<Card>> GetCardsAsync();
         Task<List<Card>> GetCardsByUserIdAsync(int userId);
-        Task<UserResponse?> GetUserFullNameById(int userId);
+        Task<UserResponse?> GetUserFullNameByIdAsync(int userId);
     }
 
     public class CreateCardRepository : ICardRepository
@@ -21,7 +21,7 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
         {
             _dataManager = dataManager;
         }
-        public async Task<Card?> GetCardByCardNumber(string CardNumber)
+        public async Task<Card?> GetCardByCardNumberAsync(string CardNumber)
         {
             string query = "SELECT * FROM Cards WHERE CardNumber = @CardNumber";
             var result = await _dataManager.Query<Card, dynamic>(query, new { CardNumber });
@@ -60,14 +60,14 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
                 throw new Exception("Failed to create card");
             }
 
-            var newCard = await GetCardByCardNumber(card.CardNumber);
+            var newCard = await GetCardByCardNumberAsync(card.CardNumber);
             if (newCard == null)
             {
                 throw new Exception("Failed to create card");
             }
             return newCard;
         }
-        public async Task<List<Card>> GetCards()
+        public async Task<List<Card>> GetCardsAsync()
         {
             string query = "SELECT Id, CardNumber, FullName, ExpirationDate, Cvv, Pin, MaxTried, isLocked, CreatedAt, UserId, AccountId FROM Cards";
             return (await _dataManager.Query<Card, dynamic>(query, null)).ToList();
@@ -79,7 +79,7 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
             var result = await _dataManager.Query<Card, dynamic>(query, new { userId });
             return result.ToList();
         }
-        public async Task<UserResponse?> GetUserFullNameById(int userId)
+        public async Task<UserResponse?> GetUserFullNameByIdAsync(int userId)
         {
             string query = @"SELECT FirstName, LastName FROM Users WHERE Id = @userId";
             var result = await _dataManager.Query<UserResponse, dynamic>(query, new { userId });

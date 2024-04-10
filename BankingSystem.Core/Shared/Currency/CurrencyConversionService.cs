@@ -1,4 +1,4 @@
-﻿namespace BankingSystem.Core.Shared.Services.Currency;
+﻿namespace BankingSystem.Core.Shared.Currency;
 
 public interface ICurrencyConversionService
 {
@@ -13,12 +13,12 @@ public class CurrencyConversionService : ICurrencyConversionService
     public CurrencyConversionService(ICurrencyConversionRepository currencyConversionRepository)
     {
         _currencyConversionRepository = currencyConversionRepository;
-        LoadCurrencyPairs().Wait();
+        LoadCurrencyPairsAsync().Wait();
     }
 
-    private async Task LoadCurrencyPairs()
+    private async Task LoadCurrencyPairsAsync()
     {
-        var currencies = await _currencyConversionRepository.GetAllCurrencies();
+        var currencies = await _currencyConversionRepository.GetAllCurrenciesAsync();
         foreach (var currency in currencies)
         {
             _currencyPairs.Add(currency.Code, currency.Rate);

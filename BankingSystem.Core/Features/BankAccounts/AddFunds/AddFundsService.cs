@@ -7,7 +7,7 @@ namespace BankingSystem.Core.Features.BankAccounts.AddFunds;
 
 public interface IAddFundsService
 {
-    Task<bool> AddFunds(AddFundsRequest addFundsRequest);
+    Task<bool> AddFundsAsync(AddFundsRequest addFundsRequest);
 }
 
 public class AddFundsService : IAddFundsService
@@ -19,7 +19,7 @@ public class AddFundsService : IAddFundsService
         _addFundsRepository = addFundsRepository;
     }
 
-    public async Task<bool> AddFunds(AddFundsRequest addFundsRequest)
+    public async Task<bool> AddFundsAsync(AddFundsRequest addFundsRequest)
     {
         ValidateAddFundsRequest(addFundsRequest);
 

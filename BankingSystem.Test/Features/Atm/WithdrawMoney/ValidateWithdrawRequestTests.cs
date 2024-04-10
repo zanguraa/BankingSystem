@@ -1,7 +1,7 @@
 ﻿using BankingSystem.Core.Features.Atm.WithdrawMoney;
 using BankingSystem.Core.Shared;
+using BankingSystem.Core.Shared.Currency;
 using BankingSystem.Core.Shared.Exceptions;
-using BankingSystem.Core.Shared.Services.Currency;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
 

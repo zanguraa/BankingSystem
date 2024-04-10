@@ -2,7 +2,6 @@
 using BankingSystem.Core.Features.Cards.CreateCard;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
-using BankingSystem.Core.Shared.Services;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
 

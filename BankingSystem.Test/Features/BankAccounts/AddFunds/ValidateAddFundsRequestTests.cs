@@ -27,7 +27,7 @@ namespace BankingSystem.Test.Features.BankAccounts
         {
             AddFundsRequest request = null;
 
-            var ex = Assert.ThrowsAsync<ArgumentNullException>(async () => await  _addFundsService.AddFunds(request));
+            var ex = Assert.ThrowsAsync<ArgumentNullException>(async () => await  _addFundsService.AddFundsAsync(request));
             Assert.That(ex.ParamName, Is.EqualTo("request"));
         }
 
@@ -37,7 +37,7 @@ namespace BankingSystem.Test.Features.BankAccounts
         {
             var request = ModelFactory.GetAddFundsRequest(r => r.Amount = amount);
 
-            var ex = Assert.ThrowsAsync<InvalidAddFundsValidationException>(async () => await _addFundsService.AddFunds(request));
+            var ex = Assert.ThrowsAsync<InvalidAddFundsValidationException>(async () => await _addFundsService.AddFundsAsync(request));
             Assert.That(ex.Message, Is.EqualTo("The amount must be greater than zero."));
         }
 
@@ -47,7 +47,7 @@ namespace BankingSystem.Test.Features.BankAccounts
         {
             var request = ModelFactory.GetAddFundsRequest(r => r.BankAccountId = bankAccountId);
 
-            var ex = Assert.ThrowsAsync<InvalidAddFundsValidationException>(async () => await _addFundsService.AddFunds(request));
+            var ex = Assert.ThrowsAsync<InvalidAddFundsValidationException>(async () => await _addFundsService.AddFundsAsync(request));
             Assert.That(ex.Message, Is.EqualTo("The Bank Account ID must be a positive number."));
         }
     }

@@ -3,7 +3,6 @@ using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
 using BankingSystem.Core.Shared;
-using BankingSystem.Core.Shared.Services;
 
 namespace BankingSystem.Test.Features.Atm.CardAuthorizations;
 

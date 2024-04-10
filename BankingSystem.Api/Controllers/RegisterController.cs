@@ -21,7 +21,7 @@ public class RegisterController : ControllerBase
     [Authorize("OperatorPolicy", AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
     {
-        await _createUserService.RegisterUser(request);
+        await _createUserService.RegisterUserAsync(request);
 
         return Ok(request.RegisteredUserResponse());
     }

@@ -4,7 +4,7 @@ namespace BankingSystem.Core.Features.Users.CreateUser
 {
     public interface ICreateUserRepository
     {
-        Task<bool> UserByPersonalIdExist(string personalId);
+        Task<bool> UserByPersonalIdExistAsync(string personalId);
     }
 
     public class CreateUserRepository : ICreateUserRepository
@@ -16,7 +16,7 @@ namespace BankingSystem.Core.Features.Users.CreateUser
             _dataManager = dataManager;
         }
 
-        public async Task<bool> UserByPersonalIdExist(string personalId)
+        public async Task<bool> UserByPersonalIdExistAsync(string personalId)
         {
             string sql = "SELECT TOP 1 1 FROM Users WHERE PersonalId = @PersonalId";
 

@@ -4,7 +4,6 @@ using BankingSystem.Core.Features.Cards.CreateCard.Models.Response;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Shared.Models;
-using BankingSystem.Core.Shared.Services;
 using System.Text;
 
 namespace BankingSystem.Core.Features.Cards.CreateCard
@@ -37,7 +36,7 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
 
         public async Task<CardDto> CreateCardAsync(CreateCardRequest createCardRequest)
         {
-            var validationResult = await CreateCardValidation(createCardRequest);
+            var validationResult = await CreateCardValidationAsync(createCardRequest);
 
             var currentTime = DateTime.UtcNow;
             var pin = GenerateNumbers(4).ToString();
@@ -80,7 +79,7 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
             return sb.ToString();
         }
 
-        private async Task<ValidatedCardData> CreateCardValidation(CreateCardRequest createCardRequest)
+        private async Task<ValidatedCardData> CreateCardValidationAsync(CreateCardRequest createCardRequest)
         {
             if (createCardRequest.UserId <= 0)
             {
@@ -91,7 +90,7 @@ namespace BankingSystem.Core.Features.Cards.CreateCard
                 throw new BankAccountNotFoundException("Invalid Account ID.{BankAccountId}", createCardRequest.AccountId);
             }
 
-            var UserInfo = await _cardRepository.GetUserFullNameById(createCardRequest.UserId)
+            var UserInfo = await _cardRepository.GetUserFullNameByIdAsync(createCardRequest.UserId)
                 ?? throw new UserNotFoundException("User not found {userId}", createCardRequest.UserId);
             var bankAccount = await _createBankAccountsRepository.GetAccountByIdAsync(createCardRequest.AccountId)
                 ?? throw new BankAccountNotFoundException("BankAcount not found. {BankAccountId}", createCardRequest.AccountId);

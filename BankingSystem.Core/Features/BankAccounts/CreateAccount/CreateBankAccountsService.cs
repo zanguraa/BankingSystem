@@ -8,7 +8,7 @@ namespace BankingSystem.Core.Features.BankAccounts.CreateAccount;
 
 public interface ICreateBankAccountsService
 {
-    Task<List<string>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest);
+    Task<List<string>> CreateBankAccountAsync(CreateBankAccountRequest createBankAccountRequest);
 }
 
 public class CreateBankAccountsService : ICreateBankAccountsService
@@ -26,9 +26,9 @@ public class CreateBankAccountsService : ICreateBankAccountsService
         _seqLogger = seqLogger;
     }
 
-    public async Task<List<string>> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
+    public async Task<List<string>> CreateBankAccountAsync(CreateBankAccountRequest createBankAccountRequest)
     {
-        await ValidateUserDoesNotHaveAccount(createBankAccountRequest.UserId);
+        await ValidateUserDoesNotHaveAccountAsync(createBankAccountRequest.UserId);
 
         var ibans = new List<string>();
         var accountIds = new List<int>();
@@ -57,7 +57,7 @@ public class CreateBankAccountsService : ICreateBankAccountsService
         return ibans;
     }
 
-    private async Task ValidateUserDoesNotHaveAccount(int userId)
+    private async Task ValidateUserDoesNotHaveAccountAsync(int userId)
     {
         bool userExists = await _authorizeUserRepository.UserExistsAsync(userId);
         if (!userExists)

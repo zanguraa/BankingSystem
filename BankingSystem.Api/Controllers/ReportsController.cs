@@ -2,6 +2,7 @@
 using BankingSystem.Core.Features.Reports.TransactionStatistics;
 using BankingSystem.Core.Features.Reports.UserStatistics;
 using BankingSystem.Core.Features.Reports.Withdrawals;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.Api.Controllers;
@@ -25,6 +26,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpPost("transaction-statistics")]
+    [Authorize("OperatorPolicy", AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> GetTransactionStatistics([FromBody] ReportsRequest request)
     {
         var result = await _transactionStatisticsService.GetTransactionStatisticsAsync(request);
@@ -32,6 +34,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpPost("daily-transaction-counts")]
+    [Authorize("OperatorPolicy", AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> GetDailyTransactionCounts([FromBody] ReportsRequest request)
     {
         var result = await _transactionStatisticsService.GetDailyTransactionCountsAsync(request);
@@ -39,6 +42,8 @@ public class ReportsController : ControllerBase
     }
 
     [HttpPost("total-withdrawn-amount")]
+    [Authorize("OperatorPolicy", AuthenticationSchemes = "Bearer")]
+
     public async Task<IActionResult> GetTotalWithdrawnAmount([FromBody] ReportsRequest request)
     {
         var result = await _withdrawalsService.GetTotalWithdrawnAmountAsync(request);
@@ -46,6 +51,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpPost("average-revenue-per-transaction")]
+    [Authorize("OperatorPolicy", AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> GetAverageRevenuePerTransaction([FromBody] ReportsRequest request)
     {
         var result = await _transactionStatisticsService.GetAverageRevenuePerTransactionAsync(request);
@@ -53,6 +59,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("user-statistics")]
+    [Authorize("OperatorPolicy", AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> GetUserStatistics()
     {
         var result = await _userStatisticsService.GetUserStatisticsAsync();

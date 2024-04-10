@@ -2,9 +2,7 @@
 {
     public class InvalidAddFundsValidationException : DomainException
     {
-        public InvalidAddFundsValidationException(string message, params object?[]? parameters) : base(message, parameters)
-        {
-
-        }
+        private static readonly int _statusCode = 400;
+        public InvalidAddFundsValidationException(string message, params object?[]? parameters) : base(message, _statusCode, parameters) { }
     }
 }

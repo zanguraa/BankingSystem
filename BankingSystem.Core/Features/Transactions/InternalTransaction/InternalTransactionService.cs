@@ -61,7 +61,7 @@ namespace BankingSystem.Core.Features.Transactions.InternalTransaction
 
             if (fromAccount.InitialAmount < request.Amount)
             {
-                throw new InvalidOperationException("Insufficient funds.");
+                throw new InvalidTransactionException("Insufficient funds for Iban:{Iban}.", fromAccount.Iban);
             }
 
             var transaction = new Transaction

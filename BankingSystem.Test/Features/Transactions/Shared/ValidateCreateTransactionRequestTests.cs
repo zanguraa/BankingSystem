@@ -39,7 +39,7 @@ namespace BankingSystem.Test.Features.Transactions.Shared
         {
             var request = ModelFactory.GetCreateTransactionRequest(r => r.FromAccountId = -1);
 
-            Assert.ThrowsAsync<InvalidTransactionValidation>(() =>
+            Assert.ThrowsAsync<InvalidTransactionException>(() =>
                 _transactionServiceValidator.ValidateCreateTransactionRequestAsync(request));
         }
 
@@ -48,7 +48,7 @@ namespace BankingSystem.Test.Features.Transactions.Shared
         {
             var request = ModelFactory.GetCreateTransactionRequest(r => r.ToAccountId = -1);
 
-            Assert.ThrowsAsync<InvalidTransactionValidation>(() =>
+            Assert.ThrowsAsync<InvalidTransactionException>(() =>
                 _transactionServiceValidator.ValidateCreateTransactionRequestAsync(request));
         }
 
@@ -57,7 +57,7 @@ namespace BankingSystem.Test.Features.Transactions.Shared
         {
             var request = ModelFactory.GetCreateTransactionRequest(r => r.Amount = -100);
 
-            Assert.ThrowsAsync<InvalidTransactionValidation>(() =>
+            Assert.ThrowsAsync<InvalidTransactionException>(() =>
                 _transactionServiceValidator.ValidateCreateTransactionRequestAsync(request));
         }
 

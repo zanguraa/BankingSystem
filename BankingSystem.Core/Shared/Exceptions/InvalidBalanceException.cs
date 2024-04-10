@@ -2,9 +2,7 @@
 {
     public class InvalidBalanceException : DomainException
     {
-        public InvalidBalanceException(string message, params object?[]? parameters) : base(message, parameters)
-        {
-
-        }
+        private static readonly int _statusCode = 400; 
+        public InvalidBalanceException(string message, params object?[]? parameters) : base(message, _statusCode, parameters) { }
     }
 }

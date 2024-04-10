@@ -1,5 +1,7 @@
 ﻿using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
+using Microsoft.AspNetCore.Http;
+using System;
 
 namespace BankingSystem.Api.Middlewares
 {
@@ -21,71 +23,36 @@ namespace BankingSystem.Api.Middlewares
             {
                 await _next(context);
             }
-            catch (NotFoundException notFoundException)
-            {
-                await ReturnErrorResult(context, notFoundException, StatusCodes.Status404NotFound);
-            }
-            catch (BankAccountNotFoundException ex)
-            {
-                await ReturnErrorResult(context, ex, StatusCodes.Status404NotFound);
-            }
-            catch (InvalidAccountException ex)
-            {
-                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
-            }
-            catch (InvalidAddFundsValidationException ex)
-            {
-                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
-            }
-            catch (InvalidAtmAmountException ex)
-            {
-                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
-            }
-            catch (InvalidBalanceException ex)
-            {
-                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
-            }
-            catch (InvalidCardException ex)
-            {
-                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
-            }
-            catch (InvalidTransactionValidation ex)
-            {
-                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
-            }
-            catch (UnsupportedCurrencyException ex)
-            {
-                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
-            }
-            catch (UserNotFoundException ex)
-            {
-                await ReturnErrorResult(context, ex, StatusCodes.Status404NotFound);
-            }
-            catch (UserValidationException ex)
-            {
-                await ReturnErrorResult(context, ex, StatusCodes.Status400BadRequest);
-            }
             catch (DomainException dex)
             {
-                await ReturnErrorResult(context, dex, StatusCodes.Status500InternalServerError);
+                var errorLog = dex.LogMessage;
+                _seqLogger.LogError(errorLog.Message, errorLog.Params);
+
+                var problemDetails = new
+                {
+                    Status = dex.StatusCode,
+                    Title = dex.Message,
+                    IsSuccess = false
+                };
+
+                context.Response.StatusCode = dex.StatusCode;
+                await context.Response.WriteAsJsonAsync(problemDetails);
             }
-            
-        }
-
-        private async Task ReturnErrorResult(HttpContext context, DomainException exception, int statusCode)
-        {
-            var errorLog = exception.LogMessage;
-            _seqLogger.LogError(errorLog.Message, errorLog.Params);
-
-            var problemDetails = new
+            catch (Exception ex)
             {
-                Status = statusCode,
-                Title = exception.Message,
-                IsSuccess = false
-            };
+                _seqLogger.LogFatal("{Message}{StackTrace}", ex.Message, ex.StackTrace);
 
-            context.Response.StatusCode = statusCode;
-            await context.Response.WriteAsJsonAsync(problemDetails);
+                var problemDetails = new
+                {
+                    Status = 500,
+                    Title = "Server Error",
+                    IsSuccess = false
+                };
+
+                context.Response.StatusCode = problemDetails.Status;
+                await context.Response.WriteAsJsonAsync(problemDetails);
+
+            }
         }
     }
 }

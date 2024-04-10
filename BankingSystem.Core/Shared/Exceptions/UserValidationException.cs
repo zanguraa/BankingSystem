@@ -2,9 +2,7 @@
 {
     public class UserValidationException : DomainException
     {
-        public UserValidationException(string message, params object?[]? parameters) : base(message, parameters)
-        {
-
-        }
+        private static readonly int _statusCode = 404; 
+        public UserValidationException(string message, params object?[]? parameters) : base(message, _statusCode, parameters) { }
     }
 }

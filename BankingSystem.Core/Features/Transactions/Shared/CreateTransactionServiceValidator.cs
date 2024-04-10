@@ -31,17 +31,17 @@ namespace BankingSystem.Core.Features.Transactions.Shared
 
             if (string.IsNullOrEmpty(request.UserId))
             {
-                throw new InvalidTransactionValidation("User ID cannot be empty.");
+                throw new InvalidTransactionException("User ID cannot be empty.");
             }
 
             if (request.FromAccountId <= 0)
             {
-                throw new InvalidTransactionValidation("From Account ID must be positive.");
+                throw new InvalidTransactionException("From Account ID must be positive.");
             }
 
             if (request.ToAccountId <= 0)
             {
-                throw new InvalidTransactionValidation("To Account ID must be positive.");
+                throw new InvalidTransactionException("To Account ID must be positive.");
             }
             if (request.FromAccountId == request.ToAccountId)
             {
@@ -50,7 +50,7 @@ namespace BankingSystem.Core.Features.Transactions.Shared
 
             if (request.Amount <= 0)
             {
-                throw new InvalidTransactionValidation("Transaction amount must be greater than zero.");
+                throw new InvalidTransactionException("Transaction amount must be greater than zero.");
             }
 
             bool fromCurrencyIsValid = await _createtransactionRepository.IsCurrencyValid(request.Currency);
@@ -63,12 +63,12 @@ namespace BankingSystem.Core.Features.Transactions.Shared
             }
             if (fromAccount.Currency.ToString() != request.Currency)
             {
-                throw new InvalidTransactionValidation($"The currency for From Account ID {request.FromAccountId} does not match the request currency.");
+                throw new InvalidTransactionException($"The currency for From Account ID {request.FromAccountId} does not match the request currency.");
             }
 
             if (toAccount.Currency.ToString() != request.ToCurrency)
             {
-                throw new InvalidTransactionValidation($"The currency for To Account ID {request.ToAccountId} does not match the request to currency.");
+                throw new InvalidTransactionException($"The currency for To Account ID {request.ToAccountId} does not match the request to currency.");
             }
 
         }

@@ -13,20 +13,16 @@ namespace BankingSystem.Core.Shared
 
     public class SeqLogger : ISeqLogger
     {
-        private readonly Logger _errorLogger;
-        private readonly Logger _fataLogger;
-        private readonly Logger _infoLogger;
+        private readonly Logger _logger;
 
         public SeqLogger()
         {
-            _errorLogger = SetupLogger(LogEventLevel.Error);
-            _fataLogger = SetupLogger(LogEventLevel.Fatal);
-            _infoLogger = SetupLogger(LogEventLevel.Information);
+            _logger = SetupLogger(LogEventLevel.Information);
         }
 
-        public void LogError(string message, params object?[]? parameters) => _errorLogger.Error(message, parameters);
-        public void LogFatal(string message, params object?[]? parameters) => _fataLogger.Fatal(message, parameters);
-        public void LogInfo(string message, params object?[]? parameters) => _infoLogger.Information(message, parameters);
+        public void LogError(string message, params object?[]? parameters) => _logger.Error(message, parameters);
+        public void LogFatal(string message, params object?[]? parameters) => _logger.Fatal(message, parameters);
+        public void LogInfo(string message, params object?[]? parameters) => _logger.Information(message, parameters);
 
 
         private Logger SetupLogger(LogEventLevel logEventLevel)

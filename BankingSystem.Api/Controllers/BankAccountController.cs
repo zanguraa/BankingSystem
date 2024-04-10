@@ -24,7 +24,7 @@ public class BankAccountController : ControllerBase
     [Authorize("OperatorPolicy", AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> CreateBankAccount(CreateBankAccountRequest createBankAccountRequest)
     {
-        var result = await _createBankAccountsService.CreateBankAccount(createBankAccountRequest);
+        var result = await _createBankAccountsService.CreateBankAccountAsync(createBankAccountRequest);
 
         return Ok(result);
     }
@@ -33,7 +33,7 @@ public class BankAccountController : ControllerBase
     [Authorize("OperatorPolicy", AuthenticationSchemes = "Bearer")]
     public async Task<IActionResult> AddFunds(AddFundsRequest addFundsRequest)
     {
-        await _addFundsService.AddFunds(addFundsRequest);
+        await _addFundsService.AddFundsAsync(addFundsRequest);
         return Ok();
     }
 }

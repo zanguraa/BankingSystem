@@ -2,8 +2,8 @@
 using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
 using BankingSystem.Core.Features.Transactions.Shared.Models.Response;
 using BankingSystem.Core.Shared;
+using BankingSystem.Core.Shared.Currency;
 using BankingSystem.Core.Shared.Models;
-using BankingSystem.Core.Shared.Services.Currency;
 
 namespace BankingSystem.Core.Features.Transactions.CreateTransactions;
 
@@ -38,7 +38,7 @@ public class ExternalTransactionService : IExternalTransactionService
     {
         using var semaphore = new SemaphoreSlim(1, 1);
 
-        await _transactionServiceValidator.ValidateCreateTransactionRequest(request);
+        await _transactionServiceValidator.ValidateCreateTransactionRequestAsync(request);
         await _createTransactionService.CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
 
         await semaphore.WaitAsync();
@@ -66,7 +66,7 @@ public class ExternalTransactionService : IExternalTransactionService
             TransactionDate = DateTime.Now,
         };
 
-        await _createtransactionRepository.ProcessBankTransaction(transaction);
+        await _createtransactionRepository.ProcessBankTransactionAsync(transaction);
 
         semaphore.Release();
 

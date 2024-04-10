@@ -3,9 +3,11 @@ namespace BankingSystem.Core.Shared.Exceptions
 {
     public class InvalidAccountException : DomainException
     {
-        public InvalidAccountException(string message, params object?[]? parameters) : base(message, parameters)
+        private static readonly int _statusCode = 400;
+
+        public InvalidAccountException(string message, params object?[]? parameters) : base(message, _statusCode, parameters)
         {
-            
+
         }
     }
 }

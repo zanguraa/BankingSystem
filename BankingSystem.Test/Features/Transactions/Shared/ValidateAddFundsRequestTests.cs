@@ -25,9 +25,9 @@ namespace BankingSystem.Test.Features.Transactions.Shared
 		{
 			AddFundsRequest request = null;
 
-			var exception = Assert.ThrowsAsync<ArgumentNullException>(() => _addFundsService.AddFunds(request));
-			Assert.That(exception.ParamName, Is.EqualTo("request")); 
-		}
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => _addFundsService.AddFundsAsync(request));
+            Assert.That(exception.ParamName, Is.EqualTo("addFundsRequest"));
+        }
 
 
 		[TestCase(-100)]
@@ -36,7 +36,7 @@ namespace BankingSystem.Test.Features.Transactions.Shared
         {
             var request = ModelFactory.GetAddFundsRequest(r => r.Amount = amount);
 
-            Assert.ThrowsAsync<InvalidAddFundsValidationException>(() => _addFundsService.AddFunds(request));
+            Assert.ThrowsAsync<InvalidAddFundsValidationException>(() => _addFundsService.AddFundsAsync(request));
         }
 
         [TestCase(-1)]
@@ -45,7 +45,7 @@ namespace BankingSystem.Test.Features.Transactions.Shared
         {
             var request = ModelFactory.GetAddFundsRequest(r => r.BankAccountId = bankAccountId);
 
-            Assert.ThrowsAsync<InvalidAddFundsValidationException>(() => _addFundsService.AddFunds(request));
+            Assert.ThrowsAsync<InvalidAddFundsValidationException>(() => _addFundsService.AddFundsAsync(request));
         }
     }
 }

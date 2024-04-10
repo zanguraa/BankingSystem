@@ -3,7 +3,7 @@ using BankingSystem.Core.Shared;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Requests;
 using BankingSystem.Core.Features.Atm.WithdrawMoney.Models.Response;
 using BankingSystem.Core.Shared.Models;
-using BankingSystem.Core.Shared.Services.Currency;
+using BankingSystem.Core.Shared.Currency;
 
 namespace BankingSystem.Core.Features.Atm.WithdrawMoney;
 
@@ -53,7 +53,7 @@ public class WithdrawMoneyService : IWithdrawMoneyService
 
 
         var report24HoursRequest = new WithdrawalCheck { BankAccountId = card.AccountId, WithdrawalDate = DateTime.Now.AddDays(-1) };
-        var totalWithdrawnAmountInGel = await _withdrawMoneyRepository.GetWithdrawalsOf24hoursByCardId(report24HoursRequest);
+        var totalWithdrawnAmountInGel = await _withdrawMoneyRepository.GetWithdrawalsOf24hoursByCardIdAsync(report24HoursRequest);
 
         // საკითხავია სწორია თუ არა ვანოსთან
         if (totalWithdrawnAmountInGel?.Sum + totalDeduction > _dailyWithdrawalLimitInGel)

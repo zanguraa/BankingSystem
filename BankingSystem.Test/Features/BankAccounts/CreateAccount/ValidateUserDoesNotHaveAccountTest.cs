@@ -30,7 +30,7 @@ namespace BankingSystem.Test.Features.BankAccounts.CreateAccount
 			int userId = 999; 
 			A.CallTo(() => _authorizeUserRepository.UserExistsAsync(userId)).Returns(false);
 
-			Assert.ThrowsAsync<UserNotFoundException>(async () => await _createBankAccountsService.CreateBankAccount(new CreateBankAccountRequest { UserId = userId }));
+			Assert.ThrowsAsync<UserNotFoundException>(async () => await _createBankAccountsService.CreateBankAccountAsync(new CreateBankAccountRequest { UserId = userId }));
 		}
 
 		[Test]
@@ -39,7 +39,7 @@ namespace BankingSystem.Test.Features.BankAccounts.CreateAccount
 			int userId = 0; 
 			A.CallTo(() => _authorizeUserRepository.UserExistsAsync(userId)).Returns(true); 
 
-			Assert.ThrowsAsync<UserNotFoundException>(async () => await _createBankAccountsService.CreateBankAccount(new CreateBankAccountRequest { UserId = userId }));
+			Assert.ThrowsAsync<UserNotFoundException>(async () => await _createBankAccountsService.CreateBankAccountAsync(new CreateBankAccountRequest { UserId = userId }));
 		}
 	}
 }

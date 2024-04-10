@@ -2,7 +2,6 @@
 using BankingSystem.Core.Features.Atm.ChangePin.Models.Response;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
-using BankingSystem.Core.Shared.Services;
 
 namespace BankingSystem.Core.Features.Atm.ChangePin;
 

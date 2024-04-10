@@ -2,8 +2,8 @@
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Test.Factory;
 using FakeItEasy;
-using BankingSystem.Core.Shared.Services.Currency;
 using BankingSystem.Core.Shared;
+using BankingSystem.Core.Shared.Currency;
 
 namespace BankingSystem.Test.Features.Transactions.Shared
 {

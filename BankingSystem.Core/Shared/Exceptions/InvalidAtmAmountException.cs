@@ -2,9 +2,7 @@
 {
     public class InvalidAtmAmountException : DomainException
     {
-        public InvalidAtmAmountException(string message, params object?[]? parameters) : base(message, parameters)
-        {
-
-        }
+        private static readonly int _statusCode = 400;
+        public InvalidAtmAmountException(string message, params object?[]? parameters) : base(message, _statusCode, parameters) { }
     }
 }

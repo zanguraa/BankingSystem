@@ -3,9 +3,9 @@ using BankingSystem.Core.Features.Transactions.Shared.Models.Requests;
 using BankingSystem.Core.Features.Transactions.Shared.Models.Response;
 using BankingSystem.Core.Features.Transactions.Shared;
 using BankingSystem.Core.Shared;
-using BankingSystem.Core.Shared.Services.Currency;
 using BankingSystem.Core.Shared.Models;
 using BankingSystem.Core.Shared.Exceptions;
+using BankingSystem.Core.Shared.Currency;
 
 namespace BankingSystem.Core.Features.Transactions.InternalTransaction
 {
@@ -39,7 +39,7 @@ namespace BankingSystem.Core.Features.Transactions.InternalTransaction
         {
             using var semaphore = new SemaphoreSlim(1, 1);
 
-            await _transactionServiceValidator.ValidateCreateTransactionRequest(request);
+            await _transactionServiceValidator.ValidateCreateTransactionRequestAsync(request);
             await _createTransactionService.CheckAccountOwnershipAsync(request.FromAccountId, request.UserId);
 
             await semaphore.WaitAsync();
@@ -61,7 +61,7 @@ namespace BankingSystem.Core.Features.Transactions.InternalTransaction
 
             if (fromAccount.InitialAmount < request.Amount)
             {
-                throw new InvalidOperationException("Insufficient funds.");
+                throw new InvalidTransactionException("Insufficient funds for Iban:{Iban}.", fromAccount.Iban);
             }
 
             var transaction = new Transaction
@@ -77,7 +77,7 @@ namespace BankingSystem.Core.Features.Transactions.InternalTransaction
                 TransactionDate = DateTime.UtcNow
             };
 
-            await _createtransactionRepository.ProcessBankTransaction(transaction);
+            await _createtransactionRepository.ProcessBankTransactionAsync(transaction);
 
             semaphore.Release();
 

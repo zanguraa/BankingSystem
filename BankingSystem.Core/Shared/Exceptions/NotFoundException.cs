@@ -2,9 +2,7 @@
 {
 	public class NotFoundException : DomainException
 	{
-		public NotFoundException(string message, params object?[]? parameters) : base(message, parameters)
-        {
-
-		}
+		private static readonly int _statusCode = 404; 
+		public NotFoundException(string message, params object?[]? parameters) : base(message, _statusCode, parameters) { }
 	}
 }

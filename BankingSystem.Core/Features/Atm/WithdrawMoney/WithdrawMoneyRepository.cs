@@ -8,7 +8,7 @@ namespace BankingSystem.Core.Features.Atm.WithdrawMoney;
 
 public interface IWithdrawMoneyRepository
 {
-    Task<DecimalSum?> GetWithdrawalsOf24hoursByCardId(WithdrawalCheck options);
+    Task<DecimalSum?> GetWithdrawalsOf24hoursByCardIdAsync(WithdrawalCheck options);
     Task<BalanceInfo?> GetBalanceInfoByCardNumberAsync(string cardNumber);
     Task<Card> GetCardByNumberAsync(string CardNumber);
     Task<bool> ProcessAtmTransaction(Transaction transactionRequest);
@@ -23,7 +23,7 @@ public class WithdrawMoneyRepository : IWithdrawMoneyRepository
         _dataManager = dataManager;
     }
 
-    public async Task<DecimalSum?> GetWithdrawalsOf24hoursByCardId(WithdrawalCheck options)
+    public async Task<DecimalSum?> GetWithdrawalsOf24hoursByCardIdAsync(WithdrawalCheck options)
     {
         var query = @"SELECT SUM(d.TotalAmount * c.Rate) AS Sum FROM DailyWithdrawals AS d
                           INNER JOIN Currencies AS c ON d.Currency = c.Code

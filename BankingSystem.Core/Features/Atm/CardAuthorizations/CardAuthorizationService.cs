@@ -3,7 +3,6 @@ using BankingSystem.Core.Features.Atm.CardAuthorizations.Models.Requests;
 using BankingSystem.Core.Shared;
 using BankingSystem.Core.Shared.Exceptions;
 using BankingSystem.Core.Shared.Models;
-using BankingSystem.Core.Shared.Services;
 
 public interface ICardAuthorizationService
 {
@@ -32,7 +31,7 @@ public class CardAuthorizationService : ICardAuthorizationService
 
     public async Task<string> AuthorizeCardAsync(CardAuthorizationRequest request)
     {
-        await ValidateCardAuthorization(request);
+        await ValidateCardAuthorizationAsync(request);
 
 
 
@@ -41,7 +40,7 @@ public class CardAuthorizationService : ICardAuthorizationService
         return (jwtTokken);
     }
 
-    private async Task<bool> ValidateCardAuthorization(CardAuthorizationRequest request)
+    private async Task<bool> ValidateCardAuthorizationAsync(CardAuthorizationRequest request)
     {
         var encryptedPin =  _cryptoService.Encrypt(request.Pin);
 

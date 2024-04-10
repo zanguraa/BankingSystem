@@ -24,7 +24,7 @@ namespace BankingSystem.Test.Features.Users
 		{
 			RegisterUserRequest request = null;
 
-			var ex = Assert.ThrowsAsync<ArgumentNullException>(async () => await _createUserService.RegisterUser(request));
+			var ex = Assert.ThrowsAsync<ArgumentNullException>(async () => await _createUserService.RegisterUserAsync(request));
 			Assert.That(ex.ParamName, Is.EqualTo("registerRequest"));
 		}
 
@@ -33,7 +33,7 @@ namespace BankingSystem.Test.Features.Users
 		{
 			var request = ModelFactory.GetRegisterUserRequest(r => r.Email = "");
 
-			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUser(request));
+			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUserAsync(request));
 			Assert.That(ex.Message, Is.EqualTo("Invalid email address."));
 		}
 
@@ -42,7 +42,7 @@ namespace BankingSystem.Test.Features.Users
 		{
 			var request = ModelFactory.GetRegisterUserRequest(r => r.Email = null);
 
-			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUser(request));
+			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUserAsync(request));
 			Assert.That(ex.Message, Is.EqualTo("Invalid email address."));
 		}
 
@@ -51,7 +51,7 @@ namespace BankingSystem.Test.Features.Users
 		{
 			var request = ModelFactory.GetRegisterUserRequest(r => r.Email = "invalidemail");
 
-			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUser(request));
+			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUserAsync(request));
 			Assert.That(ex.Message, Is.EqualTo("Invalid email address."));
 		}
 
@@ -60,7 +60,7 @@ namespace BankingSystem.Test.Features.Users
 		{
 			var request = ModelFactory.GetRegisterUserRequest(r => r.BirthdayDate = DateTime.MinValue);
 
-			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUser(request));
+			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUserAsync(request));
 			Assert.That(ex.Message, Is.EqualTo("Invalid birthday date."));
 		}
 
@@ -69,7 +69,7 @@ namespace BankingSystem.Test.Features.Users
 		{
 			var request = ModelFactory.GetRegisterUserRequest(r => r.BirthdayDate = DateTime.MaxValue);
 
-			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUser(request));
+			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUserAsync(request));
 			Assert.That(ex.Message, Is.EqualTo("Invalid birthday date."));
 		}
 		[Test]
@@ -77,7 +77,7 @@ namespace BankingSystem.Test.Features.Users
 		{
 			var request = ModelFactory.GetRegisterUserRequest(r => r.FirstName = "");
 
-			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUser(request));
+			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUserAsync(request));
 			Assert.That(ex.Message, Is.EqualTo("First name cannot be empty."));
 		}
 
@@ -86,7 +86,7 @@ namespace BankingSystem.Test.Features.Users
 		{
 			var request = ModelFactory.GetRegisterUserRequest(r => r.FirstName = null);
 
-			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUser(request));
+			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUserAsync(request));
 			Assert.That(ex.Message, Is.EqualTo("First name cannot be empty."));
 		}
 
@@ -95,7 +95,7 @@ namespace BankingSystem.Test.Features.Users
 		{
 			var request = ModelFactory.GetRegisterUserRequest(r => r.LastName = "");
 
-			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUser(request));
+			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUserAsync(request));
 			Assert.That(ex.Message, Is.EqualTo("Last name cannot be empty."));
 		}
 
@@ -104,7 +104,7 @@ namespace BankingSystem.Test.Features.Users
 		{
 			var request = ModelFactory.GetRegisterUserRequest(r => r.LastName = null);
 
-			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUser(request));
+			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUserAsync(request));
 			Assert.That(ex.Message, Is.EqualTo("Last name cannot be empty."));
 		}
 
@@ -113,7 +113,7 @@ namespace BankingSystem.Test.Features.Users
 		{
 			var request = ModelFactory.GetRegisterUserRequest(r => r.PersonalId = "");
 
-			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUser(request));
+			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUserAsync(request));
 			Assert.That(ex.Message, Is.EqualTo("Personal ID must be exactly 11 characters long."));
 		}
 
@@ -122,7 +122,7 @@ namespace BankingSystem.Test.Features.Users
 		{
 			var request = ModelFactory.GetRegisterUserRequest(r => r.PersonalId = null);
 
-			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUser(request));
+			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUserAsync(request));
 			Assert.That(ex.Message, Is.EqualTo("Personal ID must be exactly 11 characters long."));
 		}
 

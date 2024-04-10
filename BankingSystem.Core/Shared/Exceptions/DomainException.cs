@@ -20,7 +20,7 @@
 
         public class LogBag
         {
-            public string Message { get; }
+            public string Message { get; set;  }
             public object?[]? Params { get; }
             public LogBag(string message, params object?[]? parameters)
             {

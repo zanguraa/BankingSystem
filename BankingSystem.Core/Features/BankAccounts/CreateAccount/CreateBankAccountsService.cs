@@ -62,7 +62,7 @@ public class CreateBankAccountsService : ICreateBankAccountsService
         bool userExists = await _authorizeUserRepository.UserExistsAsync(userId);
         if (!userExists)
         {
-            throw new UserNotFoundException($"user ID {userId} is not exists.");
+            throw new UserNotFoundException($"Create bankAccount for user ID {userId} failed, because user with this Id is not exists.");
         }
         if (userId == 0)
         {

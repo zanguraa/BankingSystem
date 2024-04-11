@@ -20,6 +20,8 @@ public class TransactionStatisticsService : ITransactionStatisticsService
 
     public async Task<TransactionStatisticsResponse> GetTransactionStatisticsAsync(ReportsRequest request)
     {
+        ValidateReportsRequest(request);
+
         var statisticsAggregate = await _transactionStatisticsRepository.GetTransactionStatisticsAsync(request.StartDate, request.EndDate);
 
         return new TransactionStatisticsResponse
@@ -61,6 +63,8 @@ public class TransactionStatisticsService : ITransactionStatisticsService
 
     public async Task<TransactionStatisticsResponse> GetAverageRevenuePerTransactionAsync(ReportsRequest request)
     {
+        ValidateReportsRequest(request);
+
         return await _transactionStatisticsRepository.GetAverageRevenuePerTransactionAsync(request.StartDate, request.EndDate);
     }
 

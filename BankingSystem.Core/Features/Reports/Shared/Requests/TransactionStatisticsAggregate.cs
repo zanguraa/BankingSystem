@@ -3,8 +3,8 @@
     public class TransactionStatisticsAggregate
     {
         public int NumberOfTransactions { get; set; }
-        public decimal IncomeLastMonthInGEL { get; set; }
-        public decimal IncomeLastMonthInUSD { get; set; }
-        public decimal IncomeLastMonthInEUR { get; set; }
+        public decimal TransactionsInGEL { get; set; }
+        public decimal TransactionsInUSD { get; set; }
+        public decimal TransactionsInEUR { get; set; }
     }
 }

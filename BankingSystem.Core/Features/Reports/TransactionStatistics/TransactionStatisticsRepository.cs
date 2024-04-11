@@ -45,9 +45,9 @@ public class TransactionStatisticsRepository : ITransactionStatisticsRepository
         return new TransactionStatisticsResponse
         {
             TransactionsCount = statistics.NumberOfTransactions,
-            TransactionsInGEL = statistics.IncomeLastMonthInGEL,
-            TransactionsInUSD = statistics.IncomeLastMonthInUSD,
-            TransactionsInEUR = statistics.IncomeLastMonthInEUR
+            TransactionsInGEL = statistics.TransactionsInGEL,
+            TransactionsInUSD = statistics.TransactionsInUSD,
+            TransactionsInEUR = statistics.TransactionsInEUR
         };
     }
 

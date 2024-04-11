@@ -1,4 +1,5 @@
 ﻿using BankingSystem.Core.Features.Reports.Shared.Requests;
+using BankingSystem.Core.Shared.Exceptions;
 
 namespace BankingSystem.Core.Features.Reports.TransactionStatistics;
 
@@ -32,6 +33,8 @@ public class TransactionStatisticsService : ITransactionStatisticsService
 
     public async Task<Dictionary<string, int>> GetDailyTransactionCountsAsync(ReportsRequest request)
     {
+        ValidateReportsRequest(request);
+
         var transactionCountsFromRepo = await _transactionStatisticsRepository.GetDailyTransactionCountsAsync(request.StartDate, request.EndDate);
 
         // Convert the list to a dictionary with the date as the key and transaction count as the value for faster lookups
@@ -61,4 +64,33 @@ public class TransactionStatisticsService : ITransactionStatisticsService
         return await _transactionStatisticsRepository.GetAverageRevenuePerTransactionAsync(request.StartDate, request.EndDate);
     }
 
+    private void ValidateReportsRequest(ReportsRequest request)
+    {
+        if (request == null)
+        {
+            throw new ArgumentNullException(nameof(request), "ReportsRequest cannot be null.");
+        }
+
+        if (request.StartDate == DateTime.MinValue)
+        {
+            throw new InvalidReportsException("StartDate is required.", nameof(request.StartDate));
+        }
+
+        if (request.EndDate == DateTime.MinValue)
+        {
+            request.EndDate = DateTime.Now;
+        }
+
+        if (request.StartDate > request.EndDate)
+        {
+            throw new InvalidReportsException("StartDate cannot be greater than EndDate.", nameof(request.StartDate));
+        }
+
+        if (request.StartDate > DateTime.Now || request.EndDate > DateTime.Now)
+        {
+            throw new InvalidReportsException("StartDate and EndDate cannot be in the future.", nameof(request.StartDate));
+        }
+    }
 }
+
+

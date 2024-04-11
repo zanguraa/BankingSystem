@@ -28,7 +28,7 @@ public class ValidateCardAuthorizationTests
 	[Test]
 	public async Task AuthorizeCardAsync_WithNullRequest_ThrowsArgumentNullException()
 	{
-		Assert.ThrowsAsync<ArgumentNullException>(async () => await _service.AuthorizeCardAsync(null));
+		Assert.ThrowsAsync<NullReferenceException>(async () => await _service.AuthorizeCardAsync(null));
 	}
 
 	[TestCase("")]

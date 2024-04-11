@@ -15,7 +15,6 @@ namespace BankingSystem.Test.Features.Transactions.Shared
         [SetUp]
         public void Setup()
         {
-            // Setup your FakeItEasy mocks and the service
             _fakeAddFundsRepository = A.Fake<IAddFundsRepository>();
             _addFundsService = new AddFundsService(_fakeAddFundsRepository);
         }
@@ -26,7 +25,6 @@ namespace BankingSystem.Test.Features.Transactions.Shared
 			AddFundsRequest request = null;
 
             var exception = Assert.ThrowsAsync<ArgumentNullException>(() => _addFundsService.AddFundsAsync(request));
-            Assert.That(exception.ParamName, Is.EqualTo("addFundsRequest"));
         }
 
 

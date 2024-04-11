@@ -12,7 +12,6 @@ public interface ICreateTransactionService
     Task<CreateTransactionResponse> ProcessWithdrawalTransactionAsync(CreateTransactionRequest request);
     Task<bool> CheckAccountOwnershipAsync(int accountId, string userId);
     decimal CalculateTransactionFee(decimal amount, TransactionType transactionType);
-
 }
 
 public class CreateTransactionService : ICreateTransactionService
@@ -89,7 +88,6 @@ public class CreateTransactionService : ICreateTransactionService
             feePercentage = 0.01M;
             fixedFee = 0.5M;
         }
-
         decimal totalFee = amount * feePercentage + fixedFee;
         return totalFee;
     }
@@ -101,7 +99,6 @@ public class CreateTransactionService : ICreateTransactionService
         {
             throw new InvalidAccountException("User with Id: {UserId} trying to access someone else's BankAccount with Id: {AccountId}", userId, accountId);
         }
-
         return isCorrectAccount;
     }
 }

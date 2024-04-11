@@ -27,8 +27,5 @@ namespace BankingSystem.Core.Features.Users.CreateUser
 
             return result.Any();
         }
-
-
-
     }
 }

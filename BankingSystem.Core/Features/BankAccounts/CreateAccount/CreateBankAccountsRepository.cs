@@ -1,7 +1,6 @@
 ﻿using BankingSystem.Core.Data;
 using BankingSystem.Core.Shared.Models;
 
-
 namespace BankingSystem.Core.Features.BankAccounts.CreateAccount;
 
 public interface ICreateBankAccountsRepository

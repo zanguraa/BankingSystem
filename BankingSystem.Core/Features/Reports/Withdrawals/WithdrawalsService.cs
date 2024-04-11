@@ -1,24 +1,23 @@
 ﻿using BankingSystem.Core.Features.Reports.Shared.Requests;
 
-namespace BankingSystem.Core.Features.Reports.Withdrawals
+namespace BankingSystem.Core.Features.Reports.Withdrawals;
+
+public interface IWithdrawalsService
 {
-    public interface IWithdrawalsService
+    Task<TotalWithdrawnAmountDto> GetTotalWithdrawnAmountAsync(ReportsRequest request);
+}
+
+public class WithdrawalsService : IWithdrawalsService
+{
+    private readonly IWithdrawalsRepository _withdrawalRepository;
+
+    public WithdrawalsService(IWithdrawalsRepository withdrawalsRepository)
     {
-        Task<TotalWithdrawnAmountDto> GetTotalWithdrawnAmountAsync(ReportsRequest request);
+        _withdrawalRepository = withdrawalsRepository;
+
     }
-
-    public class WithdrawalsService : IWithdrawalsService
+    public async Task<TotalWithdrawnAmountDto> GetTotalWithdrawnAmountAsync(ReportsRequest request)
     {
-        private readonly IWithdrawalsRepository _withdrawalRepository;
-
-        public WithdrawalsService(IWithdrawalsRepository withdrawalsRepository)
-        {
-            _withdrawalRepository = withdrawalsRepository;
-
-        }
-        public async Task<TotalWithdrawnAmountDto> GetTotalWithdrawnAmountAsync(ReportsRequest request)
-        {
-            return await _withdrawalRepository.GetTotalWithdrawnAmountAsync(request.StartDate, request.EndDate);
-        }
+        return await _withdrawalRepository.GetTotalWithdrawnAmountAsync(request.StartDate, request.EndDate);
     }
 }

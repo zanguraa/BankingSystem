@@ -92,8 +92,6 @@ namespace BankingSystem.Core.Features.Transactions.InternalTransaction
                 Fee = transaction.Fee,
                 TransactionDate = transaction.TransactionDate
             };
-
         }
-
     }
 }

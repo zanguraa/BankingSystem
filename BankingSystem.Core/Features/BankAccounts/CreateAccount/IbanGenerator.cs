@@ -16,7 +16,7 @@ public class IbanGenerator
             throw new ArgumentException("IBAN must be 16 digits.");
         }
 
-        string tempIban = randomBban + GetCountryCodeNumeric(countryCode) + GetBankInitialsNumeric(bankInitials) + "00"; 
+        string tempIban = randomBban + GetCountryCodeNumeric(countryCode) + GetBankInitialsNumeric(bankInitials) + "00";
         int checkDigits = CalculateCheckDigits(tempIban);
         return countryCode + checkDigits.ToString("D2") + bankInitials + randomBban;
     }

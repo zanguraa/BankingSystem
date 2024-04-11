@@ -15,7 +15,6 @@ public class AuthorizeUserRepository : IAuthorizeUserRepository
         _dataManager = dataManager;
     }
 
-
     public async Task<bool> UserExistsAsync(int userId)
     {
         string sql = "SELECT TOP 1 1 FROM [BankingSystem_db].[dbo].[Users] WHERE id = @userId";

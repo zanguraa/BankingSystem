@@ -2,27 +2,27 @@
 using BankingSystem.Core.Data;
 using BankingSystem.Core.Features.Reports.Shared.Requests;
 
-namespace BankingSystem.Core.Features.Reports.TransactionStatistics
+namespace BankingSystem.Core.Features.Reports.TransactionStatistics;
+
+public interface ITransactionStatisticsRepository
 {
-    public interface ITransactionStatisticsRepository
+    Task<TransactionStatisticsResponse> GetAverageRevenuePerTransactionAsync(DateTime startDate, DateTime endDate);
+    Task<IEnumerable<DailyTransactionCountDto>> GetDailyTransactionCountsAsync(DateTime startDate, DateTime endDate);
+    Task<TransactionStatisticsResponse> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate);
+}
+
+public class TransactionStatisticsRepository : ITransactionStatisticsRepository
+{
+    private readonly IDataManager _dataManager;
+    public TransactionStatisticsRepository(IDataManager dataManager)
     {
-        Task<TransactionStatisticsResponse> GetAverageRevenuePerTransactionAsync(DateTime startDate, DateTime endDate);
-        Task<IEnumerable<DailyTransactionCountDto>> GetDailyTransactionCountsAsync(DateTime startDate, DateTime endDate);
-        Task<TransactionStatisticsResponse> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate);
+        _dataManager = dataManager;
     }
 
-    public class TransactionStatisticsRepository : ITransactionStatisticsRepository
+    public async Task<TransactionStatisticsResponse> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate)
     {
-        private readonly IDataManager _dataManager;
-        public TransactionStatisticsRepository(IDataManager dataManager)
-        {
-            _dataManager = dataManager;
-        }
 
-        public async Task<TransactionStatisticsResponse> GetTransactionStatisticsAsync(DateTime startDate, DateTime endDate)
-        {
-
-            const string transactionQuery = @"
+        const string transactionQuery = @"
                 SELECT 
                     COUNT(TransactionId) AS NumberOfTransactions,
                     SUM(CASE WHEN FromAccountCurrency = 'GEL' THEN FromAmount ELSE 0 END) AS IncomeLastMonthInGEL,
@@ -33,29 +33,29 @@ namespace BankingSystem.Core.Features.Reports.TransactionStatistics
                 ";
 
 
-            var statisticsList = await _dataManager.Query<TransactionStatisticsAggregate, dynamic>(
-                transactionQuery,
-                new { startDate, endDate });
+        var statisticsList = await _dataManager.Query<TransactionStatisticsAggregate, dynamic>(
+            transactionQuery,
+            new { startDate, endDate });
 
-            var statistics = statisticsList.FirstOrDefault();
+        var statistics = statisticsList.FirstOrDefault();
 
-            if (statistics == null)
-                return new TransactionStatisticsResponse();
+        if (statistics == null)
+            return new TransactionStatisticsResponse();
 
-            return new TransactionStatisticsResponse
-            {
-                TransactionsCount = statistics.NumberOfTransactions,
-                TransactionsInGEL = statistics.IncomeLastMonthInGEL,
-                TransactionsInUSD = statistics.IncomeLastMonthInUSD,
-                TransactionsInEUR = statistics.IncomeLastMonthInEUR
-            };
-        }
-
-        public async Task<IEnumerable<DailyTransactionCountDto>> GetDailyTransactionCountsAsync(DateTime startDate, DateTime endDate)
+        return new TransactionStatisticsResponse
         {
-            endDate = endDate.AddDays(1).AddSeconds(-1);
+            TransactionsCount = statistics.NumberOfTransactions,
+            TransactionsInGEL = statistics.IncomeLastMonthInGEL,
+            TransactionsInUSD = statistics.IncomeLastMonthInUSD,
+            TransactionsInEUR = statistics.IncomeLastMonthInEUR
+        };
+    }
 
-            const string dailyCountQuery = @"
+    public async Task<IEnumerable<DailyTransactionCountDto>> GetDailyTransactionCountsAsync(DateTime startDate, DateTime endDate)
+    {
+        endDate = endDate.AddDays(1).AddSeconds(-1);
+
+        const string dailyCountQuery = @"
                 SELECT 
                     CAST([TransactionDate] AS DATE) AS Date,
                     COUNT(*) AS TransactionCount 
@@ -65,17 +65,14 @@ namespace BankingSystem.Core.Features.Reports.TransactionStatistics
                 ORDER BY Date;
                 ";
 
-            return await _dataManager.Query<DailyTransactionCountDto, dynamic>(
-                dailyCountQuery,
-                new { startDate, endDate });
-        }
+        return await _dataManager.Query<DailyTransactionCountDto, dynamic>(
+            dailyCountQuery,
+            new { startDate, endDate });
+    }
 
-
-
-
-        public async Task<TransactionStatisticsResponse> GetAverageRevenuePerTransactionAsync(DateTime startDate, DateTime endDate)
-        {
-            const string avgRevenueQuery = @"
+    public async Task<TransactionStatisticsResponse> GetAverageRevenuePerTransactionAsync(DateTime startDate, DateTime endDate)
+    {
+        const string avgRevenueQuery = @"
                 SELECT 
                     FromAccountCurrency AS Currency,
                     AVG(FromAmount - Fee) AS AverageRevenue
@@ -84,35 +81,34 @@ namespace BankingSystem.Core.Features.Reports.TransactionStatistics
                 GROUP BY FromAccountCurrency;
                 ";
 
-            var avgRevenueResults = await _dataManager.Query<AverageRevenuePerTransactionByCurrencyDto, dynamic>(
-                avgRevenueQuery,
-                new { startDate, endDate }
-            );
+        var avgRevenueResults = await _dataManager.Query<AverageRevenuePerTransactionByCurrencyDto, dynamic>(
+            avgRevenueQuery,
+            new { startDate, endDate }
+        );
 
-            var result = new TransactionStatisticsResponse
-            {
-                TransactionsInGEL = 0,
-                TransactionsInUSD = 0,
-                TransactionsInEUR = 0
-            };
+        var result = new TransactionStatisticsResponse
+        {
+            TransactionsInGEL = 0,
+            TransactionsInUSD = 0,
+            TransactionsInEUR = 0
+        };
 
-            foreach (var avg in avgRevenueResults)
+        foreach (var avg in avgRevenueResults)
+        {
+            switch (avg.Currency)
             {
-                switch (avg.Currency)
-                {
-                    case "GEL":
-                        result.TransactionsInGEL = avg.AverageRevenue;
-                        break;
-                    case "USD":
-                        result.TransactionsInUSD = avg.AverageRevenue;
-                        break;
-                    case "EUR":
-                        result.TransactionsInEUR = avg.AverageRevenue;
-                        break;
-                }
+                case "GEL":
+                    result.TransactionsInGEL = avg.AverageRevenue;
+                    break;
+                case "USD":
+                    result.TransactionsInUSD = avg.AverageRevenue;
+                    break;
+                case "EUR":
+                    result.TransactionsInEUR = avg.AverageRevenue;
+                    break;
             }
-
-            return result;
         }
+
+        return result;
     }
 }

@@ -49,13 +49,12 @@ public class WithdrawMoneyService : IWithdrawMoneyService
         decimal totalDeduction = amountToDeduct + commission;
 
         if (totalDeduction > accountInfo.InitialAmount)
-            return new() { IsSuccessful = false, Message = "Insufficient funds.", RemainingBalance = accountInfo.InitialAmount };
+            throw new InvalidAtmAmountException("Insufficient funds. remaining balance is: {Balance} in {Currency}", accountInfo.InitialAmount, requestDto.Currency);
 
 
         var report24HoursRequest = new WithdrawalCheck { BankAccountId = card.AccountId, WithdrawalDate = DateTime.Now.AddDays(-1) };
         var totalWithdrawnAmountInGel = await _withdrawMoneyRepository.GetWithdrawalsOf24hoursByCardIdAsync(report24HoursRequest);
 
-        // საკითხავია სწორია თუ არა ვანოსთან
         if (totalWithdrawnAmountInGel?.Sum + totalDeduction > _dailyWithdrawalLimitInGel)
         {
             throw new InvalidAtmAmountException("Daily limit Daily withdrawal limit exceeded:{Amount} in {Currency}, for Card: {Card}", requestDto.Amount, requestDto.Currency, requestDto.CardNumber);
@@ -97,12 +96,12 @@ public class WithdrawMoneyService : IWithdrawMoneyService
 
     private void ValidateWithdrawRequest(WithdrawAmountCurrencyRequest requestDto)
     {
-		if (requestDto == null)
-		{
-			throw new ArgumentNullException(nameof(requestDto), "The request cannot be null.");
-		}
+        if (requestDto == null)
+        {
+            throw new ArgumentNullException(nameof(requestDto), "The request cannot be null.");
+        }
 
-		if (requestDto.Amount < 5 || requestDto.Amount % 5 != 0)
+        if (requestDto.Amount < 5 || requestDto.Amount % 5 != 0)
         {
             throw new InvalidAtmAmountException("Invalid withdrawal amount. Amount must be in multiples of 5");
         }

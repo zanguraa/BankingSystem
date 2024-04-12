@@ -61,20 +61,24 @@ namespace BankingSystem.Test.Features.Transactions.Shared
                 _transactionServiceValidator.ValidateCreateTransactionRequestAsync(request));
         }
 
-        [Test]
-        public void When_CurrenciesAreInvalid_ShouldThrow_ArgumentException()
-        {
-            var request = ModelFactory.GetCreateTransactionRequest(r =>
-            {
-                r.Currency = "INVALID";
-                r.ToCurrency = "ALSO_INVALID";
-            });
+		[Test]
+		public async Task When_CurrenciesAreInvalid_ShouldThrow_InvalidTransactionException()
+		{
+			var request = ModelFactory.GetCreateTransactionRequest(r =>
+			{
+				r.Currency = "INVALID";
+				r.ToCurrency = "ALSO_INVALID";
+			});
 
-            Assert.ThrowsAsync<ArgumentException>(() =>
-                _transactionServiceValidator.ValidateCreateTransactionRequestAsync(request));
-        }
+			// Assert that an InvalidTransactionException is thrown when currencies are invalid
+			var ex = Assert.ThrowsAsync<InvalidTransactionException>(async () =>
+				await _transactionServiceValidator.ValidateCreateTransactionRequestAsync(request));
 
-        [Test]
+			Assert.That(ex.Message, Is.EqualTo("One or both currency codes are invalid."));
+		}
+
+
+		[Test]
         public void When_FromAccountIdEqualsToAccountId_ShouldThrow_InvalidAccountException()
         {
             var request = ModelFactory.GetCreateTransactionRequest(r =>

@@ -23,7 +23,7 @@ namespace BankingSystem.Test.Features.Atm.ViewBalance
 			string cardNumber = "";
 
 			var ex = Assert.ThrowsAsync<InvalidCardException>(async () => await _viewBalanceService.GetBalanceByCardNumberAsync(cardNumber));
-			Assert.That(ex.Message, Is.EqualTo("Card Number is not Found: {CardNumber}"));
+			Assert.That(ex.Message, Is.EqualTo("Card Number is not Found."));
 		}
 
 		[Test]
@@ -32,7 +32,7 @@ namespace BankingSystem.Test.Features.Atm.ViewBalance
 			string cardNumber = null;
 
 			var ex = Assert.ThrowsAsync<InvalidCardException>(async () => await _viewBalanceService.GetBalanceByCardNumberAsync(cardNumber));
-			Assert.That(ex.Message, Is.EqualTo("Card Number is not Found: {CardNumber}"));
+			Assert.That(ex.Message, Is.EqualTo("Card Number is not Found."));
 		}
 	}
 }

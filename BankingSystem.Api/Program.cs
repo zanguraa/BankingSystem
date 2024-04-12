@@ -144,6 +144,7 @@ namespace BankingSystem.Api
 
             var app = builder.Build();
 
+            app.UseMiddleware<RequestResponseLoggingMiddleware>();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             if (app.Environment.IsDevelopment())

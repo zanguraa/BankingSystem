@@ -54,22 +54,41 @@ namespace BankingSystem.Test.Features.Users
 			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUserAsync(request));
 			Assert.That(ex.Message, Is.EqualTo("Invalid email address."));
 		}
-
 		[Test]
-		public void When_BirthdayDateIsMinValue_ShouldThrow_UserValidationException()
+		public async Task When_BirthdayDateIsMinValue_ShouldThrow_UserValidationException()
 		{
-			var request = ModelFactory.GetRegisterUserRequest(r => r.BirthdayDate = DateTime.MinValue);
+			// Arrange
+			var request = ModelFactory.GetRegisterUserRequest(r =>
+			{
+				r.BirthdayDate = DateTime.MinValue;
+				r.Email = "test@example.com"; // Ensure all required fields are set correctly.
+				r.FirstName = "John";
+				r.LastName = "Doe";
+				r.PersonalId = "12345678901";
+				r.PhoneNumber = "123456789";
+			});
 
-			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUserAsync(request));
+			// Act & Assert
+			var ex = Assert.ThrowsAsync<UserValidationException>(() => _createUserService.RegisterUserAsync(request));
 			Assert.That(ex.Message, Is.EqualTo("Invalid birthday date."));
 		}
 
 		[Test]
-		public void When_BirthdayDateIsMaxValue_ShouldThrow_UserValidationException()
+		public async Task When_BirthdayDateIsMaxValue_ShouldThrow_UserValidationException()
 		{
-			var request = ModelFactory.GetRegisterUserRequest(r => r.BirthdayDate = DateTime.MaxValue);
+			// Arrange
+			var request = ModelFactory.GetRegisterUserRequest(r =>
+			{
+				r.BirthdayDate = DateTime.MaxValue;
+				r.Email = "test@example.com"; // Ensure all required fields are set correctly.
+				r.FirstName = "Jane";
+				r.LastName = "Doe";
+				r.PersonalId = "12345678901";
+				r.PhoneNumber = "123456789";
+			});
 
-			var ex = Assert.ThrowsAsync<UserValidationException>(async () => await _createUserService.RegisterUserAsync(request));
+			// Act & Assert
+			var ex = Assert.ThrowsAsync<UserValidationException>(() => _createUserService.RegisterUserAsync(request));
 			Assert.That(ex.Message, Is.EqualTo("Invalid birthday date."));
 		}
 		[Test]

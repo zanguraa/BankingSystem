@@ -74,23 +74,26 @@ namespace BankingSystem.Test.Factory
 			customize?.Invoke(request);
 			return request;
 		}
-		public static RegisterUserRequest GetRegisterUserRequest(Action<RegisterUserRequest> customizeRequest = null)
+		
+		public static RegisterUserRequest GetRegisterUserRequest(Action<RegisterUserRequest> customize = null)
 		{
 			var request = new RegisterUserRequest
 			{
 				Email = "test@example.com",
+				Password = "securePassword123",
+				PasswordConfirmed = "securePassword123", // Ensure this matches the password if required
 				FirstName = "John",
 				LastName = "Doe",
+				PhoneNumber = "1234567890",
 				PersonalId = "12345678901",
-				PhoneNumber = "123456789",
-				BirthdayDate = new DateTime(1990, 1, 1),
-				Password = "Password123!"
+				BirthdayDate = DateTime.Today.AddYears(-25)
 			};
 
-			customizeRequest?.Invoke(request);
-
+			customize?.Invoke(request);
 			return request;
 		}
+
+
 		public static BalanceResponse CreateBalanceResponse()
 		{
 			return new BalanceResponse
@@ -123,21 +126,23 @@ namespace BankingSystem.Test.Factory
 			customizer?.Invoke(request);
 			return request;
 		}
-		public static CreateTransactionRequest GetCreateTransactionRequest(Action<CreateTransactionRequest> customize = null)
+
+		public static CreateTransactionRequest GetCreateTransactionRequest(Action<CreateTransactionRequest> customize)
 		{
 			var request = new CreateTransactionRequest
 			{
-				UserId = "test-user",
 				FromAccountId = 1,
 				ToAccountId = 2,
-				Amount = 100,
+				Amount = 100.00m,
 				Currency = "USD",
-				ToCurrency = "EUR"
+				ToCurrency = "EUR",
+				UserId = "user123"
 			};
 
 			customize?.Invoke(request);
 			return request;
 		}
+
 		public static WithdrawAmountCurrencyRequest GetWithdrawAmountCurrencyRequest(Action<WithdrawAmountCurrencyRequest> customize = null)
 		{
 			var request = new WithdrawAmountCurrencyRequest
@@ -149,12 +154,6 @@ namespace BankingSystem.Test.Factory
 			customize?.Invoke(request);
 			return request;
 		}
-		public static CreateTransactionRequest CreateTransactionRequest()
-		{
-			return new CreateTransactionRequest
-			{
-				// Set up properties as needed
-			};
-		}
+	
 	}
 }
